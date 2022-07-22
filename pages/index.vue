@@ -1,7 +1,6 @@
-<template>
-  <Tutorial />
+<template lang="pug">
+  div hello!
 </template>
-
 <script lang="ts">
 import Vue from 'vue'
 
