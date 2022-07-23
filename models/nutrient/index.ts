@@ -8,13 +8,7 @@ export interface Nutrient {
 export class Nutrient {
   constructor(nutrientId: string, value: number) {
     this.nutrientId = nutrientId
-    this.value = value
-  }
-
-  setNutrients() {
-    Object.keys(NUTRIENTS).forEach((key) => {
-      console.log('🍆', key)
-    })
+    this.value = Number(value)
   }
 
   get label() {

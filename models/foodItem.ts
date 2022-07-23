@@ -20,12 +20,12 @@ export class FoodItem {
     this.nutrients = this.setNutrients(foodItem.nutrients || [])
   }
 
-  setNutrients(nutrients) {
+  setNutrients(nutrients: Nutrient[]): Nutrient[] {
     return Object.keys(NUTRIENTS).map((key) => {
-      const nutrient = nutrients.find((n) => {
+      const nutrient = nutrients.find((n: Nutrient) => {
         return n.nutrientId === key
       })
-      return nutrient ? new Nutrient(key, nutrient.value) : ''
+      return new Nutrient(key, nutrient ? nutrient.value : 0)
     })
   }
 }
