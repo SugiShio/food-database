@@ -17,6 +17,7 @@ div(v-if='foodItem')
 <script lang="ts">
 import Vue from 'vue'
 import { FoodItem } from '@/models/foodItem'
+import { getFirestoreFormat } from '@/utils/firestore'
 
 export default Vue.extend({
   name: 'PagesFoodItemsId',
@@ -46,12 +47,7 @@ export default Vue.extend({
     submit() {
       if (!this.foodItem) return
       const db = this.$fire.firestore
-      const data = {
-        ...this.foodItem,
-        nutrients: this.foodItem.nutrients.map((n) => {
-          return { ...n }
-        }),
-      }
+      const data = getFirestoreFormat(this.foodItem)
       db.collection('foodItems')
         .doc(this.id)
         .update(data)
