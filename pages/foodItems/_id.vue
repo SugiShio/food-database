@@ -6,8 +6,11 @@ div(v-if='foodItem')
   div
     textarea(v-model='foodItem.description', :disabled='!isEditing')
   div(v-for='nutrient in foodItem.nutrients')
-    | {{ nutrient.label }}
-    input(v-model='nutrient.value', :disabled='!isEditing')
+    number-editor(
+      v-model='nutrient.value',
+      :label='nutrient.label',
+      :disabled='!isEditing'
+    )
   button(v-if='isEditing', @click='submit') Submit
 </template>
 
@@ -41,12 +44,19 @@ export default Vue.extend({
   },
   methods: {
     submit() {
+      if (!this.foodItem) return
       const db = this.$fire.firestore
+      const data = {
+        ...this.foodItem,
+        nutrients: this.foodItem.nutrients.map((n) => {
+          return { ...n }
+        }),
+      }
       db.collection('foodItems')
         .doc(this.id)
-        .update({ ...this.foodItem })
+        .update(data)
         .then(() => {
-          console.log('Item successfyllu updated! 🍅')
+          console.log('Item successfully updated! 🍅')
         })
     },
   },

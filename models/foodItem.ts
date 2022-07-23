@@ -11,7 +11,6 @@ export interface FoodItem {
 }
 
 export class FoodItem {
-  nutrient: [] = []
   constructor(id: string, foodItem: DocumentData) {
     this.id = id || ''
     this.name = foodItem.name || ''
