@@ -4,10 +4,11 @@
     v-if='isEditing',
     type='text',
     :id='idAttribute',
+    :class='size',
     :value='value',
     @input='onInput'
   )
-  span.text-editor__not-editing(v-else) {{ value }}
+  component.text-editor__not-editing(:is='htmlTag', :class='size', v-else) {{ value }}
 </template>
 
 <script lang="ts">
@@ -18,6 +19,8 @@ export default Vue.extend({
   props: {
     idAttribute: { type: String, default: '', required: true },
     isEditing: { type: Boolean, default: false },
+    size: { type: String, default: '' },
+    htmlTag: { type: String, default: 'span' },
     value: { type: String, default: '' },
   },
   methods: {
@@ -45,10 +48,18 @@ export default Vue.extend({
     padding: 5px 10px;
     width: 100%;
     border: none;
+
+    &.large {
+      font-size: 24px;
+    }
   }
 
   &__not-editing {
     padding: 5px 0;
+
+    &.large {
+      font-size: 24px;
+    }
   }
 }
 </style>

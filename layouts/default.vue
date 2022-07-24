@@ -1,7 +1,9 @@
 <template lang="pug">
-div
-  | {{ isSignin }}
-  Nuxt
+.layouts-default
+  .layouts-default__header
+    | {{ isSignin }}
+  .layouts-default__main
+    Nuxt
 </template>
 
 <script lang="ts">
@@ -26,3 +28,13 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.layouts-default {
+  &__main {
+    width: 800px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+</style>

@@ -1,38 +1,44 @@
 <template lang="pug">
 main.foodItems-id(v-if='foodItem')
-  section
-    h2 基本情報
-    .foodItems-id__title-container
-      text-editor(
-        v-model='foodItem.name',
-        id-attribute='title',
-        :is-editing='isEditing'
-      )
-      fd-button(
-        label='Edit',
-        v-if='!isEditing',
-        type='button',
-        @button-clicked='isEditing = !isEditing'
-      )
-    div
-      label(for='description') 説明
-      textarea-editor(
-        v-model='foodItem.description',
-        :is-editing='isEditing',
-        id-attribute='description'
-      )
-
-  section
-    h2 栄養素
-    ul.foodItems-id__
-      li(v-for='nutrient in foodItem.nutrients')
-        label(:for='nutrient.nutrientId') {{ nutrient.label }}
-        number-editor(
-          v-model='nutrient.value',
+  .foodItems-id__title-container
+    text-editor(
+      v-model='foodItem.name',
+      id-attribute='title',
+      :is-editing='isEditing',
+      size='large',
+      html-tag='h1'
+    )
+    fd-button(
+      label='Edit',
+      v-if='!isEditing',
+      type='button',
+      @button-clicked='isEditing = !isEditing'
+    )
+  section.foodItems-id__section
+    h2.foodItems-id__title 基本情報
+    .foodItems-id__item
+      .foodItems-id__label
+        label(for='description') 説明
+      .foodItems-id__item-body
+        textarea-editor(
+          v-model='foodItem.description',
           :is-editing='isEditing',
-          :id-attribute='nutrient.nutrientId',
-          :unit='nutrient.unit'
+          id-attribute='description'
         )
+
+  section.foodItems-id__section
+    h2.foodItems-id__title 栄養素
+    ul.foodItems-id__
+      li.foodItems-id__item(v-for='nutrient in foodItem.nutrients')
+        .foodItems-id__label
+          label(:for='nutrient.nutrientId') {{ nutrient.label }}
+        .foodItems-id__item-body
+          number-editor(
+            v-model='nutrient.value',
+            :is-editing='isEditing',
+            :id-attribute='nutrient.nutrientId',
+            :unit='nutrient.unit'
+          )
   fd-button(
     label='Cancel',
     v-if='isEditing',
@@ -89,10 +95,34 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .foodItems-id {
+  padding: 30px 20px;
+
   &__title-container {
     display: flex;
     width: 100%;
     align-items: center;
+  }
+
+  &__section {
+    margin: 30px 0;
+  }
+
+  &__title {
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  &__item {
+    margin: 15px 0;
+    display: flex;
+  }
+
+  &__label {
+    width: 150px;
+  }
+
+  &__item-body {
+    flex-grow: 1;
   }
 }
 </style>
