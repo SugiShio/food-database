@@ -1,17 +1,44 @@
 <template lang="pug">
-div(v-if='foodItem')
-  button(v-if='!isEditing', type='button', @click='isEditing = !isEditing') Edit
-  div
-    input(v-model='foodItem.name', :disabled='!isEditing')
-  div
-    textarea(v-model='foodItem.description', :disabled='!isEditing')
-  div(v-for='nutrient in foodItem.nutrients')
-    number-editor(
-      v-model='nutrient.value',
-      :label='nutrient.label',
-      :disabled='!isEditing'
-    )
-  button(v-if='isEditing', @click='submit') Submit
+main.foodItems-id(v-if='foodItem')
+  section
+    h2 基本情報
+    .foodItems-id__title-container
+      text-editor(
+        v-model='foodItem.name',
+        id-attribute='title',
+        :is-editing='isEditing'
+      )
+      fd-button(
+        label='Edit',
+        v-if='!isEditing',
+        type='button',
+        @button-clicked='isEditing = !isEditing'
+      )
+    div
+      label(for='description') 説明
+      textarea-editor(
+        v-model='foodItem.description',
+        :is-editing='isEditing',
+        id-attribute='description'
+      )
+
+  section
+    h2 栄養素
+    ul.foodItems-id__
+      li(v-for='nutrient in foodItem.nutrients')
+        label(:for='nutrient.nutrientId') {{ nutrient.label }}
+        number-editor(
+          v-model='nutrient.value',
+          :is-editing='isEditing',
+          :id-attribute='nutrient.nutrientId',
+          :unit='nutrient.unit'
+        )
+  fd-button(
+    label='Cancel',
+    v-if='isEditing',
+    @button-clicked='isEditing = false'
+  )
+  fd-button(label='Submit', v-if='isEditing', @button-clicked='submit')
 </template>
 
 <script lang="ts">
@@ -53,8 +80,19 @@ export default Vue.extend({
         .update(data)
         .then(() => {
           console.log('Item successfully updated! 🍅')
+          this.isEditing = false
         })
     },
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.foodItems-id {
+  &__title-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+  }
+}
+</style>

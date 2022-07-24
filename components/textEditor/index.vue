@@ -1,31 +1,28 @@
 <template lang="pug">
-.number-editor(:class='{ isEditing }')
-  input.number-editor__editing(
+.text-editor(:class='{ isEditing }')
+  input.text-editor__editing(
     v-if='isEditing',
-    type='number',
-    :value='value',
+    type='text',
     :id='idAttribute',
-    :step='step',
+    :value='value',
     @input='onInput'
   )
-  span.number-editor__not-editing(v-else) {{ value }}
-  span.number-editor__unit {{ unit }}
+  span.text-editor__not-editing(v-else) {{ value }}
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+
 export default Vue.extend({
-  name: 'NumberEditor',
+  name: 'TextEditor',
   props: {
     idAttribute: { type: String, default: '', required: true },
     isEditing: { type: Boolean, default: false },
-    step: { type: String, default: '0.1' },
-    unit: { type: String, default: '' },
-    value: { type: Number, default: 0 },
+    value: { type: String, default: '' },
   },
   methods: {
     onInput($event: Event) {
-      const value = Number(($event.target as HTMLInputElement).value)
+      const value = ($event.target as HTMLInputElement).value
       this.$emit('input', value)
     },
   },
@@ -33,9 +30,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.number-editor {
-  display: flex;
-  align-items: center;
+.text-editor {
+  width: 100%;
   border: 1px solid transparent;
   background-color: transparent;
   border-radius: 3px;
@@ -46,19 +42,13 @@ export default Vue.extend({
 
   &__editing {
     display: block;
-    flex-grow: 1;
     padding: 5px 10px;
+    width: 100%;
     border: none;
   }
 
   &__not-editing {
     padding: 5px 0;
-  }
-
-  &__unit {
-    margin: 0 5px;
-    color: #aec2b8;
-    font-size: 11px;
   }
 }
 </style>

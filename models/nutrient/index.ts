@@ -14,4 +14,8 @@ export class Nutrient {
   get label() {
     return NUTRIENTS[this.nutrientId].label
   }
+
+  get unit() {
+    return NUTRIENTS[this.nutrientId].unit
+  }
 }
