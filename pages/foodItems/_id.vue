@@ -67,21 +67,47 @@ export default Vue.extend({
     isEditable() {
       return this.$store.state.isSignin && !this.isEditing
     },
+    isNew() {
+      return this.id === 'new'
+    },
   },
   async created() {
     const db = this.$fire.firestore
-
-    db.collection('foodItems')
-      .doc(this.id)
-      .get()
-      .then((doc) => {
-        const data = doc.data()
-        if (data) this.foodItem = new FoodItem(this.id, data)
-      })
+    if (this.isNew) {
+      this.isEditing = true
+      this.foodItem = new FoodItem()
+    } else {
+      db.collection('foodItems')
+        .doc(this.id)
+        .get()
+        .then((doc) => {
+          const data = doc.data()
+          if (data) this.foodItem = new FoodItem(this.id, data)
+        })
+    }
   },
   methods: {
     submit() {
       if (!this.foodItem) return
+      if (this.isNew) {
+        this.create()
+      } else {
+        this.update()
+      }
+    },
+    create() {
+      const db = this.$fire.firestore
+      const data = getFirestoreFormat(this.foodItem)
+      db.collection('foodItems')
+        .add(data)
+        .then((doc) => {
+          this.$router.push({
+            name: 'foodItems-id',
+            params: { id: doc.id },
+          })
+        })
+    },
+    update() {
       const db = this.$fire.firestore
       const data = getFirestoreFormat(this.foodItem)
       db.collection('foodItems')
@@ -121,6 +147,7 @@ export default Vue.extend({
   }
 
   &__label {
+    flex-shrink: 0;
     width: 150px;
   }
 

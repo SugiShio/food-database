@@ -11,12 +11,12 @@ export interface FoodItem {
 }
 
 export class FoodItem {
-  constructor(id: string, foodItem: DocumentData) {
+  constructor(id = '', foodItem?: DocumentData) {
     this.id = id || ''
-    this.name = foodItem.name || ''
-    this.description = foodItem.description || ''
-    this.images = foodItem.images || []
-    this.nutrients = this.setNutrients(foodItem.nutrients || [])
+    this.name = foodItem ? foodItem.name : ''
+    this.description = foodItem ? foodItem.description : ''
+    this.images = foodItem ? foodItem.images : []
+    this.nutrients = this.setNutrients(foodItem ? foodItem.nutrients : [])
   }
 
   setNutrients(nutrients: Nutrient[]): Nutrient[] {
