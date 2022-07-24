@@ -1,7 +1,7 @@
 <template lang="pug">
 .layouts-default
-  .layouts-default__header
-    | {{ isSignin }}
+  .layouts-default__header(v-if='isSignin')
+    button.layouts-default__button-signout(@click='signout') Signout
   .layouts-default__main
     Nuxt
 </template>
@@ -26,11 +26,31 @@ export default Vue.extend({
       }
     })
   },
+  methods: {
+    signout() {
+      this.$fire.auth.signOut()
+    },
+  },
 })
 </script>
 
 <style lang="scss" scoped>
 .layouts-default {
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+  }
+
+  &__button-signout {
+    color: $color-main;
+    transition: opacity 0.3s;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
   &__main {
     width: 800px;
     max-width: 100%;

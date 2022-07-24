@@ -9,10 +9,10 @@ main.foodItems-id(v-if='foodItem')
       html-tag='h1'
     )
     fd-button(
+      v-if='isEditable',
       label='Edit',
-      v-if='!isEditing',
       type='button',
-      @button-clicked='isEditing = !isEditing'
+      @button-clicked='isEditing = true'
     )
   section.foodItems-id__section
     h2.foodItems-id__title 基本情報
@@ -63,6 +63,9 @@ export default Vue.extend({
   computed: {
     id() {
       return this.$route.params.id
+    },
+    isEditable() {
+      return this.$store.state.isSignin && !this.isEditing
     },
   },
   async created() {
