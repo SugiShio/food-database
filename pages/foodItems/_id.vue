@@ -42,11 +42,7 @@ main.foodItems-id(v-if='foodItem')
             ref='inputElement',
             @input='onNutrientValueInput($event, index)'
           )
-  fd-button(
-    label='Cancel',
-    v-if='isEditing',
-    @button-clicked='isEditing = false'
-  )
+  fd-button(label='Cancel', v-if='isEditing', @button-clicked='onCancel')
   fd-button(label='Submit', v-if='isEditing', @button-clicked='submit')
 </template>
 
@@ -124,6 +120,10 @@ export default Vue.extend({
           this.fetchFoodItem()
           this.isEditing = false
         })
+    },
+    onCancel() {
+      this.isEditing = false
+      this.fetchFoodItem()
     },
     onNutrientValueInput(value: string, index: number) {
       const SEPARATORS = /\n|\t|,/
