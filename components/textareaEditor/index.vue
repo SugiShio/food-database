@@ -39,7 +39,7 @@ export default Vue.extend({
   border-radius: 3px;
 
   &.isEditing {
-    border-color: #cfdbd5;
+    border-color: $color-grey-weak;
   }
 
   &__editing {
@@ -50,6 +50,7 @@ export default Vue.extend({
   }
 
   &__not-editing {
+    display: inline-block;
     padding: 5px 0;
   }
 }
