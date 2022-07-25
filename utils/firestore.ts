@@ -3,7 +3,9 @@ export const getFirestoreFormat = (object: any) => {
 }
 
 const normalizeObject = (object: any) => {
-  if (typeof object === 'string') {
+  if (object === undefined) {
+    return null
+  } else if (typeof object === 'string' || object === null) {
     return object
   } else if (Array.isArray(object)) {
     return object.map((o): any => {

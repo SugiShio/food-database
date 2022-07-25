@@ -26,6 +26,17 @@ main.foodItems-id(v-if='foodItem')
           id-attribute='description'
         )
 
+    .foodItems-id__item
+      .foodItems-id__label
+        label(for='type') タイプ
+      .foodItems-id__item-body
+        radio-editor(
+          v-model='foodItem.type',
+          :is-editing='isEditing',
+          name-attribute='type',
+          :options='foodItemTypes'
+        )
+
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
     ul.foodItems-id__
@@ -48,7 +59,7 @@ main.foodItems-id(v-if='foodItem')
 
 <script lang="ts">
 import Vue from 'vue'
-import { FoodItem } from '@/models/foodItem'
+import { FoodItem, TYPES } from '@/models/foodItem'
 import { getFirestoreFormat } from '@/utils/firestore'
 
 export default Vue.extend({
@@ -60,6 +71,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    foodItemTypes() {
+      return TYPES
+    },
     id() {
       return this.$route.params.id
     },
