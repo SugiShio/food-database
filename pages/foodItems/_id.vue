@@ -29,7 +29,7 @@ main.foodItems-id(v-if='foodItem')
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
     ul.foodItems-id__
-      li.foodItems-id__item(v-for='nutrient in foodItem.nutrients')
+      li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
         .foodItems-id__label
           label(:for='nutrient.nutrientId') {{ nutrient.label }}
         .foodItems-id__item-body
@@ -37,7 +37,10 @@ main.foodItems-id(v-if='foodItem')
             v-model='nutrient.value',
             :is-editing='isEditing',
             :id-attribute='nutrient.nutrientId',
-            :unit='nutrient.unit'
+            :index='index',
+            :unit='nutrient.unit',
+            ref='inputElement',
+            @input='onNutrientValueInput($event, index)'
           )
   fd-button(
     label='Cancel',
@@ -71,22 +74,25 @@ export default Vue.extend({
       return this.id === 'new'
     },
   },
-  async created() {
-    const db = this.$fire.firestore
-    if (this.isNew) {
-      this.isEditing = true
-      this.foodItem = new FoodItem()
-    } else {
-      db.collection('foodItems')
-        .doc(this.id)
-        .get()
-        .then((doc) => {
-          const data = doc.data()
-          if (data) this.foodItem = new FoodItem(this.id, data)
-        })
-    }
+  created() {
+    this.fetchFoodItem()
   },
   methods: {
+    async fetchFoodItem() {
+      const db = this.$fire.firestore
+      if (this.isNew) {
+        this.isEditing = true
+        this.foodItem = new FoodItem()
+      } else {
+        db.collection('foodItems')
+          .doc(this.id)
+          .get()
+          .then((doc) => {
+            const data = doc.data()
+            if (data) this.foodItem = new FoodItem(this.id, data)
+          })
+      }
+    },
     submit() {
       if (!this.foodItem) return
       if (this.isNew) {
@@ -115,8 +121,21 @@ export default Vue.extend({
         .update(data)
         .then(() => {
           console.log('Item successfully updated! 🍅')
+          this.fetchFoodItem()
           this.isEditing = false
         })
+    },
+    onNutrientValueInput(value: string, index: number) {
+      const SEPARATORS = /\n|\t|,/
+      const isMultipleValues = SEPARATORS.test(value)
+      if (isMultipleValues) {
+        const values = value.split(SEPARATORS)
+        values.forEach((value, i) => {
+          if (this.foodItem?.nutrients[index + i]) {
+            this.foodItem?.nutrients[index + i].value = value
+          }
+        })
+      }
     },
   },
 })
@@ -148,6 +167,7 @@ export default Vue.extend({
 
   &__label {
     flex-shrink: 0;
+    padding-top: 6px;
     width: 150px;
   }
 

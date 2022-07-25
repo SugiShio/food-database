@@ -1,11 +1,11 @@
 <template lang="pug">
 .number-editor(:class='{ isEditing }')
-  input.number-editor__editing(
+  textarea.number-editor__editing(
     v-if='isEditing',
     type='number',
     :value='value',
     :id='idAttribute',
-    :step='step',
+    rows=1,
     @input='onInput'
   )
   span.number-editor__not-editing(v-else) {{ value }}
@@ -14,18 +14,18 @@
 
 <script lang="ts">
 import Vue from 'vue'
+
 export default Vue.extend({
   name: 'NumberEditor',
   props: {
     idAttribute: { type: String, default: '', required: true },
     isEditing: { type: Boolean, default: false },
-    step: { type: String, default: '0.1' },
     unit: { type: String, default: '' },
-    value: { type: Number, default: 0 },
+    value: { type: [String, Number], default: 0 },
   },
   methods: {
     onInput($event: Event) {
-      const value = Number(($event.target as HTMLInputElement).value)
+      const value = ($event.target as HTMLInputElement).value
       this.$emit('input', value)
     },
   },
@@ -49,6 +49,7 @@ export default Vue.extend({
     flex-grow: 1;
     padding: 5px 10px;
     border: none;
+    resize: none;
   }
 
   &__not-editing {
