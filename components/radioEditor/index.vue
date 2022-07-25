@@ -17,6 +17,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { RadioOption } from '@/models/radioOption'
+
 export default Vue.extend({
   name: 'RadioEditor',
   props: {
@@ -28,10 +30,10 @@ export default Vue.extend({
   computed: {
     displayValue() {
       const option = this.options.find((option) => {
-        return this.value === option.value
+        return this.value === (option as RadioOption).value
       })
 
-      return option ? option.label : ''
+      return option ? (option as RadioOption).label : ''
     },
   },
   methods: {
@@ -39,7 +41,7 @@ export default Vue.extend({
       const value = ($event.target as HTMLInputElement).value
       this.$emit('input', value)
     },
-    isChecked(option) {
+    isChecked(option: RadioOption) {
       return this.value === option.value
     },
   },

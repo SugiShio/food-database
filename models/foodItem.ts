@@ -1,6 +1,7 @@
 import { DocumentData } from 'firebase/firestore'
 import { Nutrient } from '@/models/nutrient'
 import { NUTRIENTS } from '@/models/nutrient/constants'
+import { RadioOption } from '@/models/radioOption'
 
 export interface FoodItem {
   id: string
@@ -11,12 +12,8 @@ export interface FoodItem {
   nutrients: Nutrient[]
   type: string
 }
-interface FoodItemType {
-  value: string
-  label: string
-}
 
-export const TYPES: FoodItemType[] = [
+export const TYPES: RadioOption[] = [
   { value: 'general', label: '一般食品' },
   { value: 'commercial', label: '市販品' },
   { value: 'menu', label: '外食メニュー' },
