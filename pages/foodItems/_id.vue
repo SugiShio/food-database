@@ -37,6 +37,16 @@ main.foodItems-id(v-if='foodItem')
           :options='foodItemTypes'
         )
 
+    .foodItems-id__item(v-if='isEditing')
+      .foodItems-id__label
+        | キーワード
+      .foodItems-id__item-body
+        text-array-editor(
+          v-model='foodItem.keywords',
+          id-attribute='keywords',
+          :is-editing='isEditing'
+        )
+
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
     ul.foodItems-id__
