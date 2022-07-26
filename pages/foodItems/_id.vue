@@ -1,5 +1,6 @@
 <template lang="pug">
 main.foodItems-id(v-if='foodItem')
+  nuxt-link(:to={ name: "foodItems" }) Index
   .foodItems-id__title-container
     text-editor(
       v-model='foodItem.name',
