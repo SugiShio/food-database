@@ -8,7 +8,7 @@
     rows=1,
     @input='onInput'
   )
-  span.number-editor__not-editing(v-else) {{ value }}
+  span.number-editor__not-editing(v-else) {{ displayValue }}
   span.number-editor__unit {{ unit }}
 </template>
 
@@ -22,6 +22,16 @@ export default Vue.extend({
     isEditing: { type: Boolean, default: false },
     unit: { type: String, default: '' },
     value: { type: [String, Number], default: 0 },
+  },
+  computed: {
+    displayValue() {
+      if (typeof this.value === 'number') {
+        return this.value
+      }
+      if (this.value === '') {
+        return this.value === '' ? '-' : this.value
+      } else return '-'
+    },
   },
   methods: {
     onInput($event: Event) {
