@@ -1,42 +1,38 @@
 <template lang="pug">
 main.foodItems-id(v-if='foodItem')
   nuxt-link(:to={ name: "foodItems" }) Index
+
   .foodItems-id__title-container
-    text-editor(
-      v-model='foodItem.name',
-      id-attribute='title',
-      :is-editing='isEditing',
-      size='large',
-      html-tag='h1'
-    )
+    input-text(v-if='isEditing', v-model='foodItem.name', size='large')
+    fd-title(v-else, :text='foodItem.name') {{ foodItem.name }}
     fd-button(
       v-if='isEditable',
       label='Edit',
       type='button',
       @button-clicked='isEditing = true'
     )
+
   section.foodItems-id__section
     h2.foodItems-id__title 基本情報
     .foodItems-id__item
-      .foodItems-id__label
+      .foodItems-id__label(:class='{ isEditing }')
         label(for='description') 説明
       .foodItems-id__item-body
-        textarea-editor(
-          v-model='foodItem.description',
-          :is-editing='isEditing',
-          id-attribute='description'
-        )
+        input-textarea(v-if='isEditing')
+        template(v-else)
+          | {{ foodItem.description }}
 
     .foodItems-id__item
       .foodItems-id__label
         label(for='type') タイプ
       .foodItems-id__item-body
-        radio-editor(
+        input-radio(
+          v-if='isEditing',
           v-model='foodItem.type',
-          :is-editing='isEditing',
-          name-attribute='type',
           :options='foodItemTypes'
         )
+        template(v-else)
+          | {{ foodItem.type }}
 
     .foodItems-id__item(v-if='isEditing')
       .foodItems-id__label
@@ -50,18 +46,27 @@ main.foodItems-id(v-if='foodItem')
 
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
+
+    input(v-if='!isEditing', v-model='rate')
+    | gあたり
+
     ul.foodItems-id__
       li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
         .foodItems-id__label
           label(:for='nutrient.nutrientId') {{ nutrient.label }}
         .foodItems-id__item-body
-          number-editor(
+          input-number(
+            v-if='isEditing',
             v-model='nutrient.value',
-            :is-editing='isEditing',
-            :id-attribute='nutrient.nutrientId',
             :unit='nutrient.unit',
             @input='onNutrientValueInput($event, index)'
           )
+          number-with-unit(
+            v-else,
+            :number='(nutrient.value * rate) / 100',
+            :unit='nutrient.unit'
+          )
+
   fd-button(label='Cancel', v-if='isEditing', @button-clicked='onCancel')
   fd-button(label='Submit', v-if='isEditing', @button-clicked='submit')
 </template>
@@ -73,10 +78,11 @@ import { getFirestoreFormat } from '@/utils/firestore'
 
 export default Vue.extend({
   name: 'PagesFoodItemsId',
-  data(): { foodItem: FoodItem | null; isEditing: boolean } {
+  data(): { foodItem: FoodItem | null; isEditing: boolean; rate: number } {
     return {
       foodItem: null,
       isEditing: false,
+      rate: 100,
     }
   },
   computed: {
@@ -172,6 +178,7 @@ export default Vue.extend({
     display: flex;
     width: 100%;
     align-items: center;
+    justify-content: space-between;
   }
 
   &__section {
@@ -190,8 +197,11 @@ export default Vue.extend({
 
   &__label {
     flex-shrink: 0;
-    padding-top: 6px;
     width: 150px;
+
+    &.isEditing {
+      padding-top: 6px;
+    }
   }
 
   &__item-body {
