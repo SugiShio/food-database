@@ -48,9 +48,7 @@ main.foodItems-id(v-if='foodItem')
             v-model='nutrient.value',
             :is-editing='isEditing',
             :id-attribute='nutrient.nutrientId',
-            :index='index',
             :unit='nutrient.unit',
-            ref='inputElement',
             @input='onNutrientValueInput($event, index)'
           )
   fd-button(label='Cancel', v-if='isEditing', @button-clicked='onCancel')
