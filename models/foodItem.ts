@@ -38,4 +38,9 @@ export class FoodItem {
       return new Nutrient(key, nutrient ? nutrient.value : 0)
     })
   }
+
+  get typeLabel() {
+    const item = TYPES.find((type) => type.value === this.type)
+    return item ? item.label : ''
+  }
 }

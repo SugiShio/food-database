@@ -32,7 +32,7 @@ main.foodItems-id(v-if='foodItem')
           :options='foodItemTypes'
         )
         template(v-else)
-          | {{ foodItem.type }}
+          | {{ foodItem.typeLabel }}
 
     .foodItems-id__item(v-if='isEditing')
       .foodItems-id__label
