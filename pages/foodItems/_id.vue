@@ -18,24 +18,29 @@ main.foodItems-id(v-if='foodItem')
       .foodItems-id__label(:class='{ isEditing }')
         label(for='description') 説明
       .foodItems-id__item-body
-        input-textarea(v-if='isEditing')
+        input-textarea(
+          v-if='isEditing',
+          :value='foodItem.description',
+          @input='onInput($event, "description")'
+        )
         template(v-else)
           | {{ foodItem.description }}
 
     .foodItems-id__item
-      .foodItems-id__label
+      .foodItems-id__label(:class='{ isEditing }')
         label(for='type') タイプ
       .foodItems-id__item-body
         input-radio(
           v-if='isEditing',
-          v-model='foodItem.type',
-          :options='foodItemTypes'
+          :options='foodItemTypes',
+          :value='foodItem.type',
+          @input='onInput($event, "type")'
         )
         template(v-else)
           | {{ foodItem.typeLabel }}
 
     .foodItems-id__item(v-if='isEditing')
-      .foodItems-id__label
+      .foodItems-id__label(:class='{ isEditing }')
         | キーワード
       .foodItems-id__item-body
         text-array-editor(
@@ -52,7 +57,7 @@ main.foodItems-id(v-if='foodItem')
 
     ul.foodItems-id__
       li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
-        .foodItems-id__label
+        .foodItems-id__label(:class='{ isEditing }')
           label(:for='nutrient.nutrientId') {{ nutrient.label }}
         .foodItems-id__item-body
           input-number(
@@ -75,13 +80,20 @@ main.foodItems-id(v-if='foodItem')
 import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
 import { getFirestoreFormat } from '@/utils/firestore'
+import { NUTRIENTS } from '~/models/nutrient/constants'
 
 export default Vue.extend({
   name: 'PagesFoodItemsId',
-  data(): { foodItem: FoodItem | null; isEditing: boolean; rate: number } {
+  data(): {
+    foodItem: FoodItem | null
+    isEditing: boolean
+    postItem: Object
+    rate: number
+  } {
     return {
       foodItem: null,
       isEditing: false,
+      postItem: {},
       rate: 100,
     }
   },
@@ -140,7 +152,8 @@ export default Vue.extend({
     },
     update() {
       const db = this.$fire.firestore
-      const data = getFirestoreFormat(this.foodItem)
+      const data = getFirestoreFormat(this.postItem)
+
       db.collection('foodItems')
         .doc(this.id)
         .update(data)
@@ -154,17 +167,31 @@ export default Vue.extend({
       this.isEditing = false
       this.fetchFoodItem()
     },
+    onInput(value: Event, key: string) {
+      this.$set(this.postItem, key, value)
+      this.foodItem[key] = value
+    },
     onNutrientValueInput(value: string, index: number) {
       const SEPARATORS = /\n|\t|,/
-      const isMultipleValues = SEPARATORS.test(value)
-      if (isMultipleValues) {
-        const values = value.split(SEPARATORS)
-        values.forEach((value, i) => {
-          if (this.foodItem?.nutrients[index + i]) {
-            this.foodItem?.nutrients[index + i].value = value
-          }
-        })
-      }
+      const values = value.split(SEPARATORS).map((v) => {
+        const number = Number(v)
+        return isNaN(number) ? '' : number
+      })
+      const changedNutrients = values.map((value, i) => {
+        return {
+          nutrientId: Object.keys(NUTRIENTS)[index + i],
+          value,
+        }
+      })
+
+      const postNutrients = this.postItem.nutrients || [
+        ...this.foodItem?.nutrients,
+      ]
+      postNutrients.splice(index, values.length, ...changedNutrients)
+      this.$set(this.postItem, 'nutrients', postNutrients)
+      this.foodItem?.nutrients.forEach((n, i) => {
+        n.value = postNutrients[i].value
+      })
     },
   },
 })
