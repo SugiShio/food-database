@@ -1,6 +1,6 @@
 <template lang="pug">
 main.foodItems-id(v-if='foodItem')
-  nuxt-link(:to={ name: "foodItems" }) Index
+  nuxt-link.foodItems-id__link(:to={ name: "foodItems" }) Index
 
   .foodItems-id__title-container
     input-text(v-if='isEditing', v-model='foodItem.name', size='large')
@@ -52,8 +52,9 @@ main.foodItems-id(v-if='foodItem')
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
 
-    input(v-if='!isEditing', v-model='rate')
-    | gあたり
+    .foodItems-id__amount(v-if='!isEditing')
+      input.foodItems-id__amount-input(v-model='rate', type='number')
+      | gあたり
 
     ul.foodItems-id__
       li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
@@ -201,8 +202,34 @@ export default Vue.extend({
 .foodItems-id {
   padding: 30px 20px;
 
+  &__link {
+    position: relative;
+    padding-left: 15px;
+    color: $color-text-weak;
+    transition: 0.3;
+
+    &:hover {
+      color: $color-main;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 3px;
+      margin: auto;
+      border-bottom: 1px solid;
+      border-left: 1px solid;
+      transform: rotate(45deg);
+      width: 6px;
+      height: 6px;
+    }
+  }
+
   &__title-container {
     display: flex;
+    margin: 30px 0;
     width: 100%;
     align-items: center;
     justify-content: space-between;
@@ -233,6 +260,21 @@ export default Vue.extend({
 
   &__item-body {
     flex-grow: 1;
+  }
+
+  &__amount {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+  }
+
+  &__amount-input {
+    margin-right: 5px;
+    padding: 5px 10px;
+    width: 100px;
+    border: 1px solid $color-grey-weak;
+    background-color: transparent;
+    border-radius: 3px;
   }
 }
 </style>

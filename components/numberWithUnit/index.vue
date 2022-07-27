@@ -34,7 +34,7 @@ export default Vue.extend({
 
   &__unit {
     margin: 0 5px;
-    color: #aec2b8;
+    color: $color-text-weak;
     font-size: 11px;
   }
 }
