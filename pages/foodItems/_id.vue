@@ -43,10 +43,10 @@ main.foodItems-id(v-if='foodItem')
       .foodItems-id__label(:class='{ isEditing }')
         | キーワード
       .foodItems-id__item-body
-        text-array-editor(
+        input-text-array(
+          v-if='isEditing',
           v-model='foodItem.keywords',
-          id-attribute='keywords',
-          :is-editing='isEditing'
+          @text-array-input='onTextArrayInput($event, "keywords")'
         )
 
   section.foodItems-id__section
@@ -194,6 +194,12 @@ export default Vue.extend({
         n.value = postNutrients[i].value
       })
     },
+    onTextArrayInput(value: Event) {
+      if (value) {
+        this.foodItem?.keywords.push(value)
+        this.$set(this.postItem, 'keywords', this.foodItem?.keywords)
+      }
+    },
   },
 })
 </script>
@@ -260,6 +266,7 @@ export default Vue.extend({
 
   &__item-body {
     flex-grow: 1;
+    overflow: hidden;
   }
 
   &__amount {
