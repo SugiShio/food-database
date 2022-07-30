@@ -7,7 +7,11 @@
     @end-editing='onEndEditing($event, index)',
     @remove-clicked='onRemoveClicked(index)'
   )
-  input.input-text-array__input(v-model='localValue', @change='onChange')
+  input.input-text-array__input(
+    v-model='localValue',
+    @change='onChange',
+    @keydown.tab.prevent='onKeydownTab'
+  )
 </template>
 
 <script lang="ts">
@@ -26,13 +30,16 @@ export default Vue.extend({
     }
   },
   methods: {
-    onChange($event: Event) {
-      const value = ($event.target as HTMLInputElement).value
-      this.$emit('text-array-input', { value })
+    onChange() {
+      this.$emit('text-array-input', { value: this.localValue })
       this.localValue = ''
     },
     onEndEditing(value: string, index: number) {
       this.$emit('text-array-input', { value, index })
+    },
+    onKeydownTab() {
+      this.$emit('text-array-input', { value: this.localValue })
+      this.localValue = ''
     },
     onRemoveClicked(index: number) {
       this.$emit('text-array-input', { value: '', index })
