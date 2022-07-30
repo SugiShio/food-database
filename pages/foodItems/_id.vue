@@ -80,6 +80,7 @@ main.foodItems-id(v-if='foodItem')
 <script lang="ts">
 import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
+import { Nutrient } from '@/models/nutrient'
 import { getFirestoreFormat } from '@/utils/firestore'
 import { NUTRIENTS } from '~/models/nutrient/constants'
 
@@ -88,7 +89,14 @@ export default Vue.extend({
   data(): {
     foodItem: FoodItem | null
     isEditing: boolean
-    postItem: Object
+    postItem: {
+      name?: string
+      description?: string
+      images?: string[]
+      keywords?: string[]
+      nutrients?: Nutrient[]
+      type?: string
+    }
     rate: number
   } {
     return {
@@ -105,10 +113,10 @@ export default Vue.extend({
     id() {
       return this.$route.params.id
     },
-    isEditable() {
+    isEditable(): boolean {
       return this.$store.state.isSignin && !this.isEditing
     },
-    isNew() {
+    isNew(): boolean {
       return this.id === 'new'
     },
   },
