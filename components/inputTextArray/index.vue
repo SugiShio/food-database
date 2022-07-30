@@ -1,6 +1,12 @@
 <template lang="pug">
 .input-text-array
-  input-text-array-input(v-for='(v, index) in value', :value='v', :key='index')
+  input-text-array-input(
+    v-for='(v, index) in value',
+    :value='v',
+    :key='index',
+    @end-editing='onEndEditing($event, index)',
+    @remove-clicked='onRemoveClicked(index)'
+  )
   input.input-text-array__input(v-model='localValue', @change='onChange')
 </template>
 
@@ -22,9 +28,14 @@ export default Vue.extend({
   methods: {
     onChange($event: Event) {
       const value = ($event.target as HTMLInputElement).value
-
-      this.$emit('text-array-input', value)
+      this.$emit('text-array-input', { value })
       this.localValue = ''
+    },
+    onEndEditing(value: string, index: number) {
+      this.$emit('text-array-input', { value, index })
+    },
+    onRemoveClicked(index: number) {
+      this.$emit('text-array-input', { value: '', index })
     },
   },
 })

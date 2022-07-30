@@ -1,12 +1,17 @@
 <template lang="pug">
-component.input-text-array-input(
-  :class='htmlTag',
-  :is='htmlTag',
-  :value='value',
-  v-text='value',
-  @blur='endEditing',
-  @click='toggleEditing'
-)
+span.input-text-array-input
+  input.input-text-array-input__input(
+    v-if='isEditing',
+    :value='value',
+    @blur='endEditing',
+    ref='input'
+  )
+  span.input-text-array-input__span(v-else, @click='startEditing')
+    | {{ value }}
+    img.input-text-array-input__remove(
+      src='/images/cross.svg',
+      @click='onRemoveClicked'
+    )
 </template>
 
 <script lang="ts">
@@ -22,29 +27,20 @@ export default Vue.extend({
   props: {
     value: { type: String, default: '' },
   },
-  computed: {
-    htmlTag() {
-      return this.isEditing ? 'input' : 'span'
-    },
-  },
   methods: {
-    onInput($event: Event) {
+    endEditing($event: Event) {
       const value = ($event.target as HTMLInputElement).value
-      this.$emit('input', value)
-    },
-    endEditing() {
+      this.$emit('end-editing', value)
       this.isEditing = false
-      this.$emit('end-editing', this.$el.value)
+    },
+    onRemoveClicked() {
+      this.$emit('remove-clicked')
     },
     startEditing() {
       this.isEditing = true
-      this.$emit('start-editing')
       this.$nextTick(() => {
-        this.$el.focus()
+        ;(this.$refs.input as HTMLInputElement).focus()
       })
-    },
-    toggleEditing() {
-      this.isEditing ? this.endEditing() : this.startEditing()
     },
   },
 })
@@ -53,19 +49,41 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .input-text-array-input {
   align-self: center;
-  border-radius: 3px;
-  padding: 3px 5px;
-  border: none;
 
-  &.span {
-    padding-right: 30px;
+  &__span,
+  &__input {
+    border-radius: 3px;
+    padding: 3px 5px;
+    border: none;
+  }
+
+  &__span {
+    position: relative;
+    display: inherit;
+    padding-right: 25px;
     background-color: $color-main;
     color: #fff;
     word-break: keep-all;
   }
 
-  &.input {
+  &__input {
     border: 1px solid $color-text-weak;
+  }
+
+  &__remove {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 5px;
+    margin: auto;
+    width: 13px;
+    height: 13px;
+    transition: opacity 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.6;
+    }
   }
 }
 </style>
