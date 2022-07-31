@@ -73,8 +73,11 @@ main.foodItems-id(v-if='foodItem')
             :unit='nutrient.unit'
           )
 
-  fd-button(label='Cancel', v-if='isEditing', @button-clicked='onCancel')
-  fd-button(label='Submit', v-if='isEditing', @button-clicked='submit')
+  ul.foodItems-id__buttons(v-if='isEditing')
+    li.foodItems-id__button
+      fd-button(label='Cancel', type='secondary', @button-clicked='onCancel')
+    li.foodItems-id__button
+      fd-button(label='Submit', @button-clicked='submit')
 </template>
 
 <script lang="ts">
@@ -221,7 +224,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .foodItems-id {
-  padding: 30px 20px;
+  padding: 30px 20px 50px;
 
   &__link {
     position: relative;
@@ -282,6 +285,7 @@ export default Vue.extend({
   &__item-body {
     flex-grow: 1;
     overflow: hidden;
+    white-space: pre-wrap;
   }
 
   &__amount {
@@ -297,6 +301,23 @@ export default Vue.extend({
     border: 1px solid $color-grey-weak;
     background-color: transparent;
     border-radius: 3px;
+  }
+
+  &__buttons {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    padding: 10px 0;
+    background-color: #fff;
+    border-top: 1px solid $color-grey;
+  }
+
+  &__button + &__button {
+    margin: 0 30px;
   }
 }
 </style>

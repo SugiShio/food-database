@@ -59,13 +59,9 @@ export default Vue.extend({
   overflow: scroll;
 
   &__input {
+    padding: 0 3px;
     flex-grow: 1;
     border: none;
-  }
-
-  span,
-  input {
-    margin: 0 1px;
   }
 }
 </style>

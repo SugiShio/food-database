@@ -50,6 +50,10 @@ export default Vue.extend({
 .input-text-array-input {
   align-self: center;
 
+  & + & {
+    margin-left: 3px;
+  }
+
   &__span,
   &__input {
     border-radius: 3px;
