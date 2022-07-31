@@ -3,7 +3,7 @@
   input-text-array-input(
     v-for='(v, index) in value',
     :value='v',
-    :key='index',
+    :key='v',
     @end-editing='onEndEditing($event, index)',
     @remove-clicked='onRemoveClicked(index)'
   )
