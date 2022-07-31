@@ -53,8 +53,8 @@ export default Vue.extend({
         this.localValue = ''
       }
     },
-    onKeydownDelete() {
-      if (this.localValue.length) return
+    onKeydownDelete($event: KeyboardEvent) {
+      if (this.localValue.length || $event.isComposing) return
       this.$emit('text-array-input', { index: this.value.length - 1 })
     },
     onKeydownTab() {
