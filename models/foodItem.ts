@@ -4,6 +4,7 @@ import { NUTRIENTS } from '@/models/nutrient/constants'
 import { RadioOption } from '@/models/radioOption'
 
 export interface FoodItem {
+  [key: string]: string | string[] | Nutrient[]
   id: string
   name: string
   description: string

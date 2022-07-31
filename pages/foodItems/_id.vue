@@ -179,7 +179,8 @@ export default Vue.extend({
       this.isEditing = false
       this.fetchFoodItem()
     },
-    onInput(value: Event, key: string) {
+    onInput(value: string, key: string) {
+      if (!this.foodItem) return
       this.$set(this.postItem, key, value)
       this.foodItem[key] = value
     },
@@ -197,7 +198,7 @@ export default Vue.extend({
       })
 
       const postNutrients = this.postItem.nutrients || [
-        ...this.foodItem?.nutrients,
+        ...(this.foodItem?.nutrients || []),
       ]
       postNutrients.splice(index, values.length, ...changedNutrients)
       this.$set(this.postItem, 'nutrients', postNutrients)
@@ -209,12 +210,16 @@ export default Vue.extend({
       if (!this.foodItem || !this.foodItem[key]) return
       if (payload.index > -1) {
         if (payload.value) {
-          this.foodItem[key].splice(payload.index, 1, payload.value)
+          ;(this.foodItem[key] as string[]).splice(
+            payload.index,
+            1,
+            payload.value
+          )
         } else {
-          this.foodItem[key].splice(payload.index, 1)
+          ;(this.foodItem[key] as string[]).splice(payload.index, 1)
         }
       } else if (payload.value) {
-        this.foodItem[key].push(payload.value)
+        ;(this.foodItem[key] as string[]).push(payload.value)
       }
       this.$set(this.postItem, key, this.foodItem?.keywords)
     },
