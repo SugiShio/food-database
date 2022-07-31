@@ -9,7 +9,9 @@
   )
   input.input-text-array__input(
     v-model='localValue',
+    @input='onInput',
     @change='onChange',
+    @keydown.delete='onKeydownDelete',
     @keydown.tab.prevent='onKeydownTab'
   )
 </template>
@@ -17,6 +19,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import InputTextArrayInput from './input.vue'
+
+const REGEX_SEPERATOR = /[　,]/
 
 export default Vue.extend({
   name: 'InputTextArray',
@@ -31,11 +35,27 @@ export default Vue.extend({
   },
   methods: {
     onChange() {
-      this.$emit('text-array-input', { value: this.localValue })
+      const values = this.localValue.split(REGEX_SEPERATOR)
+      values.forEach((value) => {
+        this.$emit('text-array-input', { value })
+      })
+
       this.localValue = ''
     },
     onEndEditing(value: string, index: number) {
       this.$emit('text-array-input', { value, index })
+    },
+    onInput() {
+      const lastCaractor = this.localValue
+      if (REGEX_SEPERATOR.test(lastCaractor)) {
+        const value = this.localValue.replace(REGEX_SEPERATOR, '')
+        this.$emit('text-array-input', { value })
+        this.localValue = ''
+      }
+    },
+    onKeydownDelete() {
+      if (this.localValue.length) return
+      this.$emit('text-array-input', { index: this.value.length - 1 })
     },
     onKeydownTab() {
       this.$emit('text-array-input', { value: this.localValue })
