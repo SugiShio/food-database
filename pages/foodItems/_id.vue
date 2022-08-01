@@ -60,18 +60,24 @@ main.foodItems-id(v-if='foodItem')
       li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
         .foodItems-id__label(:class='{ isEditing }')
           label(:for='nutrient.nutrientId') {{ nutrient.label }}
-        .foodItems-id__item-body
+        .foodItems-id__item-body(v-if='isEditing')
           input-number(
-            v-if='isEditing',
             v-model='nutrient.value',
             :unit='nutrient.unit',
             @input='onNutrientValueInput($event, index)'
           )
-          number-with-unit(
-            v-else,
-            :number='(nutrient.value * rate) / 100',
-            :unit='nutrient.unit'
-          )
+
+        .foodItems-id__item-body(v-else)
+          .foodItems-id__item-number
+            number-with-unit(
+              :number='(nutrient.value * rate) / 100',
+              :unit='nutrient.unit'
+            )
+          .foodItems-id__item-bar
+            graph-bar(
+              :max='nutrientBasis(nutrient)',
+              :values='[nutrient.value]'
+            )
 
   ul.foodItems-id__buttons(v-if='isEditing')
     li.foodItems-id__button
@@ -85,7 +91,8 @@ import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
 import { Nutrient } from '@/models/nutrient'
 import { getFirestoreFormat } from '@/utils/firestore'
-import { NUTRIENTS } from '~/models/nutrient/constants'
+import { NUTRIENTS } from '@/models/nutrient/constants'
+import { NUTRIENT_BASIS } from '@/models/nutrientBasis/constants'
 
 export default Vue.extend({
   name: 'PagesFoodItemsId',
@@ -223,6 +230,12 @@ export default Vue.extend({
       }
       this.$set(this.postItem, key, this.foodItem?.keywords)
     },
+    nutrientBasis(nutrient: Nutrient) {
+      const nutrientBasis = NUTRIENT_BASIS.find(
+        (n) => n.nutrientID === nutrient.nutrientId
+      )
+      return nutrientBasis ? nutrientBasis.DietaryReferenceIntake : 100
+    },
   },
 })
 </script>
@@ -288,11 +301,20 @@ export default Vue.extend({
   }
 
   &__item-body {
+    display: flex;
+    align-items: center;
     flex-grow: 1;
     overflow: hidden;
     white-space: pre-wrap;
   }
 
+  &__item-number {
+    width: 100px;
+    flex-shrink: 0;
+  }
+  &__item-bar {
+    flex-grow: 1;
+  }
   &__amount {
     margin: 15px 0;
     display: flex;
