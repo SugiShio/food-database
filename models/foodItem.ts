@@ -25,7 +25,7 @@ export class FoodItem {
     this.id = id || ''
     this.name = foodItem ? foodItem.name : ''
     this.description = foodItem ? foodItem.description : ''
-    this.keywords = foodItem ? foodItem.keywords : []
+    this.keywords = foodItem ? foodItem.keywords || [] : []
     this.images = foodItem ? foodItem.images : []
     this.nutrients = this.setNutrients(foodItem ? foodItem.nutrients : [])
     this.type = foodItem ? foodItem.type : ''
