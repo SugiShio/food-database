@@ -3,7 +3,12 @@ main.foodItems-id(v-if='foodItem')
   nuxt-link.foodItems-id__link(:to={ name: "foodItems" }) Index
 
   .foodItems-id__title-container
-    input-text(v-if='isEditing', v-model='foodItem.name', size='large')
+    input-text(
+      v-if='isEditing',
+      v-model='foodItem.name',
+      size='large',
+      @input='onInput($event, "name")'
+    )
     fd-title(v-else, :text='foodItem.name') {{ foodItem.name }}
     fd-button(
       v-if='isEditable',
@@ -90,9 +95,9 @@ main.foodItems-id(v-if='foodItem')
 import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
 import { Nutrient } from '@/models/nutrient'
-import { getFirestoreFormat } from '@/utils/firestore'
 import { NUTRIENTS } from '@/models/nutrient/constants'
 import { NUTRIENT_BASIS } from '@/models/nutrientBasis/constants'
+import { FirebaseHelper } from '@/plugins/firebase'
 
 export default Vue.extend({
   name: 'PagesFoodItemsId',
@@ -140,13 +145,11 @@ export default Vue.extend({
         this.isEditing = true
         this.foodItem = new FoodItem()
       } else {
-        db.collection('foodItems')
-          .doc(this.id)
-          .get()
-          .then((doc) => {
-            const data = doc.data()
-            if (data) this.foodItem = new FoodItem(this.id, data)
-          })
+        try {
+          const doc = await FirebaseHelper.fetchItem('foodItems', this.id)
+          const data = doc.data()
+          this.foodItem = new FoodItem(this.id, data)
+        } catch (_) {}
       }
     },
     submit() {
@@ -157,30 +160,23 @@ export default Vue.extend({
         this.update()
       }
     },
-    create() {
-      const db = this.$fire.firestore
-      const data = getFirestoreFormat(this.foodItem)
-      db.collection('foodItems')
-        .add(data)
-        .then((doc) => {
-          this.$router.push({
-            name: 'foodItems-id',
-            params: { id: doc.id },
-          })
+    async create() {
+      try {
+        const doc = await FirebaseHelper.create('foodItems', this.postItem)
+        this.$router.push({
+          name: 'foodItems-id',
+          params: { id: doc.id },
         })
+      } catch (_) {}
     },
     update() {
-      const db = this.$fire.firestore
-      const data = getFirestoreFormat(this.postItem)
-
-      db.collection('foodItems')
-        .doc(this.id)
-        .update(data)
-        .then(() => {
-          console.log('Item successfully updated! 🍅')
-          this.fetchFoodItem()
-          this.isEditing = false
-        })
+      if (!this.foodItem) return
+      try {
+        FirebaseHelper.update('foodItems', this.foodItem?.id, this.postItem)
+        console.log('Item successfully updated! 🍅')
+        this.fetchFoodItem()
+        this.isEditing = false
+      } catch (_) {}
     },
     onCancel() {
       this.isEditing = false

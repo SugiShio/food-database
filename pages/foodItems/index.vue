@@ -8,6 +8,7 @@ ul
 <script lang="ts">
 import Vue from 'vue'
 import { FoodItem } from '@/models/foodItem'
+import { FirebaseHelper } from '@/plugins/firebase'
 
 export default Vue.extend({
   name: 'PagesFoodItemsIndex',
@@ -17,16 +18,12 @@ export default Vue.extend({
     }
   },
   async created() {
-    const db = this.$fire.firestore
-
-    db.collection('foodItems')
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const documentData = doc.data()
-          this.foodItems.push(new FoodItem(doc.id, documentData))
-        })
+    try {
+      const querySnapshot = await FirebaseHelper.fetchIndex('foodItems')
+      querySnapshot.forEach((doc) => {
+        this.foodItems.push(new FoodItem(doc.id, doc.data()))
       })
+    } catch (_) {}
   },
 })
 </script>
