@@ -209,20 +209,19 @@ export default Vue.extend({
         n.value = postNutrients[i].value
       })
     },
-    onTextArrayInput(payload: { value: string; index: -1 }, key: string) {
+    onTextArrayInput(
+      { value, index = -1 }: { value: string; index?: number },
+      key: string
+    ) {
       if (!this.foodItem || !this.foodItem[key]) return
-      if (payload.index > -1) {
-        if (payload.value) {
-          ;(this.foodItem[key] as string[]).splice(
-            payload.index,
-            1,
-            payload.value
-          )
+      if (index > -1) {
+        if (value) {
+          ;(this.foodItem[key] as string[]).splice(index, 1, value)
         } else {
-          ;(this.foodItem[key] as string[]).splice(payload.index, 1)
+          ;(this.foodItem[key] as string[]).splice(index, 1)
         }
-      } else if (payload.value) {
-        ;(this.foodItem[key] as string[]).push(payload.value)
+      } else if (value) {
+        ;(this.foodItem[key] as string[]).push(value)
       }
       this.$set(this.postItem, key, this.foodItem?.keywords)
     },

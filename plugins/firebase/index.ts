@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, FirebaseOptions } from 'firebase/app'
 import {
   addDoc,
   collection,
@@ -9,7 +9,7 @@ import {
   updateDoc,
 } from 'firebase/firestore'
 
-const app = initializeApp(process.env.firebaseConfig)
+const app = initializeApp(process.env.firebaseConfig as FirebaseOptions)
 const db = getFirestore(app)
 
 export const getFirestoreFormat = (object: any) => {
