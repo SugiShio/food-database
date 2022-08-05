@@ -21,7 +21,7 @@ main.recipes-id(v-if='recipe')
   section.recipes-id__section
     h2.recipes-id__title 基本情報
     .recipes-id__item
-      .recipes-id__label(:class='{ isEditing }')
+      .recipes-id__item-label(:class='{ isEditing }')
         label(for='description') 説明
       .recipes-id__item-body
         input-textarea(
@@ -165,11 +165,8 @@ export default Vue.extend({
   }
 
   &__title-container {
-    display: flex;
+    @extend .title-container;
     margin: 30px 0;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
   }
 
   &__section {
@@ -182,47 +179,16 @@ export default Vue.extend({
   }
 
   &__item {
+    @extend .list__item;
     margin: 15px 0;
-    display: flex;
   }
 
-  &__label {
-    flex-shrink: 0;
-    width: 150px;
-
-    &.isEditing {
-      padding-top: 6px;
-    }
+  &__item-label {
+    @extend .list__item-label;
   }
 
   &__item-body {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    overflow: hidden;
-    white-space: pre-wrap;
-  }
-
-  &__item-number {
-    width: 100px;
-    flex-shrink: 0;
-  }
-  &__item-bar {
-    flex-grow: 1;
-  }
-  &__amount {
-    margin: 15px 0;
-    display: flex;
-    align-items: center;
-  }
-
-  &__amount-input {
-    margin-right: 5px;
-    padding: 5px 10px;
-    width: 100px;
-    border: 1px solid $color-grey-weak;
-    background-color: transparent;
-    border-radius: 3px;
+    @extend .list__item-body;
   }
 
   &__buttons {

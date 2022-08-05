@@ -20,7 +20,7 @@ main.foodItems-id(v-if='foodItem')
   section.foodItems-id__section
     h2.foodItems-id__title 基本情報
     .foodItems-id__item
-      .foodItems-id__label(:class='{ isEditing }')
+      .foodItems-id__item-label(:class='{ isEditing }')
         label(for='description') 説明
       .foodItems-id__item-body
         input-textarea(
@@ -32,7 +32,7 @@ main.foodItems-id(v-if='foodItem')
           | {{ foodItem.description }}
 
     .foodItems-id__item
-      .foodItems-id__label(:class='{ isEditing }')
+      .foodItems-id__item-label(:class='{ isEditing }')
         label(for='type') タイプ
       .foodItems-id__item-body
         input-radio(
@@ -45,7 +45,7 @@ main.foodItems-id(v-if='foodItem')
           | {{ foodItem.typeLabel }}
 
     .foodItems-id__item(v-if='isEditing')
-      .foodItems-id__label(:class='{ isEditing }')
+      .foodItems-id__item-label(:class='{ isEditing }')
         | キーワード
       .foodItems-id__item-body
         input-text-array(
@@ -63,7 +63,7 @@ main.foodItems-id(v-if='foodItem')
 
     ul.foodItems-id__
       li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
-        .foodItems-id__label(:class='{ isEditing }')
+        .foodItems-id__item-label(:class='{ isEditing }')
           label(:for='nutrient.nutrientId') {{ nutrient.label }}
         .foodItems-id__item-body(v-if='isEditing')
           input-number(
@@ -266,11 +266,8 @@ export default Vue.extend({
   }
 
   &__title-container {
-    display: flex;
+    @extend .title-container;
     margin: 30px 0;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
   }
 
   &__section {
@@ -283,25 +280,16 @@ export default Vue.extend({
   }
 
   &__item {
+    @extend .list__item;
     margin: 15px 0;
-    display: flex;
   }
 
-  &__label {
-    flex-shrink: 0;
-    width: 150px;
-
-    &.isEditing {
-      padding-top: 6px;
-    }
+  &__item-label {
+    @extend .list__item-label;
   }
 
   &__item-body {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    overflow: hidden;
-    white-space: pre-wrap;
+    @extend .list__item-body;
   }
 
   &__item-number {
