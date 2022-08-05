@@ -37,15 +37,16 @@ main.recipes-id(v-if='recipe')
     ul
       li(v-for='(item, index) in recipe.items')
         template(v-if='isEditing')
+          | {{ recipeFoodItems[index].name }}
           input-number(
             v-model='item.amount',
             unit='g',
             @input='onItemAmountInput(index)'
           )
         template(v-else)
-          | {{ item.id }} ({{ item.amount }}g)
+          | {{ recipeFoodItems[index].name }} ({{ item.amount }}g)
 
-  section.recipes-id__section
+  section.recipes-id__section(v-if='isEditing')
     h2.recipes-id__title 食材
     ul
       li(v-for='foodItem in foodItems')
@@ -70,10 +71,9 @@ export default Vue.extend({
   name: 'PagesrecipesId',
   data(): {
     foodItems: FoodItem[]
-    itemNames: string[]
     isEditing: boolean
     recipe: Recipe | null
-
+    recipeFoodItems: FoodItem[]
     postItem: {
       id?: string
       name?: string
@@ -83,9 +83,9 @@ export default Vue.extend({
   } {
     return {
       foodItems: [],
-      itemNames: [],
-      isEditing: true,
+      isEditing: false,
       recipe: null,
+      recipeFoodItems: [],
       postItem: {},
     }
   },
@@ -100,16 +100,23 @@ export default Vue.extend({
       return this.id === 'new'
     },
   },
-  created() {
-    this.fetchRecipe()
-    this.fetchFoodItems()
+  async created() {
+    await this.initialize()
+    await this.fetchFoodItems()
   },
   methods: {
-    addItem(item: FoodItem, amount = 100) {
+    async initialize() {
+      await this.fetchRecipe()
+      await this.fetchRecipeFoodItems()
+    },
+    async addItem(item: FoodItem, amount = 100) {
       if (!this.recipe) return
-      this.recipe.addItem(item, amount)
-      this.itemNames.push(item.name)
-      this.$set(this.postItem, 'items', this.recipe.items)
+      try {
+        const foodItem = await this.getFoodItem(item.id)
+        this.recipeFoodItems.push(new FoodItem(item.id, foodItem))
+        this.recipe.addItem(item, amount)
+        this.$set(this.postItem, 'items', this.recipe.items)
+      } catch (_) {}
     },
     async fetchFoodItems() {
       try {
@@ -128,8 +135,25 @@ export default Vue.extend({
           const doc = await FirebaseHelper.fetchItem('recipes', this.id)
           const data = doc.data()
           this.recipe = new Recipe(this.id, data)
+          this.recipeFoodItems = Array(this.recipe?.items.length).fill({})
         } catch (_) {}
       }
+    },
+    async getFoodItem(id: string) {
+      try {
+        const doc = await FirebaseHelper.fetchItem('foodItems', id)
+        const data = doc.data()
+        return new FoodItem(this.id, data)
+      } catch (_) {}
+    },
+    async fetchRecipeFoodItems() {
+      this.recipe?.items.forEach(async (item, index) => {
+        try {
+          const doc = await FirebaseHelper.fetchItem('foodItems', item.id)
+          const data = doc.data()
+          this.recipeFoodItems.splice(index, 1, new FoodItem(this.id, data))
+        } catch (_) {}
+      })
     },
     submit() {
       if (!this.recipe) return
@@ -155,13 +179,13 @@ export default Vue.extend({
       try {
         FirebaseHelper.update('recipes', this.recipe?.id, this.postItem)
         console.log('Item successfully updated! 🍅')
-        this.fetchRecipe()
+        this.initialize()
         this.isEditing = false
       } catch (_) {}
     },
     onCancel() {
       this.isEditing = false
-      this.fetchRecipe()
+      this.initialize()
     },
     onInput(value: string, key: string) {
       if (!this.recipe) return
