@@ -34,8 +34,24 @@ main.recipes-id(v-if='recipe')
 
   section.recipes-id__section
     h2.recipes-id__title 材料
-    input(v-model='searchWord')
-    button(type='button', @click='searchItem') search
+    ul
+      li(v-for='(item, index) in recipe.items')
+        template(v-if='isEditing')
+          input-number(
+            v-model='item.amount',
+            unit='g',
+            @input='onItemAmountInput(index)'
+          )
+        template(v-else)
+          | {{ item.id }} ({{ item.amount }}g)
+
+  section.recipes-id__section
+    h2.recipes-id__title 食材
+    ul
+      li(v-for='foodItem in foodItems')
+        div
+          | {{ foodItem.name }}
+          button(type='button', @click='addItem(foodItem)') +
 
   ul.recipes-id__buttons(v-if='isEditing')
     li.recipes-id__button
@@ -46,21 +62,30 @@ main.recipes-id(v-if='recipe')
 
 <script lang="ts">
 import Vue from 'vue'
-import { Recipe } from '@/models/recipe'
+import { Recipe, RecipeItem } from '@/models/recipe'
 import { FirebaseHelper } from '@/plugins/firebase'
+import { FoodItem } from '~/models/foodItem'
 
 export default Vue.extend({
   name: 'PagesrecipesId',
   data(): {
+    foodItems: FoodItem[]
+    itemNames: string[]
     isEditing: boolean
     recipe: Recipe | null
-    searchWord: string
-    postItem: {}
+
+    postItem: {
+      id?: string
+      name?: string
+      description?: string
+      items?: RecipeItem[]
+    }
   } {
     return {
-      isEditing: false,
+      foodItems: [],
+      itemNames: [],
+      isEditing: true,
       recipe: null,
-      searchWord: '',
       postItem: {},
     }
   },
@@ -77,8 +102,23 @@ export default Vue.extend({
   },
   created() {
     this.fetchRecipe()
+    this.fetchFoodItems()
   },
   methods: {
+    addItem(item: FoodItem, amount = 100) {
+      if (!this.recipe) return
+      this.recipe.addItem(item, amount)
+      this.itemNames.push(item.name)
+      this.$set(this.postItem, 'items', this.recipe.items)
+    },
+    async fetchFoodItems() {
+      try {
+        const querySnapshot = await FirebaseHelper.fetchIndex('foodItems')
+        querySnapshot.forEach((doc) => {
+          this.foodItems.push(new FoodItem(doc.id, doc.data()))
+        })
+      } catch (_) {}
+    },
     async fetchRecipe() {
       if (this.isNew) {
         this.isEditing = true
@@ -110,9 +150,6 @@ export default Vue.extend({
         })
       } catch (_) {}
     },
-    searchItem() {
-      console.log(this.searchWord)
-    },
     async update() {
       if (!this.recipe) return
       try {
@@ -130,6 +167,12 @@ export default Vue.extend({
       if (!this.recipe) return
       this.$set(this.postItem, key, value)
       this.recipe[key] = value
+    },
+    onItemAmountInput(index: number) {
+      if (!this.recipe) return
+      const items = this.recipe.items
+      items.splice(index, 1, this.recipe.items[index])
+      this.$set(this.postItem, 'items', items)
     },
   },
 })
