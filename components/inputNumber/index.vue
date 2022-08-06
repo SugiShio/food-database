@@ -4,7 +4,9 @@
     type='number',
     :value='value',
     :rows=1,
-    @input='onInput'
+    @focus='onFocus',
+    @input='onInput',
+    @keydown.enter.prevent
   )
   span.input-number__unit {{ unit }}
 </template>
@@ -19,6 +21,9 @@ export default Vue.extend({
     value: { type: [String, Number], default: 0 },
   },
   methods: {
+    onFocus($event: Event) {
+      ;($event.target as HTMLInputElement).select()
+    },
     onInput($event: Event) {
       const value = ($event.target as HTMLInputElement).value
       this.$emit('input', value)
