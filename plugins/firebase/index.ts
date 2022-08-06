@@ -73,7 +73,6 @@ export class FirebaseHelper {
 
   static async update(collectionName: string, docId: string, postData: object) {
     const data = getFirestoreFormat(postData)
-    console.log('眠い', postData)
 
     try {
       const docRef = doc(db, collectionName, docId)

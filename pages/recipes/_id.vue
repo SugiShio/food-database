@@ -166,7 +166,6 @@ export default Vue.extend({
     async create() {
       try {
         const doc = await FirebaseHelper.create('recipes', this.postItem)
-        console.log(doc, this.postItem)
 
         this.$router.push({
           name: 'recipes-id',
@@ -258,6 +257,10 @@ export default Vue.extend({
     @extend .list__item-body;
   }
 
+  &__item {
+    display: flex;
+  }
+
   &__buttons {
     position: fixed;
     bottom: 0;
@@ -272,7 +275,7 @@ export default Vue.extend({
   }
 
   &__button + &__button {
-    margin: 0 30px;
+    margin-left: 30px;
   }
 }
 </style>

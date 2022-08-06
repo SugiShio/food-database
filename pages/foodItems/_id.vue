@@ -61,7 +61,7 @@ main.foodItems-id(v-if='foodItem')
       input.foodItems-id__amount-input(v-model='rate', type='number')
       | gあたり
 
-    ul.foodItems-id__
+    ul
       li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
         .foodItems-id__item-label(:class='{ isEditing }')
           label(:for='nutrient.nutrientId') {{ nutrient.label }}
@@ -327,7 +327,7 @@ export default Vue.extend({
   }
 
   &__button + &__button {
-    margin: 0 30px;
+    margin-left: 30px;
   }
 }
 </style>
