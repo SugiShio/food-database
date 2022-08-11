@@ -227,7 +227,7 @@ export default Vue.extend({
     },
     nutrientBasis(nutrient: Nutrient) {
       const nutrientBasis = NUTRIENT_BASIS.find(
-        (n) => n.nutrientID === nutrient.nutrientId
+        (n) => n.nutrientId === nutrient.nutrientId
       )
       return nutrientBasis ? nutrientBasis.DietaryReferenceIntake : 100
     },
@@ -295,9 +295,11 @@ export default Vue.extend({
     width: 100px;
     flex-shrink: 0;
   }
+
   &__item-bar {
     flex-grow: 1;
   }
+
   &__amount {
     margin: 15px 0;
     display: flex;

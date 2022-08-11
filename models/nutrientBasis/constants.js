@@ -5,123 +5,123 @@
 
 export const NUTRIENT_BASIS = [
   {
-    nutrientID: 'calorie',
+    nutrientId: 'calorie',
     DietaryReferenceIntake: 2050,
   },
   {
-    nutrientID: 'protein',
+    nutrientId: 'protein',
     DietaryReferenceIntake: 50,
   },
   {
-    nutrientID: 'fat',
+    nutrientId: 'fat',
     DietaryReferenceIntake: 56.9,
   },
   {
-    nutrientID: 'carbohydrate',
+    nutrientId: 'carbohydrate',
     DietaryReferenceIntake: 294.7,
   },
   {
-    nutrientID: 'dietaryFiber',
+    nutrientId: 'dietaryFiber',
     DietaryReferenceIntake: 18,
   },
   {
-    nutrientID: 'salt',
+    nutrientId: 'salt',
     DietaryReferenceIntake: 6.5,
   },
   {
-    nutrientID: 'vitaminA',
+    nutrientId: 'vitaminA',
     DietaryReferenceIntake: 700,
   },
   {
-    nutrientID: 'vitaminB1',
+    nutrientId: 'vitaminB1',
     DietaryReferenceIntake: 1.1,
   },
   {
-    nutrientID: 'vitaminB2',
+    nutrientId: 'vitaminB2',
     DietaryReferenceIntake: 1.2,
   },
   {
-    nutrientID: 'niacin',
+    nutrientId: 'niacin',
     DietaryReferenceIntake: 12,
   },
   {
-    nutrientID: 'vitaminB6',
+    nutrientId: 'vitaminB6',
     DietaryReferenceIntake: 1.1,
   },
   {
-    nutrientID: 'vitaminC',
+    nutrientId: 'vitaminC',
     DietaryReferenceIntake: 100,
   },
   {
-    nutrientID: 'vitaminD',
+    nutrientId: 'vitaminD',
     DietaryReferenceIntake: 8.5,
   },
   {
-    nutrientID: 'vitaminE',
+    nutrientId: 'vitaminE',
     DietaryReferenceIntake: 5.5,
   },
   {
-    nutrientID: 'folicAcid',
+    nutrientId: 'folicAcid',
     DietaryReferenceIntake: 240,
   },
   {
-    nutrientID: 'pantothenicAcid',
+    nutrientId: 'pantothenicAcid',
     DietaryReferenceIntake: 5,
   },
   {
-    nutrientID: 'biotin',
+    nutrientId: 'biotin',
     DietaryReferenceIntake: 0,
   },
   {
-    nutrientID: 'sodium',
+    nutrientId: 'sodium',
     DietaryReferenceIntake: 100,
   },
   {
-    nutrientID: 'potassium',
+    nutrientId: 'potassium',
     DietaryReferenceIntake: 2000,
   },
   {
-    nutrientID: 'calcium',
+    nutrientId: 'calcium',
     DietaryReferenceIntake: 650,
   },
   {
-    nutrientID: 'magnesium',
+    nutrientId: 'magnesium',
     DietaryReferenceIntake: 290,
   },
   {
-    nutrientID: 'phosphorous',
+    nutrientId: 'phosphorous',
     DietaryReferenceIntake: 800,
   },
   {
-    nutrientID: 'iron',
+    nutrientId: 'iron',
     DietaryReferenceIntake: 10.5,
   },
   {
-    nutrientID: 'zinc',
+    nutrientId: 'zinc',
     DietaryReferenceIntake: 8,
   },
   {
-    nutrientID: 'copper',
+    nutrientId: 'copper',
     DietaryReferenceIntake: 0.7,
   },
   {
-    nutrientID: 'manganese',
+    nutrientId: 'manganese',
     DietaryReferenceIntake: 3.5,
   },
   {
-    nutrientID: 'selenium',
+    nutrientId: 'selenium',
     DietaryReferenceIntake: 0,
   },
   {
-    nutrientID: 'chromium',
+    nutrientId: 'chromium',
     DietaryReferenceIntake: 0,
   },
   {
-    nutrientID: 'molybdenum',
+    nutrientId: 'molybdenum',
     DietaryReferenceIntake: 0,
   },
   {
-    nutrientID: 'iodine',
+    nutrientId: 'iodine',
     DietaryReferenceIntake: 0,
   },
   {},

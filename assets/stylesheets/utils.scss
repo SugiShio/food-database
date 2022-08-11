@@ -1,0 +1,29 @@
+.title-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list {
+  &__item {
+    display: flex;
+  }
+
+  &__item-label {
+    flex-shrink: 0;
+    width: 150px;
+
+    &.isEditing {
+      padding-top: 6px;
+    }
+  }
+
+  &__item-body {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: pre-wrap;
+  }
+}

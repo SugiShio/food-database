@@ -9,7 +9,7 @@ export default Vue.extend({
   name: 'GraphBar',
   props: {
     values: { type: Array, default: () => [] },
-    max: { type: Number, default: 100 },
+    base: { type: Number, default: 100 },
     labels: { type: Array, default: () => [] },
   },
   data() {
@@ -28,7 +28,7 @@ export default Vue.extend({
   methods: {
     setBarWidth() {
       this.barWidth = this.values.map((value: number) => {
-        const width = (value / this.max) * 100
+        const width = (value / this.base) * 100
         return { width: `${width}%` }
       })
     },

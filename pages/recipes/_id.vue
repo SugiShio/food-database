@@ -2,14 +2,8 @@
 main.recipes-id(v-if='recipe')
   //- todo パンクズとしてコンポーネントに切り出し
   nuxt-link.recipes-id__link(:to={ name: "recipes" }) Index
-
   .recipes-id__title-container
-    input-text(
-      v-if='isEditing',
-      v-model='recipe.name',
-      size='large',
-      @input='onInput($event, "name")'
-    )
+    input-text(v-if='isEditing', v-model='recipe.name', size='large')
     fd-title(v-else, :text='recipe.name') {{ recipe.name }}
     fd-button(
       v-if='isEditable',
@@ -17,27 +11,21 @@ main.recipes-id(v-if='recipe')
       type='button',
       @button-clicked='isEditing = true'
     )
-
   section.recipes-id__section
     h2.recipes-id__title 基本情報
     .recipes-id__item
       .recipes-id__item-label(:class='{ isEditing }')
         label(for='description') 説明
       .recipes-id__item-body
-        input-textarea(
-          v-if='isEditing',
-          :value='recipe.description',
-          @input='onInput($event, "description")'
-        )
+        input-textarea(v-if='isEditing', :value='recipe.description')
         template(v-else)
           | {{ recipe.description }}
-
   section.recipes-id__section
     h2.recipes-id__title 材料
     ul
       li.recipes-id__item(v-for='(item, index) in recipe.items')
         label.recipes-id__item-label(:class='{ isEditing }')
-          | {{ recipeFoodItems[index].name }}
+          | {{ item.foodItem.name }}
         .recipes-id__item-body
           input-number(
             v-if='isEditing',
@@ -58,24 +46,10 @@ main.recipes-id(v-if='recipe')
 
   section.recipes-id__section(v-if='!isEditing')
     h2.recipes-id__title 栄養成分
-    ul
-      li.recipes-id__item(v-for='nutrient in nutrients')
-        label.recipes-id__item-label
-          | {{ nutrient.label }}
-
-        .recipes-id__item-body
-          .recipes-id__item-number
-            number-with-unit(
-              :decimal-digit='2',
-              :number='nutrientSum(nutrient)',
-              :unit='nutrient.unit'
-            )
-          .recipes-id__item-bar
-            graph-bar(
-              :max='nutrientBasis(nutrient)',
-              :values='nutrientValues(nutrient)',
-              :labels='itemLabels(nutrient)'
-            )
+    organisms-nutrient-graph(
+      :nutrients='recipe.nutrients',
+      :nutrient-basis='nutrientBasis'
+    )
 
   ul.recipes-id__buttons(v-if='isEditing')
     li.recipes-id__button
@@ -86,10 +60,9 @@ main.recipes-id(v-if='recipe')
 
 <script lang="ts">
 import Vue from 'vue'
-import { Recipe, RecipeItem } from '@/models/recipe'
+import { Recipe } from '@/models/recipe'
 import { FirebaseHelper } from '@/plugins/firebase'
 import { FoodItem } from '@/models/foodItem'
-import { NUTRIENTS } from '@/models/nutrient/constants'
 import { NUTRIENT_BASIS } from '~/models/nutrientBasis/constants'
 
 export default Vue.extend({
@@ -98,20 +71,11 @@ export default Vue.extend({
     foodItems: FoodItem[]
     isEditing: boolean
     recipe: Recipe | null
-    recipeFoodItems: FoodItem[]
-    postItem: {
-      id?: string
-      name?: string
-      description?: string
-      items?: RecipeItem[]
-    }
   } {
     return {
       foodItems: [],
       isEditing: false,
       recipe: null,
-      recipeFoodItems: [],
-      postItem: {},
     }
   },
   computed: {
@@ -124,39 +88,23 @@ export default Vue.extend({
     isNew(): boolean {
       return this.id === 'new'
     },
-    nutrients() {
-      return Object.keys(NUTRIENTS).map((key) => {
-        const nutrient = NUTRIENTS[key]
-        const items = this.recipeFoodItems.map((recipeFoodItem, index) => {
-          if (!recipeFoodItem.nutrients) return {}
-          const nutrientData = recipeFoodItem.nutrients.find(
-            (n) => n.nutrientId === key
-          )
-          const value =
-            (nutrientData.value * this.recipe?.items[index].amount) / 100
-          return { label: recipeFoodItem.name, value }
-        })
-        return { nutrientId: key, ...nutrient, items }
+    nutrientBasis() {
+      return NUTRIENT_BASIS
+    },
+    nutrientItems() {
+      return Object.keys(this.recipe?.nutrients).map((key) => {
+        return { nutrientId: key, values: this.recipe?.nutrients[key] }
       })
     },
   },
   async created() {
-    await this.initialize()
+    await this.fetchRecipe()
     await this.fetchFoodItems()
   },
   methods: {
-    async initialize() {
-      await this.fetchRecipe()
-      await this.fetchRecipeFoodItems()
-    },
     async addItem(item: FoodItem, amount = 100) {
       if (!this.recipe) return
-      try {
-        const foodItem = await this.getFoodItem(item.id)
-        this.recipeFoodItems.push(new FoodItem(item.id, foodItem))
-        this.recipe.addItem(item, amount)
-        this.$set(this.postItem, 'items', this.recipe.items)
-      } catch (_) {}
+      this.recipe.addItem(item, amount)
     },
     async fetchFoodItems() {
       try {
@@ -175,44 +123,10 @@ export default Vue.extend({
           const doc = await FirebaseHelper.fetchItem('recipes', this.id)
           const data = doc.data()
           this.recipe = new Recipe(this.id, data)
-          this.recipeFoodItems = Array(this.recipe?.items.length).fill({})
         } catch (_) {}
       }
     },
-    async getFoodItem(id: string) {
-      try {
-        const doc = await FirebaseHelper.fetchItem('foodItems', id)
-        const data = doc.data()
-        return new FoodItem(this.id, data)
-      } catch (_) {}
-    },
-    async fetchRecipeFoodItems() {
-      this.recipe?.items.forEach(async (item, index) => {
-        try {
-          const doc = await FirebaseHelper.fetchItem('foodItems', item.id)
-          const data = doc.data()
-          this.recipeFoodItems.splice(index, 1, new FoodItem(this.id, data))
-        } catch (_) {}
-      })
-    },
-    itemLabels(nutrient) {
-      return nutrient.items.map((item) => item.label)
-    },
-    nutrientBasis(nutrient: Nutrient) {
-      const nutrientBasis = NUTRIENT_BASIS.find(
-        (n) => n.nutrientID === nutrient.nutrientId
-      )
-      return nutrientBasis ? nutrientBasis.DietaryReferenceIntake : 100
-    },
-    nutrientSum(nutrient) {
-      return nutrient.items.reduce((sum, item) => {
-        return sum + item.value
-      }, 0)
-    },
-    nutrientValues(nutrient) {
-      return nutrient.items.map((item) => item.value)
-    },
-    submit() {
+    async submit() {
       if (!this.recipe) return
       if (this.isNew) {
         this.create()
@@ -221,9 +135,10 @@ export default Vue.extend({
       }
     },
     async create() {
+      if (!this.recipe) return
       try {
-        const doc = await FirebaseHelper.create('recipes', this.postItem)
-
+        await this.recipe.setData()
+        const doc = await FirebaseHelper.create('recipes', this.recipe)
         this.$router.push({
           name: 'recipes-id',
           params: { id: doc.id },
@@ -233,26 +148,21 @@ export default Vue.extend({
     async update() {
       if (!this.recipe) return
       try {
-        FirebaseHelper.update('recipes', this.recipe?.id, this.postItem)
+        await this.recipe.setData()
+        FirebaseHelper.update('recipes', this.recipe?.id, this.recipe)
         console.log('Item successfully updated! 🍅')
-        this.initialize()
+        this.fetchRecipe()
         this.isEditing = false
       } catch (_) {}
     },
     onCancel() {
+      this.fetchRecipe()
       this.isEditing = false
-      this.initialize()
-    },
-    onInput(value: string, key: string) {
-      if (!this.recipe) return
-      this.$set(this.postItem, key, value)
-      this.recipe[key] = value
     },
     onItemAmountInput(index: number) {
       if (!this.recipe) return
       const items = this.recipe.items
       items.splice(index, 1, this.recipe.items[index])
-      this.$set(this.postItem, 'items', items)
     },
   },
 })
