@@ -61,28 +61,22 @@ main.foodItems-id(v-if='foodItem')
       input.foodItems-id__amount-input(v-model='rate', type='number')
       | gあたり
 
-    ul
+    ul(v-if='isEditing')
       li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
         .foodItems-id__item-label(:class='{ isEditing }')
           label(:for='nutrient.nutrientId') {{ nutrient.label }}
-        .foodItems-id__item-body(v-if='isEditing')
+        .foodItems-id__item-body
           input-number(
             v-model='nutrient.value',
             :unit='nutrient.unit',
             @input='onNutrientValueInput($event, index)'
           )
 
-        .foodItems-id__item-body(v-else)
-          .foodItems-id__item-number
-            number-with-unit(
-              :number='(nutrient.value * rate) / 100',
-              :unit='nutrient.unit'
-            )
-          .foodItems-id__item-bar
-            graph-bar(
-              :max='nutrientBasis(nutrient)',
-              :values='[nutrient.value]'
-            )
+    organisms-nutrient-graph(
+      v-else,
+      :nutrients='nutrients',
+      :nutrient-basis='nutrientBasis'
+    )
 
   ul.foodItems-id__buttons(v-if='isEditing')
     li.foodItems-id__button
@@ -133,6 +127,20 @@ export default Vue.extend({
     },
     isNew(): boolean {
       return this.id === 'new'
+    },
+    nutrients() {
+      const result = {}
+      Object.keys(NUTRIENTS).forEach((key) => {
+        const nutrient = this.foodItem?.nutrients.find(
+          (n) => n.nutrientId === key
+        )
+        const value = nutrient ? nutrient.value : 0
+        result[key] = [(value * this.rate) / 100]
+      })
+      return result
+    },
+    nutrientBasis() {
+      return NUTRIENT_BASIS
     },
   },
   created() {
@@ -225,12 +233,6 @@ export default Vue.extend({
       }
       this.$set(this.postItem, key, this.foodItem?.keywords)
     },
-    nutrientBasis(nutrient: Nutrient) {
-      const nutrientBasis = NUTRIENT_BASIS.find(
-        (n) => n.nutrientId === nutrient.nutrientId
-      )
-      return nutrientBasis ? nutrientBasis.DietaryReferenceIntake : 100
-    },
   },
 })
 </script>
@@ -289,15 +291,6 @@ export default Vue.extend({
 
   &__item-body {
     @extend .list__item-body;
-  }
-
-  &__item-number {
-    width: 100px;
-    flex-shrink: 0;
-  }
-
-  &__item-bar {
-    flex-grow: 1;
   }
 
   &__amount {
