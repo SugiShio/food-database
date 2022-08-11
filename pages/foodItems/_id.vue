@@ -98,20 +98,11 @@ export default Vue.extend({
   data(): {
     foodItem: FoodItem | null
     isEditing: boolean
-    postItem: {
-      name?: string
-      description?: string
-      images?: string[]
-      keywords?: string[]
-      nutrients?: Nutrient[]
-      type?: string
-    }
     rate: number
   } {
     return {
       foodItem: null,
       isEditing: false,
-      postItem: {},
       rate: 100,
     }
   },
@@ -169,8 +160,9 @@ export default Vue.extend({
       }
     },
     async create() {
+      if (!this.foodItem) return
       try {
-        const doc = await FirebaseHelper.create('foodItems', this.postItem)
+        const doc = await FirebaseHelper.create('foodItems', this.foodItem)
         this.$router.push({
           name: 'foodItems-id',
           params: { id: doc.id },
@@ -180,7 +172,7 @@ export default Vue.extend({
     update() {
       if (!this.foodItem) return
       try {
-        FirebaseHelper.update('foodItems', this.foodItem?.id, this.postItem)
+        FirebaseHelper.update('foodItems', this.foodItem?.id, this.foodItem)
         console.log('Item successfully updated! 🍅')
         this.fetchFoodItem()
         this.isEditing = false
@@ -192,7 +184,6 @@ export default Vue.extend({
     },
     onInput(value: string, key: string) {
       if (!this.foodItem) return
-      this.$set(this.postItem, key, value)
       this.foodItem[key] = value
     },
     onNutrientValueInput(value: string, index: number) {
@@ -202,20 +193,11 @@ export default Vue.extend({
         return isNaN(number) ? '' : number
       })
       const changedNutrients = values.map((value, i) => {
-        return {
-          nutrientId: Object.keys(NUTRIENTS)[index + i],
-          value,
-        }
+        const nutrientId = Object.keys(NUTRIENTS)[index + i]
+        return new Nutrient(nutrientId, value)
       })
 
-      const postNutrients = this.postItem.nutrients || [
-        ...(this.foodItem?.nutrients || []),
-      ]
-      postNutrients.splice(index, values.length, ...changedNutrients)
-      this.$set(this.postItem, 'nutrients', postNutrients)
-      this.foodItem?.nutrients.forEach((n, i) => {
-        n.value = postNutrients[i].value
-      })
+      this.foodItem.nutrients.splice(index, values.length, ...changedNutrients)
     },
     onTextArrayInput(
       { value, index = -1 }: { value: string; index?: number },
@@ -231,7 +213,6 @@ export default Vue.extend({
       } else if (value) {
         ;(this.foodItem[key] as string[]).push(value)
       }
-      this.$set(this.postItem, key, this.foodItem?.keywords)
     },
   },
 })
