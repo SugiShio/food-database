@@ -11,12 +11,15 @@ export default Vue.extend({
   name: 'NumberWithUnit',
   props: {
     unit: { type: String, default: '' },
+    decimalDigit: { type: Number, default: -1 },
     number: { type: [String, Number], default: 0 },
   },
   computed: {
     displayValue() {
       if (typeof this.number === 'number') {
-        return this.number
+        return this.decimalDigit > -1
+          ? this.number.toFixed(this.decimalDigit)
+          : this.number
       }
       if (this.number === '') {
         return this.number === '' ? '-' : this.number

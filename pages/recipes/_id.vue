@@ -35,16 +35,18 @@ main.recipes-id(v-if='recipe')
   section.recipes-id__section
     h2.recipes-id__title 材料
     ul
-      li(v-for='(item, index) in recipe.items')
-        template(v-if='isEditing')
+      li.recipes-id__item(v-for='(item, index) in recipe.items')
+        label.recipes-id__item-label(:class='{ isEditing }')
           | {{ recipeFoodItems[index].name }}
+        .recipes-id__item-body
           input-number(
+            v-if='isEditing',
             v-model='item.amount',
             unit='g',
             @input='onItemAmountInput(index)'
           )
-        template(v-else)
-          | {{ recipeFoodItems[index].name }} ({{ item.amount }}g)
+          template(v-else)
+            | {{ item.amount }} g
 
   section.recipes-id__section(v-if='isEditing')
     h2.recipes-id__title 食材
@@ -53,6 +55,27 @@ main.recipes-id(v-if='recipe')
         div
           | {{ foodItem.name }}
           button(type='button', @click='addItem(foodItem)') +
+
+  section.recipes-id__section(v-if='!isEditing')
+    h2.recipes-id__title 栄養成分
+    ul
+      li.recipes-id__item(v-for='nutrient in nutrients')
+        label.recipes-id__item-label
+          | {{ nutrient.label }}
+
+        .recipes-id__item-body
+          .recipes-id__item-number
+            number-with-unit(
+              :decimal-digit='2',
+              :number='nutrientSum(nutrient)',
+              :unit='nutrient.unit'
+            )
+          .recipes-id__item-bar
+            graph-bar(
+              :max='nutrientBasis(nutrient)',
+              :values='nutrientValues(nutrient)',
+              :labels='itemLabels(nutrient)'
+            )
 
   ul.recipes-id__buttons(v-if='isEditing')
     li.recipes-id__button
@@ -65,7 +88,9 @@ main.recipes-id(v-if='recipe')
 import Vue from 'vue'
 import { Recipe, RecipeItem } from '@/models/recipe'
 import { FirebaseHelper } from '@/plugins/firebase'
-import { FoodItem } from '~/models/foodItem'
+import { FoodItem } from '@/models/foodItem'
+import { NUTRIENTS } from '@/models/nutrient/constants'
+import { NUTRIENT_BASIS } from '~/models/nutrientBasis/constants'
 
 export default Vue.extend({
   name: 'PagesrecipesId',
@@ -98,6 +123,21 @@ export default Vue.extend({
     },
     isNew(): boolean {
       return this.id === 'new'
+    },
+    nutrients() {
+      return Object.keys(NUTRIENTS).map((key) => {
+        const nutrient = NUTRIENTS[key]
+        const items = this.recipeFoodItems.map((recipeFoodItem, index) => {
+          if (!recipeFoodItem.nutrients) return {}
+          const nutrientData = recipeFoodItem.nutrients.find(
+            (n) => n.nutrientId === key
+          )
+          const value =
+            (nutrientData.value * this.recipe?.items[index].amount) / 100
+          return { label: recipeFoodItem.name, value }
+        })
+        return { nutrientId: key, ...nutrient, items }
+      })
     },
   },
   async created() {
@@ -154,6 +194,23 @@ export default Vue.extend({
           this.recipeFoodItems.splice(index, 1, new FoodItem(this.id, data))
         } catch (_) {}
       })
+    },
+    itemLabels(nutrient) {
+      return nutrient.items.map((item) => item.label)
+    },
+    nutrientBasis(nutrient: Nutrient) {
+      const nutrientBasis = NUTRIENT_BASIS.find(
+        (n) => n.nutrientID === nutrient.nutrientId
+      )
+      return nutrientBasis ? nutrientBasis.DietaryReferenceIntake : 100
+    },
+    nutrientSum(nutrient) {
+      return nutrient.items.reduce((sum, item) => {
+        return sum + item.value
+      }, 0)
+    },
+    nutrientValues(nutrient) {
+      return nutrient.items.map((item) => item.value)
     },
     submit() {
       if (!this.recipe) return
@@ -257,8 +314,13 @@ export default Vue.extend({
     @extend .list__item-body;
   }
 
-  &__item {
-    display: flex;
+  &__item-number {
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  &__item-bar {
+    flex-grow: 1;
   }
 
   &__buttons {

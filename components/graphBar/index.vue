@@ -10,18 +10,20 @@ export default Vue.extend({
   props: {
     values: { type: Array, default: () => [] },
     max: { type: Number, default: 100 },
+    labels: { type: Array, default: () => [] },
   },
   data() {
     return {
       barWidth: [],
     }
   },
-  mounted() {
-    const containerWidth = this.$el.clientWidth
-    this.barWidth = this.values.map((value: number) => {
-      const width = (value * containerWidth) / this.max
-      return { width: `${width}px` }
-    })
+  watch: {
+    values() {
+      this.barWidth = this.values.map((value: number) => {
+        const width = (value / this.max) * 100
+        return { width: `${width}%` }
+      })
+    },
   },
 })
 </script>
