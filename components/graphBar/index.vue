@@ -19,6 +19,14 @@ export default Vue.extend({
   },
   watch: {
     values() {
+      this.setBarWidth()
+    },
+  },
+  created() {
+    this.setBarWidth()
+  },
+  methods: {
+    setBarWidth() {
       this.barWidth = this.values.map((value: number) => {
         const width = (value / this.max) * 100
         return { width: `${width}%` }
