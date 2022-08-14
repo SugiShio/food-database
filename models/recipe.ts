@@ -7,10 +7,14 @@ export interface RecipeItem {
   id: string
   amount: number
   unit: string
-  foodItem?: FoodItem
+  foodItem: FoodItem
 }
 
 export class RecipeItem {
+  id = ''
+  amount = 0
+  unit = 'g'
+
   constructor(params: RecipeItem) {
     this.id = params.id
     this.unit = params.unit
@@ -29,10 +33,6 @@ export class RecipeItem {
 }
 
 export interface Recipe {
-  [key: string]:
-    | string
-    | RecipeItem[]
-    | ((item: FoodItem, amount: number) => void)
   id: string
   name: string
   description: string
@@ -40,6 +40,11 @@ export interface Recipe {
 }
 
 export class Recipe {
+  id
+  name = ''
+  description = ''
+  items: RecipeItem[] = []
+
   constructor(id = '', recipe?: DocumentData) {
     this.id = id
     this.name = recipe ? recipe.name : ''
@@ -51,7 +56,13 @@ export class Recipe {
 
   addItem(item: FoodItem, amount: number, unit = 'g') {
     this.items.push(
-      new RecipeItem({ id: item.id, amount, unit, foodItem: item })
+      new RecipeItem({
+        id: item.id,
+        amount,
+        unit,
+        foodItem: item,
+        setFoodItem: RecipeItem.prototype.setFoodItem,
+      })
     )
   }
 

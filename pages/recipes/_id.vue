@@ -4,7 +4,7 @@ main.recipes-id(v-if='recipe')
   nuxt-link.recipes-id__link(:to={ name: "recipes" }) Index
   .recipes-id__title-container
     input-text(v-if='isEditing', v-model='recipe.name', size='large')
-    fd-title(v-else, :text='recipe.name') {{ recipe.name }}
+    fd-title(v-else, :text='recipe.name')
     fd-button(
       v-if='isEditable',
       label='Edit',
@@ -45,7 +45,7 @@ main.recipes-id(v-if='recipe')
           button(type='button', @click='addItem(foodItem)') +
 
   section.recipes-id__section(v-if='!isEditing')
-    h2.recipes-id__title 栄養成分
+    h2.recipes-id__title 栄養素
     organisms-nutrient-graph(
       :nutrients='recipe.nutrients',
       :nutrient-basis='nutrientBasis'

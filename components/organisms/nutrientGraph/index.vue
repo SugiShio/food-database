@@ -5,7 +5,8 @@ ul.o-nutrient-graph
     :nutrient-id='item.nutrientId',
     :labels='item.labels',
     :base='item.base',
-    :values='item.values'
+    :values='item.values',
+    :key='item.nutrientId'
   )
 </template>
 
