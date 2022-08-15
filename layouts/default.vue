@@ -19,16 +19,22 @@ export default Vue.extend({
     const auth = this.$fire.auth
     await auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log('🙇')
+        this.$store.commit('setUser', {
+          uid: user.uid,
+          displayName: user.displayName,
+        })
         this.$store.commit('setIsSignin')
       } else {
-        console.log('👪')
+        this.$store.commit('resetUser')
       }
     })
   },
   methods: {
-    signout() {
-      this.$fire.auth.signOut()
+    async signout() {
+      try {
+        await this.$fire.auth.signOut()
+        this.$store.commit('resetUser')
+      } catch (_) {}
     },
   },
 })
