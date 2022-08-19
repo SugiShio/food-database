@@ -44,6 +44,14 @@ main.foodItems-id(v-if='foodItem')
         template(v-else)
           | {{ foodItem.typeLabel }}
 
+    .foodItems-id__item
+      .foodItems-id__item-label(:class='{ isEditing }')
+        label(for='provider') メーカー、店名等
+      .foodItems-id__item-body
+        input-text(v-if='isEditing', v-model='foodItem.provider')
+        template(v-else)
+          | {{ foodItem.provider }}
+
     .foodItems-id__item(v-if='isEditing')
       .foodItems-id__item-label(:class='{ isEditing }')
         | キーワード

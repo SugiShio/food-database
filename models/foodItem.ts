@@ -16,6 +16,7 @@ export interface FoodItem {
   images: string[]
   keywords: string[]
   nutrients: Nutrient[]
+  provider: string
   type: string
 }
 
@@ -33,6 +34,7 @@ export class FoodItem {
     this.keywords = foodItem ? foodItem.keywords || [] : []
     this.images = foodItem ? foodItem.images : []
     this.nutrients = this.setNutrients(foodItem ? foodItem.nutrients : [])
+    this.provider = foodItem ? foodItem.provider : ''
     this.type = foodItem ? foodItem.type : ''
   }
 
