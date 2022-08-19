@@ -43,6 +43,8 @@ export default Vue.extend({
       auth
         .signInWithEmailAndPassword(this.email, this.password)
         .then((data) => {
+          if (!data.user) return
+
           this.$store.commit('setUser', {
             uid: data.user.uid,
             displayName: data.user.uid,

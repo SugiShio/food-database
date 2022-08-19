@@ -120,12 +120,12 @@ export default Vue.extend({
       return this.id === 'new'
     },
     nutrients() {
-      const result = {}
+      const result: { [key: string]: number[] } = {}
       Object.keys(NUTRIENTS).forEach((key) => {
         const nutrient = this.foodItem?.nutrients.find(
           (n) => n.nutrientId === key
         )
-        const value = nutrient ? nutrient.value : 0
+        const value = nutrient ? nutrient.value || 0 : 0
         result[key] = [(value * this.rate) / 100]
       })
       return result
@@ -187,16 +187,16 @@ export default Vue.extend({
       this.foodItem[key] = value
     },
     onNutrientValueInput(value: string, index: number) {
+      if (!this.foodItem) return
       const SEPARATORS = /\n|\t|,/
       const values = value.split(SEPARATORS).map((v) => {
         const number = Number(v)
-        return isNaN(number) ? '' : number
+        return isNaN(number) ? null : number
       })
       const changedNutrients = values.map((value, i) => {
         const nutrientId = Object.keys(NUTRIENTS)[index + i]
         return new Nutrient(nutrientId, value)
       })
-
       this.foodItem.nutrients.splice(index, values.length, ...changedNutrients)
     },
     onTextArrayInput(

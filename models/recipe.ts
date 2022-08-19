@@ -82,7 +82,9 @@ export class Recipe {
         const nutrient = item.foodItem?.nutrients.find(
           (n) => n.nutrientId === key
         )
-        result[key].push(nutrient ? (nutrient.value * item.amount) / 100 : 0)
+        result[key].push(
+          nutrient && nutrient.value ? (nutrient.value * item.amount) / 100 : 0
+        )
       })
     })
     return result

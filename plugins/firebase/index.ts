@@ -46,6 +46,7 @@ export class FirebaseHelper {
       return querySnapshot
     } catch (e) {
       console.error(e)
+      throw e
     }
   }
 
@@ -68,6 +69,7 @@ export class FirebaseHelper {
       return { id: docRef.id }
     } catch (e) {
       console.error(e)
+      throw e
     }
   }
 
@@ -79,6 +81,7 @@ export class FirebaseHelper {
       await updateDoc(docRef, data)
     } catch (e) {
       console.error(e)
+      throw e
     }
   }
 

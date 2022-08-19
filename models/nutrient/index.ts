@@ -2,13 +2,13 @@ import { NUTRIENTS } from './constants'
 
 export interface Nutrient {
   nutrientId: string
-  value: number
+  value: number | null
 }
 
 export class Nutrient {
-  constructor(nutrientId: string, value: number) {
+  constructor(nutrientId: string, value: number | null) {
     this.nutrientId = nutrientId
-    this.value = Number(value)
+    this.value = value
   }
 
   get label() {

@@ -12,7 +12,9 @@ export default Vue.extend({
     base: { type: Number, default: 100 },
     labels: { type: Array, default: () => [] },
   },
-  data() {
+  data(): {
+    barWidth: { width: string }[]
+  } {
     return {
       barWidth: [],
     }
@@ -27,8 +29,8 @@ export default Vue.extend({
   },
   methods: {
     setBarWidth() {
-      this.barWidth = this.values.map((value: number) => {
-        const width = (value / this.base) * 100
+      this.barWidth = this.values.map((value) => {
+        const width = ((value as number) / this.base) * 100
         return { width: `${width}%` }
       })
     },

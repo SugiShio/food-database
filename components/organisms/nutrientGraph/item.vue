@@ -19,20 +19,20 @@ export default Vue.extend({
   props: {
     labels: { type: Array, default: () => [] },
     base: { type: Number, default: 100 },
-    nutrientId: { type: String, required: true },
+    nutrientId: { type: String, required: true, default: '' },
     values: { type: Array, default: () => [] },
   },
   computed: {
     label() {
-      return NUTRIENTS[this.nutrientId].label
+      return NUTRIENTS[this.nutrientId as string].label
     },
     sum() {
-      return this.values.reduce((sum: number, currentValue: number) => {
-        return sum + currentValue
+      return this.values.reduce((sum, currentValue) => {
+        return (sum as number) + (currentValue as number)
       }, 0)
     },
     unit() {
-      return NUTRIENTS[this.nutrientId].unit
+      return NUTRIENTS[this.nutrientId as string].unit
     },
   },
 })
