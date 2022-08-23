@@ -3,6 +3,11 @@
 // 設定から持ってくる
 // 最大値最小値
 
+export interface NutrientBasis {
+  nutrientId: string
+  dietaryReferenceIntake: number
+}
+
 export const NUTRIENT_BASIS = [
   {
     nutrientId: 'calorie',

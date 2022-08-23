@@ -91,9 +91,11 @@ export default Vue.extend({
     nutrientBasis() {
       return NUTRIENT_BASIS
     },
-    nutrientItems() {
-      return Object.keys(this.recipe?.nutrients).map((key) => {
-        return { nutrientId: key, values: this.recipe?.nutrients[key] }
+    nutrientItems(): { nutrientId: string; values: number[] }[] {
+      if (!this.recipe) return []
+      const recipe = this.recipe
+      return Object.keys(recipe.nutrients).map((key) => {
+        return { nutrientId: key, values: recipe.nutrients[key] }
       })
     },
   },
