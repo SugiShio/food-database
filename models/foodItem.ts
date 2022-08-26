@@ -51,4 +51,8 @@ export class FoodItem {
     const item = TYPES.find((type) => type.value === this.type)
     return item ? item.label : ''
   }
+
+  get nameWithProvider() {
+    return this.provider ? `${this.name}(${this.provider})` : this.name
+  }
 }

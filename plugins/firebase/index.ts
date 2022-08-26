@@ -7,6 +7,13 @@ import {
   getDocs,
   getFirestore,
   updateDoc,
+  where,
+  query,
+  limit,
+  orderBy,
+  FieldPath,
+  QueryConstraint,
+  WhereFilterOp,
 } from 'firebase/firestore'
 
 const app = initializeApp(process.env.firebaseConfig as FirebaseOptions)
@@ -55,6 +62,37 @@ export class FirebaseHelper {
       const docSnap = await getDoc(doc(db, collectionName, docId))
       if (!docSnap?.exists()) throw new Error('Document not found')
       return docSnap
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  static async search(
+    collectionName: string,
+    {
+      wheres,
+      l = 10,
+      ob = 'createdAt',
+    }: {
+      wheres: {
+        fieldPath: string | FieldPath
+        optStr: WhereFilterOp
+        value: unknown
+      }[]
+      l?: number
+      ob?: string
+    }
+  ) {
+    try {
+      const collectionRef = collection(db, collectionName)
+      const processedWheres = wheres.map((w) =>
+        where(w.fieldPath, w.optStr, w.value)
+      )
+
+      const q = query(collectionRef, ...processedWheres, orderBy(ob), limit(l))
+      const querySnapshot = await getDocs(q)
+      return querySnapshot
     } catch (e) {
       console.error(e)
       throw e
