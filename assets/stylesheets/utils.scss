@@ -1,3 +1,15 @@
+@mixin screen-pc {
+  @media screen and (min-width: 600px) {
+    @content;
+  }
+}
+
+@mixin screen-sp {
+  @media screen and (max-width: 600px) {
+    @content;
+  }
+}
+
 .title-container {
   display: flex;
   width: 100%;
@@ -7,12 +19,19 @@
 
 .list {
   &__item {
-    display: flex;
+    @include screen-pc() {
+      display: flex;
+    }
   }
 
   &__item-label {
     flex-shrink: 0;
     width: 150px;
+
+    @include screen-sp() {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
 
     &.isEditing {
       padding-top: 6px;
