@@ -1,21 +1,13 @@
 <template lang="pug">
 div
-  div(v-if='isSignin')
-    p hello, {{ displayName }}
-    nav
-      ul
-        li
-          nuxt-link.foodItems-id__link(:to={ name: "foodItems" }) 食品データベース
-        li
-          nuxt-link.foodItems-id__link(:to={ name: "recipes" }) レシピ
-        li
-          nuxt-link.foodItems-id__link(:to={ name: "daily" }) デイリー
-    fd-button(label='Signout', type='button', @button-clicked='signout')
-
-  div(v-else)
-    input(v-model='email')
-    input(v-model='password', type='password')
-    button(type='button', @click='signin') singing
+  nav
+    ul
+      li
+        nuxt-link.foodItems-id__link(:to={ name: "foodItems" }) 食品データベース
+      li
+        nuxt-link.foodItems-id__link(:to={ name: "recipes" }) レシピ
+      li
+        nuxt-link.foodItems-id__link(:to={ name: "daily" }) デイリー
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -52,9 +44,6 @@ export default Vue.extend({
           this.$store.commit('setIsSignin')
         })
         .catch((_) => {})
-    },
-    signout() {
-      this.$fire.auth.signOut()
     },
   },
 })

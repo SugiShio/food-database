@@ -1,15 +1,25 @@
 <template lang="pug">
 .layouts-default
-  .layouts-default__header(v-if='isSignin')
-    button.layouts-default__button-signout(@click='signout') Signout
+  .layouts-default__header
+    button.layouts-default__button(v-if='isSignin', @click='signout') Signout
+    button.layouts-default__button(v-else, @click='isSigninModalOpen = true') Signin
   .layouts-default__main
     Nuxt
+  organisms-signin-modal(
+    :is-signin-modal-open='isSigninModalOpen',
+    @close-modal='isSigninModalOpen = false'
+  )
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
   name: 'LayoutsDefault',
+  data() {
+    return {
+      isSigninModalOpen: false,
+    }
+  },
   computed: {
     isSignin() {
       return this.$store.state.isSignin
@@ -30,6 +40,23 @@ export default Vue.extend({
     })
   },
   methods: {
+    signin() {
+      if (!this.email || !this.password) return
+      const auth = this.$fire.auth
+      auth
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then((data) => {
+          if (!data.user) return
+
+          this.$store.commit('setUser', {
+            uid: data.user.uid,
+            displayName: data.user.uid,
+          })
+          this.$store.commit('setIsSignin')
+        })
+        .catch((_) => {})
+    },
+
     async signout() {
       try {
         await this.$fire.auth.signOut()
@@ -48,7 +75,7 @@ export default Vue.extend({
     padding: 10px 20px;
   }
 
-  &__button-signout {
+  &__button {
     color: $color-main;
     transition: opacity 0.3s;
 
