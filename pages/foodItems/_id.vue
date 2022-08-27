@@ -69,16 +69,8 @@ main.foodItems-id(v-if='foodItem')
       input.foodItems-id__amount-input(v-model='rate', type='number')
       | gあたり
 
-    ul(v-if='isEditing')
-      li.foodItems-id__item(v-for='(nutrient, index) in foodItem.nutrients')
-        .foodItems-id__item-label(:class='{ isEditing }')
-          label(:for='nutrient.nutrientId') {{ nutrient.label }}
-        .foodItems-id__item-body
-          input-number(
-            v-model='nutrient.value',
-            :unit='nutrient.unit',
-            @input='onNutrientValueInput($event, index)'
-          )
+    template(v-if='isEditing')
+      organisms-input-nutrients(v-model='foodItem.nutrients')
 
     organisms-nutrient-graph(
       v-else,
@@ -193,19 +185,6 @@ export default Vue.extend({
     onInput(value: string, key: string) {
       if (!this.foodItem) return
       this.foodItem[key] = value
-    },
-    onNutrientValueInput(value: string, index: number) {
-      if (!this.foodItem) return
-      const SEPARATORS = /\n|\t|,/
-      const values = value.split(SEPARATORS).map((v) => {
-        const number = Number(v)
-        return isNaN(number) ? null : number
-      })
-      const changedNutrients = values.map((value, i) => {
-        const nutrientId = Object.keys(NUTRIENTS)[index + i]
-        return new Nutrient(nutrientId, value)
-      })
-      this.foodItem.nutrients.splice(index, values.length, ...changedNutrients)
     },
     onTextArrayInput(
       { value, index = -1 }: { value: string; index?: number },
