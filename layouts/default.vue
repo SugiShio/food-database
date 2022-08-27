@@ -40,23 +40,6 @@ export default Vue.extend({
     })
   },
   methods: {
-    signin() {
-      if (!this.email || !this.password) return
-      const auth = this.$fire.auth
-      auth
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then((data) => {
-          if (!data.user) return
-
-          this.$store.commit('setUser', {
-            uid: data.user.uid,
-            displayName: data.user.uid,
-          })
-          this.$store.commit('setIsSignin')
-        })
-        .catch((_) => {})
-    },
-
     async signout() {
       try {
         await this.$fire.auth.signOut()
