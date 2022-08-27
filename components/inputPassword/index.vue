@@ -1,5 +1,5 @@
 <template lang="pug">
-input.input-password(:type='type', :value='value', @input='onInput')
+input.input-password(type='password', :value='value', @input='onInput')
 </template>
 
 <script lang="ts">
@@ -12,13 +12,14 @@ export default Vue.extend({
   },
   data() {
     return {
-      isShow: false,
+      // isShow: false,
     }
   },
   computed: {
-    type() {
-      return this.isShow ? 'text' : 'password'
-    },
+    // todo
+    // type() {
+    //   return this.isShow ? 'text' : 'password'
+    // },
   },
   methods: {
     onInput($event: Event) {
