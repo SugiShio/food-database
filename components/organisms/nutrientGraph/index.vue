@@ -47,7 +47,6 @@ export default Vue.extend({
         const nutrientBasis = this.nutrientBasis.find((nb) => {
           return (nb as NutrientBasis).nutrientId === key
         })
-        if (!nutrientBasis) return {}
         const base = nutrientBasis
           ? (nutrientBasis as NutrientBasis).dietaryReferenceIntake
           : 100
