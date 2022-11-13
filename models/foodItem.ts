@@ -1,6 +1,6 @@
-import { DocumentData } from 'firebase/firestore'
 import { Nutrient } from '@/models/nutrient'
 import { NUTRIENTS } from '@/models/nutrient/constants'
+import { FOOD_ITEM_NUTRIENTS } from '@/models/nutrient/types'
 import { RadioOption } from '@/models/radioOption'
 
 export interface FoodItem {
@@ -9,7 +9,7 @@ export interface FoodItem {
     | number
     | string[]
     | Nutrient[]
-    | ((nutrients: Nutrient[]) => Nutrient[])
+    | ((nutrients: FOOD_ITEM_NUTRIENTS) => Nutrient[])
   id: string
   name: string
   description: string
@@ -27,7 +27,7 @@ export const TYPES: RadioOption[] = [
 ]
 
 export class FoodItem {
-  constructor(id = '', foodItem?: DocumentData) {
+  constructor(id = '', foodItem?: any) {
     this.id = id || ''
     this.name = foodItem ? foodItem.name : ''
     this.description = foodItem ? foodItem.description : ''
@@ -38,12 +38,12 @@ export class FoodItem {
     this.type = foodItem ? foodItem.type : ''
   }
 
-  setNutrients(nutrients: Nutrient[]): Nutrient[] {
+  setNutrients(nutrients: FOOD_ITEM_NUTRIENTS): Nutrient[] {
     return Object.keys(NUTRIENTS).map((key) => {
-      const nutrient = nutrients.find((n: Nutrient) => {
-        return n.nutrientId === key
+      const nutrient = Object.keys(nutrients).find((n: string) => {
+        return n === key
       })
-      return new Nutrient(key, nutrient ? nutrient.value : 0)
+      return new Nutrient(key, nutrient ? nutrients[key] : 0)
     })
   }
 

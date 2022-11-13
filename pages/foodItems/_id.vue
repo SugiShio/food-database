@@ -1,6 +1,6 @@
 <template lang="pug">
 main.foodItems-id(v-if='foodItem')
-  nuxt-link.foodItems-id__link(:to={ name: "foodItems" }) Index
+  nuxt-link.foodItems-id__link(:to='{ name: "foodItems"}') Index
 
   .foodItems-id__title-container
     input-text(
@@ -88,7 +88,6 @@ main.foodItems-id(v-if='foodItem')
 <script lang="ts">
 import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
-import { Nutrient } from '@/models/nutrient'
 import { NUTRIENTS } from '@/models/nutrient/constants'
 import { NUTRIENT_BASIS } from '@/models/nutrientBasis/constants'
 import { FirebaseHelper } from '@/plugins/firebase'

@@ -1,4 +1,3 @@
-import { DocumentData } from 'firebase/firestore'
 import { FoodItem } from './foodItem'
 import { NUTRIENTS } from './nutrient/constants'
 import { FirebaseHelper } from '@/plugins/firebase'
@@ -45,7 +44,7 @@ export class Recipe {
   description = ''
   items: RecipeItem[] = []
 
-  constructor(id = '', recipe?: DocumentData) {
+  constructor(id = '', recipe?: any) {
     this.id = id
     this.name = recipe ? recipe.name : ''
     this.description = recipe ? recipe.description : ''
