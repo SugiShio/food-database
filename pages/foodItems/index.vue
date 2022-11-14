@@ -3,20 +3,11 @@
   section.foodItems-index__block
     h2.foodItems-index__title
       | 食材検索
-    .foodItems-index__search-item
-      .foodItems-index__label キーワード
-      input-text(v-model='keyword')
-
-    .foodItems-index__search-item
-      .foodItems-index__label タイプ
-      checkbox-array(v-model='types', :options='typeOptions', inline)
-
-    .foodItems-index__search-item
-      fd-button(
-        label='Search',
-        @button-clicked='search',
-        :disabled='isSearching'
-      )
+    organisms-search(
+      @search-start='isSearching = true',
+      @search-succeed='onSearchSucceed',
+      @search-failed='onSearchFailed'
+    )
 
   section.foodItems-index__block
     h2.foodItems-index__title
@@ -40,8 +31,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
-import { FirebaseHelper } from '@/plugins/firebase'
-import { WhereFilterOp } from '@firebase/firestore'
 import { RadioOption } from '~/models/radioOption'
 
 export default Vue.extend({
@@ -68,41 +57,13 @@ export default Vue.extend({
     }
   },
   methods: {
-    async search() {
-      this.isSearching = true
-      this.foodItems = []
-      this.noResultText = ''
-
-      const wheres = []
-      if (this.keyword)
-        wheres.push({
-          fieldPath: 'keywords',
-          optStr: 'array-contains' as WhereFilterOp,
-          value: this.keyword,
-        })
-      if (this.types.length)
-        wheres.push({
-          fieldPath: 'type',
-          optStr: 'in' as WhereFilterOp,
-          value: this.types,
-        })
-
-      try {
-        const querySnapshot = await FirebaseHelper.search('foodItems', {
-          wheres,
-          ob: 'name',
-        })
-        querySnapshot.forEach((doc) => {
-          this.foodItems.push(new FoodItem(doc.id, doc.data()))
-        })
-        if (!this.foodItems.length)
-          this.noResultText = '検索条件に合う食材が見つかりませんでした。'
-      } catch (e) {
-        console.error(e)
-        this.hasError = true
-      } finally {
-        this.isSearching = false
-      }
+    onSearchSucceed(foodItems) {
+      this.foodItems = foodItems
+      this.isSearching = false
+    },
+    onSearchFailed() {
+      this.hasError = true
+      this.isSearching = false
     },
   },
 })
