@@ -8,16 +8,18 @@ export interface FoodItem {
     | string
     | number
     | string[]
-    | Nutrient[]
+    | FOOD_ITEM_NUTRIENTS
+    | { unit: string; rate: number }[]
     | ((nutrients: FOOD_ITEM_NUTRIENTS) => Nutrient[])
   id: string
   name: string
   description: string
   images: string[]
   keywords: string[]
-  nutrients: Nutrient[]
+  nutrients: FOOD_ITEM_NUTRIENTS
   provider: string
   type: string
+  units: { unit: string; rate: number }[]
 }
 
 export const TYPES: RadioOption[] = [
@@ -39,13 +41,11 @@ export class FoodItem {
     this.units = foodItem ? foodItem.units : []
   }
 
-  setNutrients(nutrients: FOOD_ITEM_NUTRIENTS): Nutrient[] {
-    return Object.keys(NUTRIENTS).map((key) => {
-      const nutrient = Object.keys(nutrients).find((n: string) => {
-        return n === key
-      })
-      return new Nutrient(key, nutrient ? nutrients[key] : 0)
-    })
+  getNutrientValue({ nutrientId, amount, unit }) {
+    const unitInfo = this.units.find((u) => u.unit === unit)
+    if (!unitInfo) return
+    const value = this.nutrients[nutrientId]
+    return value === null ? null : (amount * value * unitInfo.rate) / 100
   }
 
   get typeLabel() {

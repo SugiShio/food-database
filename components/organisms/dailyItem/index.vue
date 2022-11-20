@@ -22,7 +22,7 @@
         )
         button(@click='onDelete(index)') Delete
       span(v-else)
-        | {{ foodItem.amount }}{{ foodItem.unit }} /
+        | {{ foodItem.amount }}{{ foodItem.unit }} / {{ foodItem.getNutrientValue({ nutrientId: "calorie" }) }} kcal
   template(v-if='isEditing')
     fd-button(
       v-if='!isSearchModalOpen',
