@@ -12,7 +12,6 @@ import {
   limit,
   orderBy,
   FieldPath,
-  QueryConstraint,
   WhereFilterOp,
 } from 'firebase/firestore'
 

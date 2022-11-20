@@ -34,7 +34,7 @@ export default Vue.extend({
   } {
     return {
       isSearching: false,
-      keyword: 'ヨーグルト',
+      keyword: 'とうにゅう',
       limit: 10,
       types: [],
       typeOptions: TYPES,

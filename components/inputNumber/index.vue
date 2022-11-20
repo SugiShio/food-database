@@ -15,7 +15,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'InputText',
+  name: 'InputNumber',
   props: {
     unit: { type: String, default: '' },
     value: { type: [String, Number], default: 0 },

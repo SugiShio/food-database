@@ -57,7 +57,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    onSearchSucceed(foodItems) {
+    onSearchSucceed(foodItems: FoodItem[]) {
       this.foodItems = foodItems
       this.isSearching = false
     },

@@ -21,7 +21,7 @@ export default Vue.extend({
     return {
       dailys: [],
       year: 2022,
-      month: 8,
+      month: 9,
     }
   },
   async created() {

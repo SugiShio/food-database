@@ -36,6 +36,7 @@ export class FoodItem {
     this.nutrients = this.setNutrients(foodItem ? foodItem.nutrients : [])
     this.provider = foodItem ? foodItem.provider : ''
     this.type = foodItem ? foodItem.type : ''
+    this.units = foodItem ? foodItem.units : []
   }
 
   setNutrients(nutrients: FOOD_ITEM_NUTRIENTS): Nutrient[] {

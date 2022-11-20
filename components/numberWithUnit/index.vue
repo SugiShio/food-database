@@ -16,14 +16,11 @@ export default Vue.extend({
   },
   computed: {
     displayValue() {
-      if (typeof this.number === 'number') {
+      if (this.number === '') return '-'
+      else
         return this.decimalDigit > -1
-          ? this.number.toFixed(this.decimalDigit)
-          : this.number
-      }
-      if (this.number === '') {
-        return this.number === '' ? '-' : this.number
-      } else return '-'
+          ? Number(this.number).toFixed(this.decimalDigit)
+          : Number(this.number)
     },
   },
 })
