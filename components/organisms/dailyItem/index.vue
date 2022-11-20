@@ -9,15 +9,18 @@
   )
 
   ul.o-daily-item-index__food-item-list
-    li.o-daily-item-index__food-item(v-for='foodItem in dailyItem.foodItems')
+    li.o-daily-item-index__food-item(
+      v-for='(foodItem, index) in dailyItem.foodItems'
+    )
       div {{ foodItem.nameWithProvider }}
-      span(v-if='isEditing')
+      .o-daily-item-index__food-item-actions(v-if='isEditing')
         input-number-with-unit(
           :amount='foodItem.amount',
           :unit='foodItem.unit',
           :units='foodItem.units',
           @input='onInput(foodItem, $event)'
         )
+        button(@click='onDelete(index)') Delete
       span(v-else)
         | {{ foodItem.amount }}{{ foodItem.unit }} /
   template(v-if='isEditing')
@@ -67,6 +70,9 @@ export default Vue.extend({
     addFoodItem(foodItem) {
       this.dailyItem.addFoodItem(foodItem)
     },
+    onDelete(index) {
+      this.dailyItem.deleteFoodItem(index)
+    },
     onInput(foodItem, value) {
       foodItem.setAmountAndUnit(value)
     },
@@ -87,6 +93,10 @@ export default Vue.extend({
     align-content: center;
     justify-content: space-between;
     margin: 10px 0;
+  }
+
+  &__food-item-actions {
+    display: flex;
   }
 }
 </style>

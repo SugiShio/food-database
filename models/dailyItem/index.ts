@@ -25,6 +25,10 @@ export class DailyItem {
     this.foodItems.push(new DailyFoodItem(foodItem))
   }
 
+  deleteFoodItem(index: number) {
+    this.foodItems.splice(index, 1)
+  }
+
   get timeText() {
     const dateObj = new Date(this.time.seconds * 1000)
     const hours = dateObj.getHours()
