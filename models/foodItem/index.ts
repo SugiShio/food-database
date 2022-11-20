@@ -1,6 +1,6 @@
 import { Nutrient } from '@/models/nutrient'
 import { NUTRIENTS } from '@/models/nutrient/constants'
-import { FOOD_ITEM_NUTRIENTS } from '@/models/nutrient/types'
+import { FoodItemNutrients } from '@/models/foodItem/nutrients'
 import { RadioOption } from '@/models/radioOption'
 
 export interface FoodItem {
@@ -8,15 +8,15 @@ export interface FoodItem {
     | string
     | number
     | string[]
-    | FOOD_ITEM_NUTRIENTS
+    | FoodItemNutrients
     | { unit: string; rate: number }[]
-    | ((nutrients: FOOD_ITEM_NUTRIENTS) => Nutrient[])
+    | ((nutrients: FoodItemNutrients) => Nutrient[])
   id: string
   name: string
   description: string
   images: string[]
   keywords: string[]
-  nutrients: FOOD_ITEM_NUTRIENTS
+  nutrients: FoodItemNutrients
   provider: string
   type: string
   units: { unit: string; rate: number }[]
@@ -35,7 +35,7 @@ export class FoodItem {
     this.description = foodItem ? foodItem.description : ''
     this.keywords = foodItem ? foodItem.keywords || [] : []
     this.images = foodItem ? foodItem.images : []
-    this.nutrients = this.setNutrients(foodItem ? foodItem.nutrients : [])
+    this.nutrients = foodItem ? foodItem.nutrients : new FoodItemNutrients()
     this.provider = foodItem ? foodItem.provider : ''
     this.type = foodItem ? foodItem.type : ''
     this.units = foodItem ? foodItem.units : []

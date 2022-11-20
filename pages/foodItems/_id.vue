@@ -88,7 +88,7 @@ main.foodItems-id(v-if='foodItem')
 <script lang="ts">
 import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
-import { NUTRIENTS } from '@/models/nutrient/constants'
+import { NUTRIENTS } from '@/constants/nutrients'
 import { NUTRIENT_BASIS } from '@/models/nutrientBasis/constants'
 import { FirebaseHelper } from '@/plugins/firebase'
 
@@ -121,10 +121,8 @@ export default Vue.extend({
     nutrients() {
       const result: { [key: string]: number[] } = {}
       Object.keys(NUTRIENTS).forEach((key) => {
-        const nutrient = this.foodItem?.nutrients.find(
-          (n) => n.nutrientId === key
-        )
-        const value = nutrient ? nutrient.value || 0 : 0
+        const nutrient = this.foodItem?.nutrients[key]
+        const value = nutrient ? nutrient || 0 : 0
         result[key] = [(value * this.rate) / 100]
       })
       return result
