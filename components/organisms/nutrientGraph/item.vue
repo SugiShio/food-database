@@ -12,7 +12,7 @@ li.nutrient-graph-item
 
 <script lang="ts">
 import Vue from 'vue'
-import { NUTRIENTS } from '@/models/nutrient/constants'
+import { NUTRIENTS } from '~/constants/nutrients'
 
 export default Vue.extend({
   name: 'OrganismsNutrientGraphItem',

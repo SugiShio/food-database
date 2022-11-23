@@ -12,7 +12,7 @@ ul.o-nutrient-graph
 
 <script lang="ts">
 import Vue from 'vue'
-import { NUTRIENTS } from '@/models/nutrient/constants'
+import { NUTRIENTS } from '~/constants/nutrients'
 import { NUTRIENT_BASIS, NutrientBasis } from '~/models/nutrientBasis/constants'
 
 export default Vue.extend({

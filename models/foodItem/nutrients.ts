@@ -1,5 +1,7 @@
-export interface FOOD_ITEM_NUTRIENTS {
-  [key: string]: number | null
+import { NUTRIENTS } from '~/constants/nutrients'
+
+export interface FoodItemNutrients {
+  [key: string]: number | null | ((nutrientId: string) => string)
 
   calorie: number | null
   protein: number | null
@@ -32,4 +34,20 @@ export interface FOOD_ITEM_NUTRIENTS {
   chromium: number | null
   molybdenum: number | null
   iodine: number | null
+}
+
+export class FoodItemNutrients {
+  constructor(nutrients?: FoodItemNutrients) {
+    Object.keys(NUTRIENTS).forEach((key: string) => {
+      this[key] = nutrients ? nutrients[key] : null
+    })
+  }
+
+  getLabel(nutrientId: string) {
+    return NUTRIENTS[nutrientId].label
+  }
+
+  getUnit(nutrientId: string) {
+    return NUTRIENTS[nutrientId].unit
+  }
 }

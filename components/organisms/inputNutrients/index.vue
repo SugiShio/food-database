@@ -1,57 +1,49 @@
 <template lang="pug">
 .o-input-nutrients
   ul.o-input-nutrients__block
-    li.o-input-nutrients__item(v-for='(nutrient, index) in value')
+    li.o-input-nutrients__item(v-for='(v, key) in value')
       label.o-input-nutrients__label
-        | {{ nutrients[nutrient.nutrientId].label }}
+        | {{ value.getLabel(key) }}
       organisms-input-nutrients-item(
-        :unit='nutrients[nutrient.nutrientId].unit',
-        v-model='nutrient.value',
-        @input='onInput($event, index)'
+        :unit='value.getUnit(key)',
+        v-model='value[key]',
+        @input='onInput($event, key)'
       )
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { NUTRIENTS } from '@/models/nutrient/constants'
-import { Nutrient } from '~/models/nutrient'
+import { NUTRIENTS } from '~/constants/nutrients'
+import { FoodItemNutrients } from '~/models/foodItem/nutrients'
 
 export default Vue.extend({
   name: 'OrganismsInputNutrientsIndex',
   props: {
     value: {
-      type: Array,
+      type: FoodItemNutrients,
       default: () => {
-        return Object.keys(NUTRIENTS).map((key) => {
-          return {
-            nutrientId: key,
-            value: 0,
-          }
-        })
+        return new FoodItemNutrients()
       },
-    },
-  },
-  computed: {
-    nutrients() {
-      return NUTRIENTS
     },
   },
   methods: {
     onFocus($event: Event) {
       ;($event.target as HTMLInputElement).select()
     },
-    onInput(value: string, index: number) {
+    onInput(value: string, key: string) {
       const SEPARATORS = /\n|\t|,/
       const values = value.split(SEPARATORS).map((v) => {
         const number = Number(v)
         return isNaN(number) ? null : number
       })
-      const changedNutrients = values.map((value, i) => {
-        const nutrientId = Object.keys(NUTRIENTS)[index + i]
-        return new Nutrient(nutrientId, value)
+
+      const nutrientIds = Object.keys(NUTRIENTS)
+      const startIndex = nutrientIds.indexOf(key)
+
+      values.forEach((v, index) => {
+        if (!nutrientIds[startIndex + index]) return
+        this.value[nutrientIds[startIndex + index]] = v
       })
-      // memo ↓よくない
-      this.value.splice(index, values.length, ...changedNutrients)
     },
   },
 })

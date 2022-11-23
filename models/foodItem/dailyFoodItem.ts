@@ -2,7 +2,7 @@ import { FoodItem } from '.'
 export interface DailyFoodItem extends FoodItem {
   amount: number
   unit: string
-  getNutrientValue: ({ nutrientId: string }) => void
+  getNutrientValue(params: { nutrientId: string }): void
 }
 
 export class DailyFoodItem extends FoodItem {
@@ -12,9 +12,9 @@ export class DailyFoodItem extends FoodItem {
     this.unit = dailyFoodItem ? dailyFoodItem.unit || 'g' : 'g'
   }
 
-  getNutrientValue({ nutrientId }) {
+  getNutrientValue(params: { nutrientId: string }) {
     return super.getNutrientValue({
-      nutrientId,
+      nutrientId: params.nutrientId,
       amount: this.amount,
       unit: this.unit,
     })

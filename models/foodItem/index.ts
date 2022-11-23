@@ -1,16 +1,8 @@
-import { Nutrient } from '@/models/nutrient'
-import { NUTRIENTS } from '@/models/nutrient/constants'
 import { FoodItemNutrients } from '@/models/foodItem/nutrients'
 import { RadioOption } from '@/models/radioOption'
 
 export interface FoodItem {
-  [key: string]:
-    | string
-    | number
-    | string[]
-    | FoodItemNutrients
-    | { unit: string; rate: number }[]
-    | ((nutrients: FoodItemNutrients) => Nutrient[])
+  [key: string]: any
   id: string
   name: string
   description: string
@@ -35,17 +27,26 @@ export class FoodItem {
     this.description = foodItem ? foodItem.description : ''
     this.keywords = foodItem ? foodItem.keywords || [] : []
     this.images = foodItem ? foodItem.images : []
-    this.nutrients = foodItem ? foodItem.nutrients : new FoodItemNutrients()
+    this.nutrients = foodItem
+      ? new FoodItemNutrients(foodItem.nutrients)
+      : new FoodItemNutrients()
     this.provider = foodItem ? foodItem.provider : ''
     this.type = foodItem ? foodItem.type : ''
     this.units = foodItem ? foodItem.units : []
   }
 
-  getNutrientValue({ nutrientId, amount, unit }) {
-    const unitInfo = this.units.find((u) => u.unit === unit)
+  getNutrientValue(params: {
+    nutrientId: string
+    amount: number
+    unit: string
+  }) {
+    const unitInfo = this.units.find((u) => u.unit === params.unit)
     if (!unitInfo) return
-    const value = this.nutrients[nutrientId]
-    return value === null ? null : (amount * value * unitInfo.rate) / 100
+    const value = this.nutrients[params.nutrientId]
+
+    return typeof value === 'number'
+      ? (params.amount * value * unitInfo.rate) / 100
+      : null
   }
 
   get typeLabel() {

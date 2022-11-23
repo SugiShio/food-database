@@ -1,5 +1,5 @@
 import { FoodItem } from './foodItem'
-import { NUTRIENTS } from './nutrient/constants'
+import { NUTRIENTS } from '~/constants/nutrients'
 import { FirebaseHelper } from '@/plugins/firebase'
 
 export interface RecipeItem {
