@@ -3,11 +3,7 @@
   section.foodItems-index__block
     h2.foodItems-index__title
       | 食材検索
-    organisms-search(
-      @search-start='isSearching = true',
-      @search-succeed='onSearchSucceed',
-      @search-failed='onSearchFailed'
-    )
+    organisms-search
 
   section.foodItems-index__block
     h2.foodItems-index__title
@@ -30,40 +26,24 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { FoodItem, TYPES } from '@/models/foodItem'
-import { RadioOption } from '~/models/radioOption'
 
 export default Vue.extend({
   name: 'PagesFoodItemsIndex',
   data(): {
-    foodItems: FoodItem[]
     hasError: boolean
-    isSearching: boolean
-    keyword: string
-    limit: number
     noResultText: string
-    types: string[]
-    typeOptions: RadioOption[]
   } {
     return {
-      foodItems: [],
       hasError: false,
-      isSearching: false,
-      keyword: '',
-      limit: 10,
       noResultText: '',
-      types: [],
-      typeOptions: TYPES,
     }
   },
-  methods: {
-    onSearchSucceed(foodItems: FoodItem[]) {
-      this.foodItems = foodItems
-      this.isSearching = false
+  computed: {
+    foodItems() {
+      return this.$store.state.search.foodItems
     },
-    onSearchFailed() {
-      this.hasError = true
-      this.isSearching = false
+    isSearching() {
+      return this.$store.state.search.isSearching
     },
   },
 })

@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  startAfter,
   updateDoc,
   where,
   query,
@@ -73,6 +74,7 @@ export class FirebaseHelper {
       wheres,
       l = 10,
       ob = 'createdAt',
+      sa = '',
     }: {
       wheres: {
         fieldPath: string | FieldPath
@@ -81,6 +83,7 @@ export class FirebaseHelper {
       }[]
       l?: number
       ob?: string
+      sa?: any
     }
   ) {
     try {
@@ -89,7 +92,13 @@ export class FirebaseHelper {
         where(w.fieldPath, w.optStr, w.value)
       )
 
-      const q = query(collectionRef, ...processedWheres, orderBy(ob), limit(l))
+      const q = query(
+        collectionRef,
+        ...processedWheres,
+        orderBy(ob),
+        startAfter(sa),
+        limit(l)
+      )
       const querySnapshot = await getDocs(q)
       return querySnapshot
     } catch (e) {

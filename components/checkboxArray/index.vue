@@ -14,15 +14,16 @@ export default {
   },
   methods: {
     onInput({ value, checked }) {
+      const v = [...this.value]
       if (checked) {
-        this.value.push(value)
+        v.push(value)
       } else {
-        const index = this.value.indexOf(value)
+        const index = v.indexOf(value)
         if (index > -1) {
-          this.value.splice(index, 1)
+          v.splice(index, 1)
         }
       }
-      this.$emit('input', this.value)
+      this.$emit('input', v)
     },
   },
 }
