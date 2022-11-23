@@ -19,8 +19,7 @@
             :to='{ name: "foodItems-id", params: { id: foodItem.id } }'
           )
             | {{ foodItem.nameWithProvider }}
-      //- todo
-      //- .foodItems-index__more(@click='search')
+      .foodItems-index__more(@click='showMore')
         | 次の{{ limit }}件を表示
 </template>
 
@@ -44,6 +43,14 @@ export default Vue.extend({
     },
     isSearching() {
       return this.$store.state.search.isSearching
+    },
+    limit() {
+      return this.$store.state.search.limit
+    },
+  },
+  methods: {
+    async showMore() {
+      this.$store.dispatch('search/search')
     },
   },
 })
