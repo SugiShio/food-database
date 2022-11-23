@@ -11,7 +11,7 @@
 
     .foodItems-index__searching(v-if='isSearching') 検索中
     .foodItems-index__error(v-else-if='hasError') エラーがありました
-    .foodItems-index__error(v-else-if='!foodItems.length') {{ noResultText }}
+    .foodItems-index__error(v-else-if='!foodItems.length') 条件に合う食材がありませんでした
     template(v-else)
       ul.foodItems-index__list
         li(v-for='foodItem in foodItems')
@@ -28,18 +28,12 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'PagesFoodItemsIndex',
-  data(): {
-    hasError: boolean
-    noResultText: string
-  } {
-    return {
-      hasError: false,
-      noResultText: '',
-    }
-  },
   computed: {
     foodItems() {
       return this.$store.state.search.foodItems
+    },
+    hasError() {
+      return this.$store.state.search.hasError
     },
     isSearching() {
       return this.$store.state.search.isSearching
