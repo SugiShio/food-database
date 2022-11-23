@@ -3,6 +3,7 @@ import {
   addDoc,
   collection,
   doc,
+  endAt,
   getDoc,
   getDocs,
   getFirestore,
@@ -74,7 +75,8 @@ export class FirebaseHelper {
       wheres,
       l = 10,
       ob = 'createdAt',
-      sa = '',
+      sa = null,
+      ea = null,
     }: {
       wheres: {
         fieldPath: string | FieldPath
@@ -84,21 +86,22 @@ export class FirebaseHelper {
       l?: number
       ob?: string
       sa?: any
+      ea?: any
     }
   ) {
     try {
       const collectionRef = collection(db, collectionName)
-      const processedWheres = wheres.map((w) =>
+      const queries = (wheres || []).map((w) =>
         where(w.fieldPath, w.optStr, w.value)
       )
+      if (sa !== null) {
+        queries.push(startAfter(sa))
+      }
+      if (ea !== null) {
+        queries.push(endAt(ea))
+      }
 
-      const q = query(
-        collectionRef,
-        ...processedWheres,
-        orderBy(ob),
-        startAfter(sa),
-        limit(l)
-      )
+      const q = query(collectionRef, orderBy(ob), ...queries, limit(l))
       const querySnapshot = await getDocs(q)
       return querySnapshot
     } catch (e) {

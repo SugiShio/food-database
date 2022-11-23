@@ -45,20 +45,12 @@ export default Vue.extend({
               optStr: '==' as WhereFilterOp,
               value: uid,
             },
-            {
-              fieldPath: 'date.seconds',
-              optStr: '>=' as WhereFilterOp,
-              value: startDate.getTime() / 1000,
-            },
-            {
-              fieldPath: 'date.seconds',
-              optStr: '<' as WhereFilterOp,
-              value: endDate.getTime() / 1000,
-            },
           ],
-          l: 31,
           ob: 'date.seconds',
+          sa: startDate.getTime() / 1000 - 1,
+          ea: endDate.getTime() / 1000,
         })
+
         querySnapshot.forEach((doc) => {
           const data = doc.data()
           this.dailys.push(new Daily(data.id, data))
