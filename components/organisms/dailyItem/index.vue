@@ -33,12 +33,8 @@
     fd-button(label='Submit', @button-clicked='$emit("daily-item-submit")')
 
     template(v-if='isSearchModalOpen')
-      div(@click='isSearchModalOpen = false') 閉じる
-      organisms-search(
-        @search-start='isSearching = true',
-        @search-succeed='onSearchSucceed',
-        @search-failed='onSearchFailed'
-      )
+      div(@click='closeSearchModal') 閉じる
+      organisms-search
       ul.o-daily-item-index__list
         li(v-for='foodItem in foodItems')
           | {{ foodItem.name }}
@@ -48,15 +44,29 @@
 <script lang="ts">
 import Vue from 'vue'
 import { DailyItem } from '~/models/dailyItem'
-import { FoodItem } from '~/models/foodItem'
 export default Vue.extend({
   name: 'OrganismsDailyItemIndex',
   data() {
     return {
-      isSearching: false,
       isSearchModalOpen: false,
-      foodItems: [],
     }
+  },
+  computed: {
+    foodItems() {
+      return this.$store.state.search.foodItems
+    },
+    hasError() {
+      return this.$store.state.search.hasError
+    },
+    isSearching() {
+      return this.$store.state.search.isSearching
+    },
+    limit() {
+      return this.$store.state.search.limit
+    },
+    iconClass() {
+      return `icon-${this.dailyItem.mark}`
+    },
   },
   props: {
     dailyItem: {
@@ -71,17 +81,15 @@ export default Vue.extend({
     addFoodItem(foodItem) {
       this.dailyItem.addFoodItem(foodItem)
     },
+    closeSearchModal() {
+      this.$store.commit('search/resetFoodItems')
+      this.isSearchModalOpen = false
+    },
     onDelete(index) {
       this.dailyItem.deleteFoodItem(index)
     },
     onInput(foodItem, value) {
       foodItem.setAmountAndUnit(value)
-    },
-    onSearchSucceed(foodItems: FoodItem[]) {
-      this.foodItems = foodItems
-    },
-    onSearchFailed(e) {
-      console.error(e)
     },
   },
 })
