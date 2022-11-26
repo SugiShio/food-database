@@ -1,0 +1,51 @@
+$icons-font: 'icons';
+
+@font-face {
+  font-family: $icons-font;
+  src: url('@/assets/fonts/icons.eot?c3a79d14b08c6bca618cfbcb30eddb81#iefix')
+      format('embedded-opentype'),
+    url('@/assets/fonts/icons.woff2?c3a79d14b08c6bca618cfbcb30eddb81')
+      format('woff2'),
+    url('@/assets/fonts/icons.woff?c3a79d14b08c6bca618cfbcb30eddb81')
+      format('woff');
+}
+
+i[class^='icon-']:before,
+i[class*=' icon-']:before {
+  font-family: icons !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+$icons-map: (
+  'moon': '\f101',
+  'morning': '\f102',
+  'pen': '\f103',
+  'plus-circle': '\f104',
+  'sun': '\f105',
+  'trash': '\f106',
+);
+
+.icon-moon:before {
+  content: map-get($icons-map, 'moon');
+}
+.icon-morning:before {
+  content: map-get($icons-map, 'morning');
+}
+.icon-pen:before {
+  content: map-get($icons-map, 'pen');
+}
+.icon-plus-circle:before {
+  content: map-get($icons-map, 'plus-circle');
+}
+.icon-sun:before {
+  content: map-get($icons-map, 'sun');
+}
+.icon-trash:before {
+  content: map-get($icons-map, 'trash');
+}

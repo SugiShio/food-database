@@ -1,7 +1,8 @@
 <template lang="pug">
 .o-daily-item-index
-  div {{ dailyItem.mark }}
-  div {{ dailyItem.timeText }}
+  i(:class='iconClass')
+  time {{ dailyItem.timeText }}
+
   fd-button(
     v-if='!isEditing',
     label='Edit',
