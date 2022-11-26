@@ -226,7 +226,7 @@ export default Vue.extend({
       }
     },
     onUnitsInput(value) {
-      console.log(value)
+      this.foodItem.setUnit(value)
     },
   },
 })

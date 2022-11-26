@@ -1,11 +1,24 @@
 <template lang="pug">
 .input-units
   .input-units__item(v-for='(v, index) in localValue', :key='v.unit')
-    input-text(:value='v.unit', @input='onUnitInput($event, index)')
-    | 1 {{ v.unit }} あたり
-    input-number(type='number', :value='v.rate')
-    | g
-  button(type='button', @click='$emit("add-unit-clicked")') add unit
+    label.input-units__unit
+      span.input-units__label 単位
+      input-text(:value='v.unit', @input='onUnitInput($event, index)')
+    label.input-units__rate
+      span.input-units__label 1 {{ v.unit || "単位" }} あたり
+      input-number(
+        type='number',
+        unit='g',
+        :value='v.rate',
+        @input='onRateInput($event, index)'
+      )
+  button.input-units__add-button(
+    type='button',
+    :disabled='isLastItemEmpty',
+    @click='onAddUnitClicked'
+  )
+    i.icon-plus-circle.input-units__add-icon
+    | add unit
 </template>
 
 <script lang="ts">
@@ -16,15 +29,26 @@ export default Vue.extend({
     value: { type: Array, default: () => [] },
   },
   computed: {
+    isLastItemEmpty() {
+      return !this.localValue[this.localValue.length - 1].unit
+    },
     localValue() {
       return this.value.slice(1)
     },
   },
   methods: {
+    onAddUnitClicked() {
+      if (this.isLastItemEmpty) return
+      this.$emit('add-unit-clicked')
+    },
     onUnitInput(unit: string, index: number) {
       this.localValue[index].unit = unit
       const value = [this.value[0], ...this.localValue]
-      console.log(value)
+      this.$emit('units-input', value)
+    },
+    onRateInput(rate: number, index: number) {
+      this.localValue[index].rate = rate
+      const value = [this.value[0], ...this.localValue]
       this.$emit('units-input', value)
     },
   },
@@ -33,8 +57,45 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .input-units {
+  width: 100%;
+
   &__item {
     display: flex;
+    margin-bottom: 10px;
+  }
+
+  &__unit,
+  &__rate {
+    width: calc(50% - 5px);
+  }
+
+  &__rate {
+    margin-left: 10px;
+  }
+
+  &__label {
+    font-size: 10px;
+    margin-bottom: 5px;
+  }
+
+  &__add-button {
+    font-size: inherit;
+    color: $color-text-weak;
+    transition: 0.3s;
+
+    &:not([disabled]):hover {
+      opacity: 0.7;
+    }
+
+    &[disabled] {
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+
+  &__add-icon {
+    font-size: 1.3em;
+    margin-right: 5px;
   }
 }
 </style>

@@ -55,6 +55,13 @@ export class FoodItem {
       : null
   }
 
+  setUnit(units: { unit: string; rate: number }[]) {
+    this.units = []
+    units.forEach((unit) => {
+      this.units.push(unit)
+    })
+  }
+
   get typeLabel() {
     const item = TYPES.find((type) => type.value === this.type)
     return item ? item.label : ''
