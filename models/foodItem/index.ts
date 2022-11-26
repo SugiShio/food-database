@@ -11,6 +11,7 @@ export interface FoodItem {
   nutrients: FoodItemNutrients
   provider: string
   type: string
+  url: string
   units: { unit: string; rate: number }[]
 }
 
@@ -32,7 +33,12 @@ export class FoodItem {
       : new FoodItemNutrients()
     this.provider = foodItem ? foodItem.provider : ''
     this.type = foodItem ? foodItem.type : ''
+    this.url = foodItem ? foodItem.url : ''
     this.units = foodItem ? foodItem.units : []
+  }
+
+  addUnit() {
+    this.units.push({ unit: '', rate: 1 })
   }
 
   getNutrientValue(params: {

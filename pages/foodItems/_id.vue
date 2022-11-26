@@ -52,6 +52,27 @@ main.foodItems-id(v-if='foodItem')
         template(v-else)
           | {{ foodItem.provider }}
 
+    .foodItems-id__item
+      .foodItems-id__item-label(:class='{ isEditing }')
+        label(for='url') URL
+      .foodItems-id__item-body
+        input-text(v-if='isEditing', v-model='foodItem.url')
+        template(v-else)
+          a(:href='foodItem.url') {{ foodItem.url }}
+
+    .foodItems-id__item
+      .foodItems-id__item-label(:class='{ isEditing }')
+        label(for='units') 単位
+      .foodItems-id__item-body
+        input-units(
+          v-if='isEditing',
+          v-model='foodItem.units',
+          @add-unit-clicked='onAddUnitClicked',
+          @units-input='onUnitsInput'
+        )
+        template(v-else)
+          | {{ unitText }}
+
     .foodItems-id__item(v-if='isEditing')
       .foodItems-id__item-label(:class='{ isEditing }')
         | キーワード
@@ -130,6 +151,9 @@ export default Vue.extend({
     nutrientBasis() {
       return NUTRIENT_BASIS
     },
+    unitText() {
+      return this.foodItem?.units.map((unit) => unit.unit).join(', ')
+    },
   },
   created() {
     this.fetchFoodItem()
@@ -175,6 +199,9 @@ export default Vue.extend({
         this.isEditing = false
       } catch (_) {}
     },
+    onAddUnitClicked() {
+      this.foodItem.addUnit()
+    },
     onCancel() {
       this.isEditing = false
       this.fetchFoodItem()
@@ -197,6 +224,9 @@ export default Vue.extend({
       } else if (value) {
         ;(this.foodItem[key] as string[]).push(value)
       }
+    },
+    onUnitsInput(value) {
+      console.log(value)
     },
   },
 })
