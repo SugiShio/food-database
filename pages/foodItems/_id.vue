@@ -1,6 +1,6 @@
 <template lang="pug">
 main.foodItems-id(v-if='foodItem')
-  nuxt-link.foodItems-id__link(:to='{ name: "foodItems"}') Index
+  nuxt-link.foodItems-id__link(:to='{ name: "foodItems" }') Index
 
   .foodItems-id__title-container
     input-text(

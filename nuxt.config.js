@@ -15,7 +15,7 @@ export default {
   head: {
     title: 'food-database',
     htmlAttrs: {
-      lang: 'en',
+      lang: 'ja',
     },
     meta: [
       { charset: 'utf-8' },
