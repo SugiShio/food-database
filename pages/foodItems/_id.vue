@@ -122,7 +122,7 @@ export default Vue.extend({
   } {
     return {
       foodItem: null,
-      isEditing: false,
+      isEditing: true,
       rate: 100,
     }
   },

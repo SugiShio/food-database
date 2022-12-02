@@ -116,6 +116,11 @@ button {
   outline: none;
 }
 
+a {
+  text-decoration: underline;
+  color: $color-main;
+}
+
 button {
   border: none;
   background: none;
