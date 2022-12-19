@@ -25,7 +25,7 @@ import { Daily } from '@/models/daily'
 export default Vue.extend({
   name: 'OrganismsDailyId',
   props: {
-    date: { type: Number, required: true },
+    id: { type: String, required: true },
     uid: { type: String, required: true },
   },
   data(): { daily: Daily | null; editingDailyItemIndex: number | null } {
@@ -42,16 +42,15 @@ export default Vue.extend({
       this.daily?.addItem()
     },
     async fetchDaily() {
-      const dateStr = `${this.date}`
       try {
         const docSnap = await getDoc(
-          doc(db, 'users', this.uid, 'daily', dateStr)
+          doc(db, 'users', this.uid, 'daily', this.id)
         )
         if (docSnap?.exists()) {
           const data = docSnap.data()
-          this.daily = new Daily(dateStr, data)
+          this.daily = new Daily(this.id, data)
         } else {
-          this.daily = new Daily(dateStr)
+          this.daily = new Daily(this.id)
         }
       } catch (e) {
         console.error(e)

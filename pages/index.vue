@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  organisms-daily(v-if='uid', :date='date', :uid='uid')
+  organisms-daily(v-if='uid', :id='id', :uid='uid')
 
   nav
     ul
@@ -22,10 +22,10 @@ export default Vue.extend({
     const y = today.getFullYear()
     const m = today.getMonth() + 1
     const d = today.getDate()
-    const date = y * 10000 + m * 100 + d
+    const id = `${y * 10000 + m * 100 + d}`
 
     return {
-      date,
+      id,
     }
   },
   computed: {
