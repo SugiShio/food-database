@@ -45,7 +45,7 @@
 import Vue from 'vue'
 import { DailyItem } from '~/models/dailyItem'
 export default Vue.extend({
-  name: 'OrganismsDailyItemIndex',
+  name: 'OrganismsDailyDailyItem',
   data() {
     return {
       isSearchModalOpen: false,

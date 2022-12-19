@@ -1,49 +1,36 @@
 <template lang="pug">
 div
+  organisms-daily(v-if='uid', :date='date', :uid='uid')
+
   nav
     ul
       li
-        nuxt-link.foodItems-id__link(:to={ name: "foodItems" }) 食品データベース
+        nuxt-link.foodItems-id__link(:to='{ name: "foodItems" }') 食品データベース
       li
-        nuxt-link.foodItems-id__link(:to={ name: "recipes" }) レシピ
+        nuxt-link.foodItems-id__link(:to='{ name: "recipes" }') レシピ
       li
-        nuxt-link.foodItems-id__link(:to={ name: "daily" }) デイリー
+        nuxt-link.foodItems-id__link(:to='{ name: "daily" }') デイリー
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
 
 export default Vue.extend({
   name: 'PagesIndex',
   data() {
+    const today = new Date()
+    const y = today.getFullYear()
+    const m = today.getMonth() + 1
+    const d = today.getDate()
+    const date = y * 10000 + m * 100 + d
+
     return {
-      email: '',
-      password: '',
+      date,
     }
   },
   computed: {
-    displayName() {
-      return this.$store.getters.displayName
-    },
-    isSignin() {
-      return this.$store.state.isSignin
-    },
-  },
-  methods: {
-    signin() {
-      if (!this.email || !this.password) return
-      const auth = this.$fire.auth
-      auth
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then((data) => {
-          if (!data.user) return
-
-          this.$store.commit('setUser', {
-            uid: data.user.uid,
-            displayName: data.user.uid,
-          })
-          this.$store.commit('setIsSignin')
-        })
-        .catch((_) => {})
+    uid() {
+      return this.$store.state.user.uid
     },
   },
 })

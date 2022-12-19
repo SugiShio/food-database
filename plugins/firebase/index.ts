@@ -18,7 +18,7 @@ import {
 } from 'firebase/firestore'
 
 const app = initializeApp(process.env.firebaseConfig as FirebaseOptions)
-const db = getFirestore(app)
+export const db = getFirestore(app)
 
 export const getFirestoreFormat = (object: any) => {
   return normalizeObject(object)
