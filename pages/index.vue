@@ -17,18 +17,26 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'PagesIndex',
-  data() {
-    const today = new Date()
-    const y = today.getFullYear()
-    const m = today.getMonth() + 1
-    const d = today.getDate()
-    const id = `${y * 10000 + m * 100 + d}`
-
-    return {
-      id,
-    }
-  },
   computed: {
+    id() {
+      if (this.year && this.month && this.date)
+        return `${this.year}${this.month}${this.date}`
+
+      const today = new Date()
+      const y = today.getFullYear()
+      const m = today.getMonth() + 1
+      const d = today.getDate()
+      return `${y * 10000 + m * 100 + d}`
+    },
+    year() {
+      return this.$route.query.year
+    },
+    month() {
+      return this.$route.query.month
+    },
+    date() {
+      return this.$route.query.date
+    },
     uid() {
       return this.$store.state.user.uid
     },
