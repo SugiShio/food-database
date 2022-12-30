@@ -1,13 +1,11 @@
 <template lang="pug">
-.o-daily-id(v-if='daily')
+.o-daily(v-if='daily')
   div(@click='submit') submit
-  time(:datetime='`${daily.year}-${daily.month}-${daily.date}`') {{ daily.year }}.{{ daily.month }}.{{ daily.date }}
+  fd-title
+    time(:datetime='`${daily.year}-${daily.month}-${daily.date}`') {{ daily.year }}.{{ daily.month }}.{{ daily.date }}
 
   ul
-    li.o-daily-id__item
-      button(type='button', @click='addDailyItem')
-        | 食事を記録
-    li.o-daily-id__item(v-for='(item, index) in daily.items')
+    li.o-daily__item(v-for='(item, index) in daily.items')
       organisms-daily-item(
         :daily-item='item',
         :is-editing='isEditingDailyItem(index)',
@@ -18,7 +16,7 @@
 
 <script lang="ts">
 import { setDoc, collection, doc, getDoc } from 'firebase/firestore'
-import { db, getFirestoreFormat, FirebaseHelper } from '@/plugins/firebase'
+import { db, getFirestoreFormat } from '@/plugins/firebase'
 import Vue from 'vue'
 import { Daily } from '@/models/daily'
 
@@ -67,7 +65,7 @@ export default Vue.extend({
       try {
         const data = getFirestoreFormat(this.daily)
         await setDoc(
-          doc(collection(db, 'users', this.uid, 'daily'), `${this.date}`),
+          doc(collection(db, 'users', this.uid, 'daily'), this.id),
           data
         )
       } catch (e) {
@@ -79,7 +77,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.o-daily-id {
+.o-daily {
   padding: 20px 10px 40px;
 
   &__link {

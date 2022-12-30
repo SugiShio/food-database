@@ -1,5 +1,6 @@
 <template lang="pug">
-h1.fd-title {{ text }}
+h1.fd-title
+  slot
 </template>
 
 <script lang="ts">
