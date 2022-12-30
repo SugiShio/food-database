@@ -4,6 +4,8 @@
   fd-title
     time(:datetime='`${daily.year}-${daily.month}-${daily.date}`') {{ daily.year }}.{{ daily.month }}.{{ daily.date }}
 
+  organisms-nutrients-summary(:nutrients='{}')
+
   ul
     li.o-daily__item(v-for='(item, index) in daily.items')
       organisms-daily-item(
