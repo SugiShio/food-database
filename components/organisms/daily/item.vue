@@ -13,7 +13,7 @@
     li.o-daily-item-index__food-item(
       v-for='(foodItem, index) in dailyItem.foodItems'
     )
-      div {{ foodItem.nameWithProvider }}
+      .o-daily-item-index__food-item-name {{ foodItem.nameWithProvider }}
       .o-daily-item-index__food-item-actions(v-if='isEditing')
         input-number-with-unit(
           :amount='foodItem.amount',
@@ -21,7 +21,8 @@
           :units='foodItem.units',
           @input='onInput(foodItem, $event)'
         )
-        button(@click='onDelete(index)') Delete
+        button.o-daily-item-index__food-item-trash(@click='onDelete(index)')
+          i.icon-trash
       span(v-else)
         | {{ foodItem.amount }}{{ foodItem.unit }} / {{ foodItem.getNutrientValue({ nutrientId: "calorie" }) }} kcal
   template(v-if='isEditing')
@@ -101,11 +102,26 @@ export default Vue.extend({
     display: flex;
     align-content: center;
     justify-content: space-between;
+    align-items: center;
     margin: 10px 0;
+  }
+
+  &__food-item-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__food-item-actions {
     display: flex;
+    max-width: 40%;
+    margin-left: 10px;
+  }
+
+  &__food-item-trash {
+    margin-left: 5px;
+    font-size: 24px;
+    line-height: 1;
   }
 }
 </style>

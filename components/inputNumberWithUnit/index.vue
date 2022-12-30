@@ -49,23 +49,40 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .input-number-with-unit {
+  position: relative;
   width: 100%;
   display: flex;
   border: 1px solid $color-grey-weak;
   background-color: transparent;
   border-radius: 3px;
 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 8px;
+    margin: auto;
+    width: 5px;
+    height: 5px;
+    border-right: 1px solid $color-grey-weak;
+    border-bottom: 1px solid $color-grey-weak;
+    transform: rotate(45deg);
+  }
+
   &__amount {
     padding: 5px 10px;
     border: none;
     flex-grow: 1;
+    width: 100%;
   }
 
   &__unit {
-    padding: 5px 10px;
+    padding: 5px 20px 5px 0;
     width: 60px;
     border: none;
-    background-color: $color-grey-weak;
+    color: $color-grey-weak;
+    text-align: right;
     line-height: inherit;
     appearance: none;
   }
