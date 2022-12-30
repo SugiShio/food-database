@@ -29,6 +29,20 @@ export class RecipeItem {
       }
     } catch (_) {}
   }
+
+  get nutrients() {
+    const result: { [key: string]: number | null } = {}
+    Object.keys(NUTRIENTS).forEach((key) => {
+      result[key] = this.getNutrient(key)
+    })
+    return result
+  }
+
+  getNutrient(nutrientId: string) {
+    const nutrient = this.foodItem?.nutrients[nutrientId]
+    const unit = this.foodItem.units.find((u) => u.unit === this.unit)
+    return !Number.isNaN(nutrient) && unit ? nutrient * unit.rate : null
+  }
 }
 
 export interface Recipe {
@@ -75,17 +89,21 @@ export class Recipe {
 
   get nutrients() {
     const result: { [key: string]: number[] } = {}
-    // Object.keys(NUTRIENTS).forEach((key) => {
-    //   result[key as string] = []
-    //   this.items.forEach((item) => {
-    //     const nutrient = item.foodItem?.nutrients.find(
-    //       (n) => n.nutrientId === key
-    //     )
-    //     result[key].push(
-    //       nutrient && nutrient.value ? (nutrient.value * item.amount) / 100 : 0
-    //     )
-    //   })
-    // })
+    Object.keys(NUTRIENTS).forEach((key) => {
+      const values: (number | null)[] = []
+      this.items.forEach((item) => {
+        const nutrient = item.foodItem?.nutrients[key]
+        values.push(!Number.isNaN(nutrient) ? nutrient : null)
+      })
+      result[key] = values
+    })
     return result
+  }
+
+  getNutrientSum(nutrientId: string) {
+    const nutrientValues = this.nutrients[nutrientId]
+    return nutrientValues.reduce((p, c) => {
+      return p + (c || 0)
+    }, 0)
   }
 }
