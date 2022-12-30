@@ -1,7 +1,7 @@
 <template lang="pug">
 main.recipes-id(v-if='recipe')
   //- todo パンクズとしてコンポーネントに切り出し
-  nuxt-link.recipes-id__link(:to={ name: "recipes" }) Index
+  nuxt-link.recipes-id__link(:to='{ name: "recipes" }') Index
   .recipes-id__title-container
     input-text(v-if='isEditing', v-model='recipe.name', size='large')
     fd-title(v-else) {{ recipe.name }}
