@@ -9,7 +9,7 @@ main.foodItems-id(v-if='foodItem')
       size='large',
       @input='onInput($event, "name")'
     )
-    fd-title(v-else, :text='foodItem.name') {{ foodItem.name }}
+    fd-title(v-else) {{ foodItem.name }}
     fd-button(
       v-if='isEditable',
       label='Edit',
