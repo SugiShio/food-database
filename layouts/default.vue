@@ -53,7 +53,6 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .layouts-default {
   min-height: 100vh;
-  background: linear-gradient($color-grey, $color-main);
 
   &__header {
     display: flex;
@@ -62,7 +61,6 @@ export default Vue.extend({
   }
 
   &__button {
-    color: #fff;
     transition: opacity 0.3s;
 
     &:hover {
