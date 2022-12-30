@@ -16,8 +16,7 @@ export const mutations = {
   },
 
   setUser(state: state, user: { uid: string; displayName: string }) {
-    state.user.uid = user.uid
-    state.user.displayName = user.displayName
+    state.user = { ...user }
   },
 
   resetUser(state: state) {
