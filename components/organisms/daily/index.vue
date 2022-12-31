@@ -21,6 +21,7 @@
   fd-window(:is-show='!!editingDailyItem')
     organisms-daily-item-edit(
       :daily-item='editingDailyItem',
+      @daily-item-submit='updateDailyItem',
       @add-button-clicked='isSearchModalShow = true',
       @cancel-clicked='editingDailyItem = null'
     )
@@ -52,11 +53,13 @@ export default Vue.extend({
   data(): {
     daily: Daily | null
     editingDailyItem: Daily | null
+    editingDailyItemIndex: number | null
     isSearchModalShow: boolean
   } {
     return {
       daily: null,
       editingDailyItem: null,
+      editingDailyItemIndex: null,
       isSearchModalShow: false,
     }
   },
@@ -95,10 +98,24 @@ export default Vue.extend({
       this.isSearchModalShow = false
     },
     editDailyItem(index: number) {
+      this.editingDailyItemIndex = index
       this.editingDailyItem = this.daily?.items[index]
+    },
+    async updateDailyItem() {
+      if (this.editingDailyItemIndex === null) {
+        this.daily?.addItem(this.editingDailyItem)
+      } else {
+        this.daily.updateItem(this.editingDailyItemIndex, this.editingDailyItem)
+        this.editingDailyItemIndex = null
+      }
+      try {
+        await this.submit()
+        this.editingDailyItem = null
+      } catch {}
     },
     async submit() {
       if (!this.daily) return
+      this.daily.sortItems()
       try {
         const data = getFirestoreFormat(this.daily)
         await setDoc(

@@ -20,8 +20,20 @@ export class Daily {
     this.createdAt = daily ? daily.createdAt : null
   }
 
-  addItem() {
-    this.items.unshift(new DailyItem())
+  addItem(dailyItem?: DailyItem) {
+    this.items.unshift(dailyItem || new DailyItem())
+    this.sortItems()
+  }
+
+  updateItem(index: number, dailyItem: DailyItem) {
+    this.items.splice(index, 1, dailyItem)
+    this.sortItems()
+  }
+
+  sortItems() {
+    return this.items.sort((a, b) => {
+      return a.time.seconds < b.time.seconds ? -1 : 1
+    })
   }
 
   get year() {
