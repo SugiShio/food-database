@@ -2,7 +2,7 @@
 .o-daily-item-edit
   .o-daily-item-edit__head
     i.o-daily-item-edit__mark
-    input-text(v-model='dailyItem.time')
+    input-time(v-model='dailyItem.time')
 
   ul.o-daily-item-edit__food-item-list
     li.o-daily-item-edit__food-item(

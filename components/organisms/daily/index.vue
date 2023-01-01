@@ -52,7 +52,7 @@ export default Vue.extend({
   },
   data(): {
     daily: Daily | null
-    editingDailyItem: Daily | null
+    editingDailyItem: DailyItem | null
     editingDailyItemIndex: number | null
     isSearchModalShow: boolean
   } {
@@ -73,7 +73,7 @@ export default Vue.extend({
   },
   methods: {
     addDailyItem() {
-      this.editingDailyItem = new DailyItem()
+      this.editingDailyItem = new DailyItem(null, this.daily?.timestamp)
     },
     addFoodItem(foodItem) {
       this.editingDailyItem.addFoodItem(foodItem)

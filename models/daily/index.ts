@@ -20,8 +20,8 @@ export class Daily {
     this.createdAt = daily ? daily.createdAt : null
   }
 
-  addItem(dailyItem?: DailyItem) {
-    this.items.unshift(dailyItem || new DailyItem())
+  addItem(dailyItem: DailyItem) {
+    this.items.unshift(dailyItem)
     this.sortItems()
   }
 
@@ -46,5 +46,9 @@ export class Daily {
 
   get date() {
     return parseInt(this.dateString.slice(6, 8))
+  }
+
+  get timestamp() {
+    return new Date(this.year, this.month - 1, this.date).getTime()
   }
 }
