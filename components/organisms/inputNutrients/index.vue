@@ -27,10 +27,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    onFocus($event: Event) {
-      ;($event.target as HTMLInputElement).select()
+    onFocus($event) {
+      $event.target.select()
     },
-    onInput(value: string, key: string) {
+    onInput(value, key) {
       const SEPARATORS = /\n|\t|,/
       const values = value.split(SEPARATORS).map((v) => {
         const number = Number(v)

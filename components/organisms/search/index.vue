@@ -20,13 +20,10 @@
 <script lang="ts">
 import Vue from 'vue'
 import { TYPES } from '@/models/foodItem'
-import { RadioOption } from '~/models/radioOption'
 
 export default Vue.extend({
   name: 'OrganismsSearchIndex',
-  data(): {
-    typeOptions: RadioOption[]
-  } {
+  data() {
     return {
       typeOptions: TYPES,
     }

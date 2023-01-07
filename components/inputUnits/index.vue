@@ -41,12 +41,12 @@ export default Vue.extend({
       if (this.isLastItemEmpty) return
       this.$emit('add-unit-clicked')
     },
-    onUnitInput(unit: string, index: number) {
+    onUnitInput(unit, index) {
       this.localValue[index].unit = unit
       const value = [this.value[0], ...this.localValue]
       this.$emit('units-input', value)
     },
-    onRateInput(rate: number, index: number) {
+    onRateInput(rate, index) {
       this.localValue[index].rate = rate
       const value = [this.value[0], ...this.localValue]
       this.$emit('units-input', value)

@@ -49,7 +49,7 @@ export default Vue.extend({
     nutrients: {
       type: Object,
       default: () => {
-        const result: { [key: string]: number[] } = {}
+        const result = {}
         Object.keys(NUTRIENTS).forEach((key) => {
           result[key] = []
         })
@@ -58,14 +58,14 @@ export default Vue.extend({
   },
   computed: {
     nutrientLabels() {
-      const result: { [key: string]: string } = {}
+      const result = {}
       Object.keys(NUTRIENTS).forEach((key) => {
         result[key] = NUTRIENTS[key].label
       })
       return result
     },
     nutrientUnits() {
-      const result: { [key: string]: string } = {}
+      const result = {}
       Object.keys(NUTRIENTS).forEach((key) => {
         result[key] = NUTRIENTS[key].unit
       })

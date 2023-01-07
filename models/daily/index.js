@@ -1,31 +1,24 @@
 import { DailyItem } from '../dailyItem'
 
-export interface Daily {
-  [key: string]: any
-  id: string
-  dateString: string
-  items: DailyItem[]
-}
-
 export class Daily {
-  constructor(dateString: string, daily?: any) {
+  constructor(dateString, daily) {
     this.dateString = dateString
     this.description = 'test description'
     this.items =
       daily && daily.items
-        ? daily.items.map((item: DailyItem) => {
+        ? daily.items.map((item) => {
             return new DailyItem(item)
           })
         : []
     this.createdAt = daily ? daily.createdAt : null
   }
 
-  addItem(dailyItem: DailyItem) {
+  addItem(dailyItem) {
     this.items.unshift(dailyItem)
     this.sortItems()
   }
 
-  updateItem(index: number, dailyItem: DailyItem) {
+  updateItem(index, dailyItem) {
     this.items.splice(index, 1, dailyItem)
     this.sortItems()
   }

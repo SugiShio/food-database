@@ -21,11 +21,11 @@ export default Vue.extend({
     value: { type: [String, Number], default: 0 },
   },
   methods: {
-    onFocus($event: Event) {
-      ;($event.target as HTMLInputElement).select()
+    onFocus($event) {
+      $event.target.select()
     },
-    onInput($event: Event) {
-      const value = ($event.target as HTMLInputElement).value
+    onInput($event) {
+      const value = $event.target.value
       this.$emit('input', value)
     },
   },

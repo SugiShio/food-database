@@ -40,15 +40,15 @@ export default Vue.extend({
     }
   },
   methods: {
-    onHoursChange($event: Event) {
-      const hours = Number.parseInt(($event.target as HTMLInputElement).value)
+    onHoursChange($event) {
+      const hours = Number.parseInt($event.target.value)
       const datetime = new Date(this.value.seconds * 1000)
       datetime.setHours(hours)
       const seconds = Math.floor(datetime.getTime() / 1000)
       this.$emit('input', { seconds })
     },
-    onMinutesChange($event: Event) {
-      const minutes = Number.parseInt(($event.target as HTMLInputElement).value)
+    onMinutesChange($event) {
+      const minutes = Number.parseInt($event.target.value)
       const datetime = new Date(this.value.seconds * 1000)
       datetime.setMinutes(minutes)
       const seconds = Math.floor(datetime.getTime() / 1000)

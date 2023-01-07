@@ -14,31 +14,28 @@ import {
   limit,
   orderBy,
   FieldPath,
-  WhereFilterOp,
 } from 'firebase/firestore'
 
-const app = initializeApp(process.env.firebaseConfig as FirebaseOptions)
+const app = initializeApp(process.env.firebaseConfig)
 export const db = getFirestore(app)
 
-export const getFirestoreFormat = (object: any) => {
+export const getFirestoreFormat = (object) => {
   return normalizeObject(object)
 }
 
-const normalizeObject = (object: any) => {
+const normalizeObject = (object) => {
   if (object === undefined) {
     return null
   } else if (typeof object === 'string' || object === null) {
     return object
   } else if (Array.isArray(object)) {
-    return object.map((o): any => {
+    return object.map((o) => {
       return normalizeObject(o)
     })
   } else if (Object.keys(object).length) {
-    const result: {
-      [key: string]: any
-    } = {}
+    const result = {}
 
-    Object.keys(object).forEach((key): any => {
+    Object.keys(object).forEach((key) => {
       result[key] = normalizeObject(object[key])
     })
     return result
@@ -48,7 +45,7 @@ const normalizeObject = (object: any) => {
 }
 
 export class FirebaseHelper {
-  static async fetchIndex(collectionName: string) {
+  static async fetchIndex(collectionName) {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName))
       return querySnapshot
@@ -58,10 +55,10 @@ export class FirebaseHelper {
     }
   }
 
-  static async fetchItem(collectionName: string, docId: string) {
+  static async fetchItem(collectionName, docId) {
     try {
       const docSnap = await getDoc(doc(db, collectionName, docId))
-      if (!docSnap?.exists()) throw new Error('Document not found')
+      if (!docSnap.exists()) throw new Error('Document not found')
       return docSnap
     } catch (e) {
       console.error(e)
@@ -70,24 +67,8 @@ export class FirebaseHelper {
   }
 
   static async search(
-    collectionName: string,
-    {
-      wheres,
-      l = 10,
-      ob = 'createdAt',
-      sa = null,
-      ea = null,
-    }: {
-      wheres: {
-        fieldPath: string | FieldPath
-        optStr: WhereFilterOp
-        value: unknown
-      }[]
-      l?: number
-      ob?: string
-      sa?: any
-      ea?: any
-    }
+    collectionName,
+    { wheres, l = 10, ob = 'createdAt', sa = null, ea = null }
   ) {
     try {
       const collectionRef = collection(db, collectionName)
@@ -110,7 +91,7 @@ export class FirebaseHelper {
     }
   }
 
-  static async create(collectionName: string, postData: object) {
+  static async create(collectionName, postData) {
     const data = getFirestoreFormat(postData)
 
     try {
@@ -122,7 +103,7 @@ export class FirebaseHelper {
     }
   }
 
-  static async update(collectionName: string, docId: string, postData: object) {
+  static async update(collectionName, docId, postData) {
     const data = getFirestoreFormat(postData)
 
     try {
@@ -134,7 +115,7 @@ export class FirebaseHelper {
     }
   }
 
-  static getFirestoreFormat(object: any) {
+  static getFirestoreFormat(object) {
     return normalizeObject(object)
   }
 }

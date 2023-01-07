@@ -11,8 +11,8 @@ export default Vue.extend({
     value: { type: String, default: '' },
   },
   methods: {
-    onInput($event: Event) {
-      const value = ($event.target as HTMLInputElement).value
+    onInput($event) {
+      const value = $event.target.value
       this.$emit('input', value)
     },
   },

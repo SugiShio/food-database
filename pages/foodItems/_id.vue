@@ -115,11 +115,7 @@ import { FirebaseHelper } from '@/plugins/firebase'
 
 export default Vue.extend({
   name: 'PagesFoodItemsId',
-  data(): {
-    foodItem: FoodItem | null
-    isEditing: boolean
-    rate: number
-  } {
+  data() {
     return {
       foodItem: null,
       isEditing: true,
@@ -133,16 +129,16 @@ export default Vue.extend({
     id() {
       return this.$route.params.id
     },
-    isEditable(): boolean {
+    isEditable() {
       return this.$store.state.isSignin && !this.isEditing
     },
-    isNew(): boolean {
+    isNew() {
       return this.id === 'new'
     },
     nutrients() {
-      const result: { [key: string]: number[] } = {}
+      const result = {}
       Object.keys(NUTRIENTS).forEach((key) => {
-        const nutrient = this.foodItem?.nutrients[key]
+        const nutrient = this.foodItem.nutrients[key]
         const value = nutrient ? nutrient || 0 : 0
         result[key] = [(value * this.rate) / 100]
       })
@@ -152,7 +148,7 @@ export default Vue.extend({
       return NUTRIENT_BASIS
     },
     unitText() {
-      return this.foodItem?.units.map((unit) => unit.unit).join(', ')
+      return this.foodItem.units.map((unit) => unit.unit).join(', ')
     },
   },
   created() {
@@ -193,7 +189,7 @@ export default Vue.extend({
     update() {
       if (!this.foodItem) return
       try {
-        FirebaseHelper.update('foodItems', this.foodItem?.id, this.foodItem)
+        FirebaseHelper.update('foodItems', this.foodItem.id, this.foodItem)
         console.log('Item successfully updated! 🍅')
         this.fetchFoodItem()
         this.isEditing = false
@@ -206,23 +202,20 @@ export default Vue.extend({
       this.isEditing = false
       this.fetchFoodItem()
     },
-    onInput(value: string, key: string) {
+    onInput(value, key) {
       if (!this.foodItem) return
       this.foodItem[key] = value
     },
-    onTextArrayInput(
-      { value, index = -1 }: { value: string; index?: number },
-      key: string
-    ) {
+    onTextArrayInput({ value, index = -1 }, key) {
       if (!this.foodItem || !this.foodItem[key]) return
       if (index > -1) {
         if (value) {
-          ;(this.foodItem[key] as string[]).splice(index, 1, value)
+          this.foodItem[key].splice(index, 1, value)
         } else {
-          ;(this.foodItem[key] as string[]).splice(index, 1)
+          this.foodItem[key].splice(index, 1)
         }
       } else if (value) {
-        ;(this.foodItem[key] as string[]).push(value)
+        this.foodItem[key].push(value)
       }
     },
     onUnitsInput(value) {

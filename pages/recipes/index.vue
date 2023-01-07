@@ -15,7 +15,7 @@ import { FirebaseHelper } from '@/plugins/firebase'
 
 export default Vue.extend({
   name: 'PagesRecipes',
-  data(): { recipes: Recipe[] } {
+  data() {
     return {
       recipes: [],
     }

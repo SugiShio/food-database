@@ -28,8 +28,8 @@ export default Vue.extend({
     value: { type: String, default: '' },
   },
   methods: {
-    endEditing($event: Event) {
-      const value = ($event.target as HTMLInputElement).value
+    endEditing($event) {
+      const value = $event.target.value
       this.$emit('end-editing', value)
       this.isEditing = false
     },
@@ -39,7 +39,7 @@ export default Vue.extend({
     startEditing() {
       this.isEditing = true
       this.$nextTick(() => {
-        ;(this.$refs.input as HTMLInputElement).focus()
+        this.$refs.input.focus()
       })
     },
   },

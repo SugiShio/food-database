@@ -2,23 +2,18 @@ import { FoodItem } from './foodItem'
 import { NUTRIENTS } from '~/constants/nutrients'
 import { FirebaseHelper } from '@/plugins/firebase'
 
-export interface RecipeItem {
-  id: string
-  amount: number
-  unit: string
-  foodItem: FoodItem
-}
-
 export class RecipeItem {
   id = ''
   amount = 0
   unit = 'g'
 
-  constructor(params: RecipeItem) {
-    this.id = params.id
-    this.unit = params.unit
-    this.amount = params.amount
-    this.foodItem = params.foodItem || new FoodItem(this.id)
+  constructor(params) {
+    this.id = params ? params.id : ''
+    this.unit = params ? params.unit : ''
+    this.amount = params ? params.amount : 0
+    this.foodItem = params
+      ? params.foodItem || new FoodItem(this.id)
+      : new FoodItem()
   }
 
   async setFoodItem() {
@@ -31,43 +26,34 @@ export class RecipeItem {
   }
 
   get nutrients() {
-    const result: { [key: string]: number | null } = {}
+    const result = {}
     Object.keys(NUTRIENTS).forEach((key) => {
       result[key] = this.getNutrient(key)
     })
     return result
   }
 
-  getNutrient(nutrientId: string) {
-    const nutrient = this.foodItem?.nutrients[nutrientId]
+  getNutrient(nutrientId) {
+    const nutrient = this.foodItem.nutrients[nutrientId]
     const unit = this.foodItem.units.find((u) => u.unit === this.unit)
-    return !Number.isNaN(nutrient) && unit ? nutrient * unit.rate : null
+    return typeof nutrient === 'number' && unit ? nutrient * unit.rate : null
   }
-}
-
-export interface Recipe {
-  id: string
-  name: string
-  description: string
-  items: RecipeItem[]
 }
 
 export class Recipe {
   id
   name = ''
   description = ''
-  items: RecipeItem[] = []
+  items = []
 
-  constructor(id = '', recipe?: any) {
+  constructor(id = '', recipe) {
     this.id = id
     this.name = recipe ? recipe.name : ''
     this.description = recipe ? recipe.description : ''
-    this.items = recipe
-      ? recipe.items.map((item: RecipeItem) => new RecipeItem(item))
-      : []
+    this.items = recipe ? recipe.items.map((item) => new RecipeItem(item)) : []
   }
 
-  addItem(item: FoodItem, amount: number, unit = 'g') {
+  addItem(item, amount, unit = 'g') {
     this.items.push(
       new RecipeItem({
         id: item.id,
@@ -75,6 +61,8 @@ export class Recipe {
         unit,
         foodItem: item,
         setFoodItem: RecipeItem.prototype.setFoodItem,
+        nutrients: RecipeItem.prototype.nutrients,
+        getNutrient: RecipeItem.prototype.getNutrient,
       })
     )
   }
@@ -88,22 +76,22 @@ export class Recipe {
   }
 
   get nutrients() {
-    const result: { [key: string]: number[] } = {}
+    const result = {}
     Object.keys(NUTRIENTS).forEach((key) => {
-      const values: (number | null)[] = []
+      const values = []
       this.items.forEach((item) => {
-        const nutrient = item.foodItem?.nutrients[key]
-        values.push(!Number.isNaN(nutrient) ? nutrient : null)
+        const nutrient = item.foodItem.nutrients[key]
+        values.push(typeof nutrient === 'number' ? nutrient : null)
       })
       result[key] = values
     })
     return result
   }
 
-  getNutrientSum(nutrientId: string) {
+  getNutrientSum(nutrientId) {
     const nutrientValues = this.nutrients[nutrientId]
     return nutrientValues.reduce((p, c) => {
-      return p + (c || 0)
+      return typeof p === 'number' && typeof c === 'number' ? p + c : null
     }, 0)
   }
 }

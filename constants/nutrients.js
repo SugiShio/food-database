@@ -1,11 +1,4 @@
-export interface NUTRIENTS {
-  [key: string]: {
-    label: string
-    unit: string
-  }
-}
-
-export const NUTRIENTS: NUTRIENTS = {
+export const NUTRIENTS = {
   calorie: { label: 'カロリー', unit: 'kcal' },
   protein: { label: 'タンパク質', unit: 'g' },
   fat: { label: '脂質', unit: 'g' },

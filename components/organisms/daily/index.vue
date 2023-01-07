@@ -50,12 +50,7 @@ export default Vue.extend({
     id: { type: String, required: true },
     uid: { type: String, required: true },
   },
-  data(): {
-    daily: Daily | null
-    editingDailyItem: DailyItem | null
-    editingDailyItemIndex: number | null
-    isSearchModalShow: boolean
-  } {
+  data() {
     return {
       daily: null,
       editingDailyItem: null,
@@ -73,7 +68,7 @@ export default Vue.extend({
   },
   methods: {
     addDailyItem() {
-      this.editingDailyItem = new DailyItem(null, this.daily?.timestamp)
+      this.editingDailyItem = new DailyItem(null, this.daily.timestamp)
     },
     addFoodItem(foodItem) {
       this.editingDailyItem.addFoodItem(foodItem)
@@ -83,7 +78,7 @@ export default Vue.extend({
         const docSnap = await getDoc(
           doc(db, 'users', this.uid, 'daily', this.id)
         )
-        if (docSnap?.exists()) {
+        if (docSnap.exists()) {
           const data = docSnap.data()
           this.daily = new Daily(this.id, data)
         } else {
@@ -97,13 +92,13 @@ export default Vue.extend({
       this.$store.commit('search/resetFoodItems')
       this.isSearchModalShow = false
     },
-    editDailyItem(index: number) {
+    editDailyItem(index) {
       this.editingDailyItemIndex = index
-      this.editingDailyItem = this.daily?.items[index]
+      this.editingDailyItem = this.daily.items[index]
     },
     async updateDailyItem() {
       if (this.editingDailyItemIndex === null) {
-        this.daily?.addItem(this.editingDailyItem)
+        this.daily.addItem(this.editingDailyItem)
       } else {
         this.daily.updateItem(this.editingDailyItemIndex, this.editingDailyItem)
         this.editingDailyItemIndex = null

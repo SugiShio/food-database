@@ -1,18 +1,13 @@
 import { FoodItem } from '.'
-export interface DailyFoodItem extends FoodItem {
-  amount: number
-  unit: string
-  getNutrientValue(params: { nutrientId: string }): void
-}
 
 export class DailyFoodItem extends FoodItem {
-  constructor(dailyFoodItem?: any) {
+  constructor(dailyFoodItem) {
     super(dailyFoodItem.id, dailyFoodItem)
     this.amount = dailyFoodItem ? dailyFoodItem.amount || 100 : 100
     this.unit = dailyFoodItem ? dailyFoodItem.unit || 'g' : 'g'
   }
 
-  getNutrientValue(params: { nutrientId: string }) {
+  getNutrientValue(params) {
     return super.getNutrientValue({
       nutrientId: params.nutrientId,
       amount: this.amount,
@@ -20,7 +15,7 @@ export class DailyFoodItem extends FoodItem {
     })
   }
 
-  setAmountAndUnit(value: { amount: 100; unit: 'g' }) {
+  setAmountAndUnit(value) {
     this.amount = value.amount
     this.unit = value.unit
   }

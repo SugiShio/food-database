@@ -42,7 +42,7 @@ export default Vue.extend({
 
       this.localValue = ''
     },
-    onEndEditing(value: string, index: number) {
+    onEndEditing(value, index) {
       this.$emit('text-array-input', { value, index })
     },
     onInput() {
@@ -53,7 +53,7 @@ export default Vue.extend({
         this.localValue = ''
       }
     },
-    onKeydownDelete($event: KeyboardEvent) {
+    onKeydownDelete($event) {
       if (this.localValue.length || $event.isComposing) return
       this.$emit('text-array-input', { index: this.value.length - 1 })
     },
@@ -61,7 +61,7 @@ export default Vue.extend({
       this.$emit('text-array-input', { value: this.localValue })
       this.localValue = ''
     },
-    onRemoveClicked(index: number) {
+    onRemoveClicked(index) {
       this.$emit('text-array-input', { value: '', index })
     },
   },

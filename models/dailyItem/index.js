@@ -2,28 +2,22 @@ import { FoodItem } from '../foodItem'
 import { DailyFoodItem } from '../foodItem/dailyFoodItem'
 const MARKS = ['morning', 'lunch', 'dinner']
 
-export interface DailyItem {
-  createdAt: number
-  foodItems: FoodItem[]
-  mark: string
-  time: { seconds: number }
-}
 export class DailyItem {
-  constructor(dailyItem?: any, timestamp?: number) {
+  constructor(dailyItem, timestamp) {
     this.mark = dailyItem ? dailyItem.mark : MARKS[0]
     this.time = dailyItem ? dailyItem.time : this.getTimeObject(timestamp)
     this.foodItems = dailyItem
-      ? dailyItem.foodItems.map((foodItem: DailyFoodItem) => {
+      ? dailyItem.foodItems.map((foodItem) => {
           return new DailyFoodItem(foodItem)
         })
       : []
   }
 
-  addFoodItem(foodItem: FoodItem) {
+  addFoodItem(foodItem) {
     this.foodItems.push(new DailyFoodItem(foodItem))
   }
 
-  deleteFoodItem(index: number) {
+  deleteFoodItem(index) {
     this.foodItems.splice(index, 1)
   }
 
@@ -35,7 +29,7 @@ export class DailyItem {
     return `${hours}:${minutesText}`
   }
 
-  getTimeObject(timestamp?: number) {
+  getTimeObject(timestamp) {
     const datetime = timestamp ? new Date(timestamp) : new Date()
     const now = new Date()
     const hours = now.getHours()

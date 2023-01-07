@@ -24,15 +24,15 @@ export default Vue.extend({
   },
   computed: {
     label() {
-      return NUTRIENTS[this.nutrientId as string].label
+      return NUTRIENTS[this.nutrientId].label
     },
     sum() {
       return this.values.reduce((sum, currentValue) => {
-        return (sum as number) + (currentValue as number)
+        return sum + currentValue
       }, 0)
     },
     unit() {
-      return NUTRIENTS[this.nutrientId as string].unit
+      return NUTRIENTS[this.nutrientId].unit
     },
   },
 })

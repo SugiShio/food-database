@@ -29,15 +29,15 @@ export default Vue.extend({
     units: { type: Array, default: () => [] },
   },
   methods: {
-    onAmountInput($event: Event) {
-      const value = ($event.target as HTMLInputElement).value
+    onAmountInput($event) {
+      const value = $event.target.value
       this.$emit('input', {
         amount: value,
         unit: this.unit,
       })
     },
-    onUnitChange($event: Event) {
-      const value = ($event.target as HTMLInputElement).value
+    onUnitChange($event) {
+      const value = $event.target.value
       this.$emit('input', {
         amount: this.amount,
         unit: value,

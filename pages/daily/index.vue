@@ -2,7 +2,7 @@
 .daily-index
   input(type='number', v-model='year')
   input(type='number', v-model='month')
-  ul 
+  ul
     li(v-for='daily in dailys')
       nuxt-link(:to='{ name: "daily-id", params: { id: daily.id } }')
         | {{ daily.dateText }}
@@ -10,14 +10,13 @@
 
 <script lang="ts">
 import { FirebaseHelper } from '@/plugins/firebase'
-import { WhereFilterOp } from '@firebase/firestore'
 
 import Vue from 'vue'
 import { Daily } from '@/models/daily'
 
 export default Vue.extend({
   name: 'PagesDailyIndex',
-  data(): { dailys: Daily[]; year: number; month: number } {
+  data() {
     return {
       dailys: [],
       year: 2022,
@@ -33,7 +32,7 @@ export default Vue.extend({
     })
   },
   methods: {
-    async fetchDailys(uid: string) {
+    async fetchDailys(uid) {
       const startDate = new Date(this.year, this.month - 1)
       const endDate = new Date(this.year, this.month)
 
@@ -42,7 +41,7 @@ export default Vue.extend({
           wheres: [
             {
               fieldPath: 'uid',
-              optStr: '==' as WhereFilterOp,
+              optStr: '==',
               value: uid,
             },
           ],

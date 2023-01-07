@@ -67,11 +67,7 @@ import { NUTRIENT_BASIS } from '~/models/nutrientBasis/constants'
 
 export default Vue.extend({
   name: 'PagesrecipesId',
-  data(): {
-    foodItems: FoodItem[]
-    isEditing: boolean
-    recipe: Recipe | null
-  } {
+  data() {
     return {
       foodItems: [],
       isEditing: false,
@@ -82,16 +78,16 @@ export default Vue.extend({
     id() {
       return this.$route.params.id
     },
-    isEditable(): boolean {
+    isEditable() {
       return this.$store.state.isSignin && !this.isEditing
     },
-    isNew(): boolean {
+    isNew() {
       return this.id === 'new'
     },
     nutrientBasis() {
       return NUTRIENT_BASIS
     },
-    nutrientItems(): { nutrientId: string; values: number[] }[] {
+    nutrientItems() {
       if (!this.recipe) return []
       const recipe = this.recipe
       return Object.keys(recipe.nutrients).map((key) => {
@@ -104,7 +100,7 @@ export default Vue.extend({
     await this.fetchFoodItems()
   },
   methods: {
-    async addItem(item: FoodItem, amount = 100) {
+    async addItem(item, amount = 100) {
       if (!this.recipe) return
       this.recipe.addItem(item, amount)
     },
@@ -151,7 +147,7 @@ export default Vue.extend({
       if (!this.recipe) return
       try {
         await this.recipe.setData()
-        FirebaseHelper.update('recipes', this.recipe?.id, this.recipe)
+        FirebaseHelper.update('recipes', this.recipe.id, this.recipe)
         console.log('Item successfully updated! 🍅')
         this.fetchRecipe()
         this.isEditing = false
@@ -161,7 +157,7 @@ export default Vue.extend({
       this.fetchRecipe()
       this.isEditing = false
     },
-    onItemAmountInput(index: number) {
+    onItemAmountInput(index) {
       if (!this.recipe) return
       const items = this.recipe.items
       items.splice(index, 1, this.recipe.items[index])

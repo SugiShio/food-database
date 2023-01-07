@@ -13,7 +13,7 @@ ul.o-nutrient-graph
 <script lang="ts">
 import Vue from 'vue'
 import { NUTRIENTS } from '~/constants/nutrients'
-import { NUTRIENT_BASIS, NutrientBasis } from '~/models/nutrientBasis/constants'
+import { NUTRIENT_BASIS } from '~/models/nutrientBasis/constants'
 
 export default Vue.extend({
   name: 'OrganismsNutrientGraph',
@@ -21,7 +21,7 @@ export default Vue.extend({
     nutrients: {
       type: Object,
       default: () => {
-        const result: { [key: string]: number[] } = {}
+        const result = {}
         Object.keys(NUTRIENTS).forEach((key) => {
           result[key] = []
         })
@@ -45,14 +45,12 @@ export default Vue.extend({
     nutrientItems() {
       return Object.keys(this.nutrients).map((key) => {
         const nutrientBasis = this.nutrientBasis.find((nb) => {
-          return (nb as NutrientBasis).nutrientId === key
+          return nb.nutrientId === key
         })
-        const base = nutrientBasis
-          ? (nutrientBasis as NutrientBasis).dietaryReferenceIntake
-          : 100
+        const base = nutrientBasis ? nutrientBasis.dietaryReferenceIntake : 100
         return {
           nutrientId: key,
-          values: (this.nutrients as { [key: string]: number[] })[key],
+          values: this.nutrients[key],
           base,
         }
       })
