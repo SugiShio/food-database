@@ -23,13 +23,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { DEFAULT_UNIT } from '~/models/unit'
 export default Vue.extend({
   name: 'InputUnits',
   props: {
-    value: { type: Array, default: () => [] },
+    value: { type: Array, default: () => [DEFAULT_UNIT] },
   },
   computed: {
     isLastItemEmpty() {
+      if (!this.localValue.length) return false
       return !this.localValue[this.localValue.length - 1].unit
     },
     localValue() {
