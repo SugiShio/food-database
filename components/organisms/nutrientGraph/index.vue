@@ -10,7 +10,7 @@ ul.o-nutrient-graph
   )
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { NUTRIENTS } from '~/constants/nutrients'
 import { NUTRIENT_BASIS } from '~/models/nutrientBasis/constants'

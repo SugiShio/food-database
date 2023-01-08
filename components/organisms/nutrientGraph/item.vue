@@ -10,7 +10,7 @@ li.nutrient-graph-item
       graph-bar(:base='base', :values='values')
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { NUTRIENTS } from '~/constants/nutrients'
 

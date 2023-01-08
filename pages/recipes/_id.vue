@@ -58,7 +58,7 @@ main.recipes-id(v-if='recipe')
       fd-button(label='Submit', @button-clicked='submit')
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { Recipe } from '@/models/recipe'
 import { FirebaseHelper } from '@/plugins/firebase'

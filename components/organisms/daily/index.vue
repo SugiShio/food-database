@@ -37,7 +37,7 @@
           | {{ foodItem.name }}
 </template>
 
-<script lang="ts">
+<script>
 import { setDoc, collection, doc, getDoc } from 'firebase/firestore'
 import { db, getFirestoreFormat } from '@/plugins/firebase'
 import Vue from 'vue'

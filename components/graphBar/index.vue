@@ -3,7 +3,7 @@
   .graph-bar__item(v-for='style in barWidth', :style='style')
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 export default Vue.extend({
   name: 'GraphBar',

@@ -33,7 +33,7 @@
   )
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { DailyItem } from '~/models/dailyItem'
 export default Vue.extend({

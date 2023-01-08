@@ -17,7 +17,7 @@
     )
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { TYPES } from '@/models/foodItem'
 

@@ -8,7 +8,7 @@
         | {{ daily.dateText }}
 </template>
 
-<script lang="ts">
+<script>
 import { FirebaseHelper } from '@/plugins/firebase'
 
 import Vue from 'vue'

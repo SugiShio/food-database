@@ -21,7 +21,7 @@
     | add unit
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { DEFAULT_UNIT } from '~/models/unit'
 export default Vue.extend({

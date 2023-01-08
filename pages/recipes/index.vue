@@ -8,7 +8,7 @@ div
         | {{ recipe.name }}
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { Recipe } from '@/models/recipe'
 import { FirebaseHelper } from '@/plugins/firebase'

@@ -12,7 +12,7 @@ div
         nuxt-link.foodItems-id__link(:to='{ name: "daily" }') デイリー
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 
 export default Vue.extend({

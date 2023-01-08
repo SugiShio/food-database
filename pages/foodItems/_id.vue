@@ -106,7 +106,7 @@ main.foodItems-id(v-if='foodItem')
       fd-button(label='Submit', @button-clicked='submit')
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import { FoodItem, TYPES } from '@/models/foodItem'
 import { NUTRIENTS } from '@/constants/nutrients'
