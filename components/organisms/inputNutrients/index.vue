@@ -14,15 +14,15 @@
 <script>
 import Vue from 'vue'
 import { NUTRIENTS } from '~/constants/nutrients'
-import { FoodItemNutrients } from '~/models/foodItem/nutrients'
+import { Nutrients } from '~/models/nutrients'
 
 export default Vue.extend({
   name: 'OrganismsInputNutrientsIndex',
   props: {
     value: {
-      type: FoodItemNutrients,
+      type: Nutrients,
       default: () => {
-        return new FoodItemNutrients()
+        return new Nutrients()
       },
     },
   },

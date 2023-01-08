@@ -1,4 +1,4 @@
-import { FoodItemNutrients } from '~/models/foodItem/nutrients'
+import { Nutrients } from '~/models/nutrients'
 
 export const TYPES = [
   { value: 'general', label: '一般食品' },
@@ -14,8 +14,8 @@ export class FoodItem {
     this.keywords = foodItem ? foodItem.keywords || [] : []
     this.images = foodItem ? foodItem.images : []
     this.nutrients = foodItem
-      ? new FoodItemNutrients(foodItem.nutrients)
-      : new FoodItemNutrients()
+      ? new Nutrients(foodItem.nutrients)
+      : new Nutrients()
     this.provider = foodItem ? foodItem.provider : ''
     this.type = foodItem ? foodItem.type : ''
     this.url = foodItem ? foodItem.url : ''

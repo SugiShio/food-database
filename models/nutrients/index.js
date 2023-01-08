@@ -1,6 +1,6 @@
 import { NUTRIENTS } from '~/constants/nutrients'
 
-export class FoodItemNutrients {
+export class Nutrients {
   constructor(nutrients) {
     Object.keys(NUTRIENTS).forEach((key) => {
       this[key] = nutrients ? nutrients[key] : null
