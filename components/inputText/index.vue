@@ -1,5 +1,11 @@
 <template lang="pug">
-input.input-text(type='text', :class='size', :value='value', @input='onInput')
+input.input-text(
+  type='text',
+  :class='size',
+  :value='value',
+  @input='onInput',
+  @change='$emit("change")'
+)
 </template>
 
 <script lang="ts">

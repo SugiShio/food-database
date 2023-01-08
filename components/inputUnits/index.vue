@@ -3,7 +3,7 @@
   .input-units__item(v-for='(v, index) in localValue', :key='v.unit')
     label.input-units__unit
       span.input-units__label 単位
-      input-text(:value='v.unit', @input='onUnitInput($event, index)')
+      input-text(:value='v.unit', @change='onUnitChange($event, index)')
     label.input-units__rate
       span.input-units__label 1 {{ v.unit || "単位" }} あたり
       input-number(
@@ -43,7 +43,7 @@ export default Vue.extend({
       if (this.isLastItemEmpty) return
       this.$emit('add-unit-clicked')
     },
-    onUnitInput(unit, index) {
+    onUnitChange(unit, index) {
       this.localValue[index].unit = unit
       const value = [this.value[0], ...this.localValue]
       this.$emit('units-input', value)
