@@ -35,8 +35,12 @@ export class RecipeItem {
 
   getNutrient(nutrientId) {
     const nutrient = this.foodItem.nutrients[nutrientId]
-    const unit = this.foodItem.units.find((u) => u.unit === this.unit)
-    return typeof nutrient === 'number' && unit ? nutrient * unit.rate : null
+    if (this.foodItem.units) {
+      const unit = this.foodItem.units.find((u) => u.unit === this.unit)
+      return typeof nutrient === 'number' && unit ? nutrient * unit.rate : null
+    } else {
+      return typeof nutrient === 'number' ? nutrient : null
+    }
   }
 }
 

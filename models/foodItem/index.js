@@ -27,9 +27,9 @@ export class FoodItem {
   }
 
   getNutrientValue(params) {
-    // if (!this.units) return
-    const unitInfo = this.units.find((u) => u.unit === params.unit)
-    if (!unitInfo) return
+    // const unitInfo = this.units.find((u) => u.unit === params.unit)
+    let unitInfo = this.units.find((u) => u.unit === params.unit)
+    if (!unitInfo) unitInfo = { unit: 'g', rate: 1 }
     const value = this.nutrients[params.nutrientId]
 
     return typeof value === 'number'

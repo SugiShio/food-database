@@ -4,7 +4,11 @@
   fd-title
     time(:datetime='`${daily.year}-${daily.month}-${daily.date}`') {{ daily.year }}.{{ daily.month }}.{{ daily.date }}
 
-  organisms-nutrients-summary(:nutrients='{}')
+  organisms-nutrients-summary(:nutrients='nutrientSums')
+  organisms-nutrient-graph(
+    :nutrients='nutrients',
+    :nutrient-basis='nutrientBasis'
+  )
 
   button.o-daily__add-button(type='button', @click='addDailyItem')
     i.icon-plus-circle.o-daily__add-icon
@@ -43,6 +47,7 @@ import { db, getFirestoreFormat } from '@/plugins/firebase'
 import Vue from 'vue'
 import { Daily } from '@/models/daily'
 import { DailyItem } from '~/models/dailyItem'
+import { NUTRIENT_BASIS } from '~/models/nutrientBasis/constants'
 
 export default Vue.extend({
   name: 'OrganismsDailyId',
@@ -61,6 +66,15 @@ export default Vue.extend({
   computed: {
     foodItems() {
       return this.$store.state.search.foodItems
+    },
+    nutrients() {
+      return this.daily.nutrients
+    },
+    nutrientSums() {
+      return this.daily.nutrientSums
+    },
+    nutrientBasis() {
+      return NUTRIENT_BASIS
     },
   },
   async created() {
@@ -106,6 +120,7 @@ export default Vue.extend({
       try {
         await this.submit()
         this.editingDailyItem = null
+        this.closeSearchModal()
       } catch {}
     },
     async submit() {

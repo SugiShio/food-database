@@ -39,9 +39,6 @@ import { DailyItem } from '~/models/dailyItem'
 export default Vue.extend({
   name: 'OrganismsDailyItemEdit',
   props: {
-    dailyItem: { type: DailyItem, default: new DailyItem() },
-  },
-  props: {
     dailyItem: {
       type: DailyItem,
       default: () => {

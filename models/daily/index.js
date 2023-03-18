@@ -1,4 +1,5 @@
 import { DailyItem } from '../dailyItem'
+import { getNutrientSums, getNutrientValues } from '~/models/nutrients'
 
 export class Daily {
   constructor(dateString, daily) {
@@ -27,6 +28,16 @@ export class Daily {
     return this.items.sort((a, b) => {
       return a.time.seconds < b.time.seconds ? -1 : 1
     })
+  }
+
+  get nutrientSums() {
+    return getNutrientSums(this.nutrients)
+  }
+
+  get nutrients() {
+    const result = {}
+    this.items.map((item) => {})
+    return getNutrientValues(this.items)
   }
 
   get year() {

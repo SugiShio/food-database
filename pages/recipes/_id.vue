@@ -12,6 +12,9 @@ main.recipes-id(v-if='recipe')
       @button-clicked='isEditing = true'
     )
   section.recipes-id__section
+    organisms-nutrients-summary(:nutrients='nutrients')
+
+  section.recipes-id__section
     h2.recipes-id__title 基本情報
     .recipes-id__item
       .recipes-id__item-label(:class='{ isEditing }')
@@ -83,6 +86,9 @@ export default Vue.extend({
     },
     isNew() {
       return this.id === 'new'
+    },
+    nutrients() {
+      this.recipe.items.forEach((item) => {})
     },
     nutrientBasis() {
       return NUTRIENT_BASIS

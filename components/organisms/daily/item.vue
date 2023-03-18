@@ -5,6 +5,7 @@
     time {{ dailyItem.timeText }}
     button(type='button', @click='$emit("edit-clicked")')
       i.icon-pen.o-daily-item-index__button-edit
+  organisms-nutrients-summary(:nutrients='nutrientSums')
 
   ul.o-daily-item-index__food-item-list
     li.o-daily-item-index__food-item(
@@ -29,6 +30,9 @@ export default Vue.extend({
   computed: {
     iconClass() {
       return `icon-${this.dailyItem.mark}`
+    },
+    nutrientSums() {
+      return this.dailyItem.nutrientSums
     },
   },
   props: {

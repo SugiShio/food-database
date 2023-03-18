@@ -1,5 +1,6 @@
 import { FoodItem } from '../foodItem'
 import { DailyFoodItem } from '../foodItem/dailyFoodItem'
+import { getNutrientSums, getNutrientValues } from '~/models/nutrients'
 const MARKS = ['morning', 'lunch', 'dinner']
 
 export class DailyItem {
@@ -19,6 +20,13 @@ export class DailyItem {
 
   deleteFoodItem(index) {
     this.foodItems.splice(index, 1)
+  }
+
+  get nutrientSums() {
+    return getNutrientSums(this.nutrients)
+  }
+  get nutrients() {
+    return getNutrientValues(this.foodItems)
   }
 
   get timeText() {

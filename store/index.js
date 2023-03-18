@@ -16,3 +16,9 @@ export const mutations = {
     state.user = {}
   },
 }
+
+export const getters = {
+  isDesktop() {
+    return process.client && window.innerWidth > 600
+  },
+}
