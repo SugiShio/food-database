@@ -59,16 +59,6 @@ export default {
       return !isNaN(this.value)
     },
   },
-  created() {
-    if (!process.client) return
-    document.querySelector('html').style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
-  },
-  beforeDestroy() {
-    if (!process.client) return
-    document.querySelector('html').style.overflow = 'unset'
-    document.body.style.overflow = 'unset'
-  },
   methods: {
     calculate() {
       try {
