@@ -1,6 +1,20 @@
 <template lang="pug">
-div
-  organisms-daily(v-if='uid', :id='id', :uid='uid')
+main.index
+  organisms-search
+  section.foodItems-index__block
+    h2.foodItems-index__title
+      | 検索結果
+
+    .foodItems-index__searching(v-if='isSearching') 検索中
+    .foodItems-index__error(v-else-if='hasError') エラーがありました
+    .foodItems-index__error(v-else-if='!foodItems.length') 条件に合う食材がありませんでした
+    template(v-else)
+      ul.foodItems-index__list
+        li(v-for='foodItem in foodItems')
+          nuxt-link(
+            :to='{ name: "foodItems-id", params: { id: foodItem.id } }'
+          )
+            | {{ foodItem.nameWithProvider }}
 
   nav
     ul
@@ -18,6 +32,13 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'PagesIndex',
   computed: {
+    foodItems() {
+      return this.$store.state.search.foodItems
+    },
+    hasError() {
+      return this.$store.state.search.hasError
+    },
+
     id() {
       if (this.year && this.month && this.date)
         return `${this.year}${this.month}${this.date}`
@@ -27,6 +48,9 @@ export default Vue.extend({
       const m = today.getMonth() + 1
       const d = today.getDate()
       return `${y * 10000 + m * 100 + d}`
+    },
+    isSearching() {
+      return this.$store.state.search.isSearching
     },
     year() {
       return this.$route.query.year
@@ -43,3 +67,9 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.index {
+  padding: 30px 20px 50px;
+}
+</style>

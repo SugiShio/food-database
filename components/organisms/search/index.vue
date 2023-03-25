@@ -57,6 +57,9 @@ export default Vue.extend({
       },
     },
   },
+  created() {
+    this.search()
+  },
   methods: {
     async search() {
       this.$store.commit('search/resetFoodItems')

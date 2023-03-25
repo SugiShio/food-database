@@ -1,5 +1,8 @@
+import algoliasearch from 'algoliasearch'
 import { FirebaseHelper } from '@/plugins/firebase'
 import { TYPES, FoodItem } from '~/models/foodItem'
+const client = algoliasearch('0VUG31LZTM', '6db46705cc09237dd2c59bba77c63254')
+const index = client.initIndex('index_fooditems')
 
 export const state = () => ({
   foodItems: [],
@@ -45,39 +48,19 @@ export const mutations = {
 export const actions = {
   async search({ commit, state }) {
     commit('startSearch')
-    const wheres = []
-    if (state.keyword)
-      wheres.push({
-        fieldPath: 'keywords',
-        optStr: 'array-contains',
-        value: state.keyword,
+    index
+      .search(state.keyword)
+      .then(({ hits }) => {
+        const foodItems = hits.map(
+          (foodItem) => new FoodItem(foodItem.objectID, foodItem)
+        )
+        commit('setFoodItems', { foodItems })
       })
-    if (state.types.length)
-      wheres.push({
-        fieldPath: 'type',
-        optStr: 'in',
-        value: state.types,
+      .catch((err) => {
+        console.log(err)
       })
-
-    const query = {
-      wheres,
-      ob: state.orderBy,
-      l: state.limit,
-    }
-    if (state.foodItems.length) {
-      query.sa = state.foodItems[state.foodItems.length - 1].name
-    }
-    try {
-      const querySnapshot = await FirebaseHelper.search('foodItems', query)
-      const foodItems = []
-      querySnapshot.forEach((doc) => {
-        foodItems.push(new FoodItem(doc.id, doc.data()))
+      .finally(() => {
+        commit('finishSearch')
       })
-      commit('setFoodItems', { foodItems })
-    } catch (e) {
-      console.error(e)
-    } finally {
-      commit('finishSearch')
-    }
   },
 }
