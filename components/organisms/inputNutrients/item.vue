@@ -10,7 +10,11 @@
   )
   span.o-input-nutrients-item__unit {{ unit }}
   transition(name='fade')
-    fd-calculator(v-show='showCalculator', @value-entered='onValueEntered')
+    fd-calculator(
+      v-show='showCalculator',
+      @value-entered='onValueEntered',
+      @close-calculator='showCalculator = false'
+    )
 </template>
 
 <script>

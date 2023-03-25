@@ -1,6 +1,6 @@
 <template lang="pug">
-.fd-calculator
-  .fd-calculator__container
+.fd-calculator(@click.stop='closeCalculator', @dblclick.prevent)
+  .fd-calculator__container(@click.stop)
     .fd-error(v-if='hasError') Invalid input
     .fd-calculator__formula(v-else)
       | {{ formula }}
@@ -83,6 +83,10 @@ export default {
           ? 0
           : this.value.toString().slice(0, -1)
     },
+    closeCalculator() {
+      this.$emit('close-calculator')
+      this.clearValueAll()
+    },
     emitValue() {
       this.$emit('value-entered', this.value)
     },
@@ -139,6 +143,7 @@ export default {
   &__item {
     width: 25%;
     padding: 1px;
+    user-select: none;
   }
 
   &__button {
