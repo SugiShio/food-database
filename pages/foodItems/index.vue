@@ -4,6 +4,11 @@
     h2.foodItems-index__title
       | 食材検索
     organisms-search
+  nuxt-link.foodItems-index_link(
+    :to='{ name: "foodItems-id", params: { id: "new" } }'
+  )
+    i.icon-plus-circle.o-daily__add-icon
+    | 食材を追加
 
   section.foodItems-index__block
     h2.foodItems-index__title
