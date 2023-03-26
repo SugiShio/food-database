@@ -44,6 +44,7 @@ export default Vue.extend({
     width: 100%;
     border: none;
     resize: none;
+    white-space: pre;
   }
 
   &__unit {
