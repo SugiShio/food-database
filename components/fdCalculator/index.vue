@@ -5,7 +5,7 @@
     .fd-calculator__formula(v-else)
       | {{ formula }}
     .fd-calculator__value
-      | {{ value }}
+      | {{ localValue }}
     ul.fd-calculator__buttons
       li.fd-calculator__item
         button.fd-calculator__button(type='button', @click='inputValue("(")') (
@@ -47,24 +47,27 @@
 import { evaluate } from 'mathjs'
 export default {
   name: 'FdCalculator',
+  props: {
+    value: { type: Number, default: 0 },
+  },
   data() {
     return {
       formula: '',
       hasError: false,
-      value: 0,
+      localValue: this.value || 0,
     }
   },
   computed: {
     isValueNumber() {
-      return !isNaN(this.value)
+      return !isNaN(this.localValue)
     },
   },
   methods: {
     calculate() {
       try {
-        const result = evaluate(this.value.toString())
-        this.formula = `${this.value} =`
-        this.value = Math.round(result * 100000) / 100000
+        const result = evaluate(this.localValue.toString())
+        this.formula = `${this.localValue} =`
+        this.localValue = Math.round(result * 100000) / 100000
       } catch (error) {
         this.hasError = true
         this.formula = ''
@@ -73,32 +76,32 @@ export default {
     },
     clearValueAll() {
       this.hasError = false
-      this.value = 0
+      this.localValue = 0
       this.formula = ''
     },
     clearValue() {
       this.hasError = false
-      this.value =
-        this.value.toString().length === 1
+      this.localValue =
+        this.localValue.toString().length === 1
           ? 0
-          : this.value.toString().slice(0, -1)
+          : this.localValue.toString().slice(0, -1)
     },
     closeCalculator() {
       this.$emit('close-calculator')
       this.clearValueAll()
     },
     emitValue() {
-      this.$emit('value-entered', this.value)
+      this.$emit('value-entered', this.localValue)
     },
     inputValue(value) {
       this.hasError = false
       if (
-        (this.value === 0 || this.value === '0') &&
+        (this.localValue === 0 || this.localValue === '0') &&
         (!isNaN(value) || value === '(')
       ) {
-        this.value = value
+        this.localValue = value
       } else {
-        this.value += value.toString()
+        this.localValue += value.toString()
       }
     },
   },

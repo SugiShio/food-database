@@ -12,6 +12,7 @@
   transition(name='fade')
     fd-calculator(
       v-show='showCalculator',
+      :value='value',
       @value-entered='onValueEntered',
       @close-calculator='showCalculator = false'
     )
