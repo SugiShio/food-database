@@ -87,7 +87,7 @@ main.foodItems-id(v-if='foodItem')
     h2.foodItems-id__title 栄養素
 
     .foodItems-id__amount(v-if='!isEditing')
-      input.foodItems-id__amount-input(v-model='rate', type='number')
+      input.foodItems-id__amount-input(v-model='gram', type='number')
       | gあたり
 
     template(v-if='isEditing')
@@ -118,8 +118,8 @@ export default Vue.extend({
   data() {
     return {
       foodItem: null,
-      isEditing: true,
-      rate: 100,
+      isEditing: false,
+      gram: 100,
     }
   },
   computed: {
@@ -140,7 +140,7 @@ export default Vue.extend({
       Object.keys(NUTRIENTS).forEach((key) => {
         const nutrient = this.foodItem.nutrients[key]
         const value = nutrient ? nutrient || 0 : 0
-        result[key] = [(value * this.rate) / 100]
+        result[key] = [(value * this.gram) / 100]
       })
       return result
     },

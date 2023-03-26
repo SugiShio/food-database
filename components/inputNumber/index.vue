@@ -5,7 +5,8 @@
     :value='value',
     :rows=1,
     @focus='onFocus',
-    @input='onInput',
+    @change='$emit("change", $event.target.value)',
+    @input='$emit("input", $event.target.value)',
     @keydown.enter.prevent
   )
   span.input-number__unit {{ unit }}
@@ -24,17 +25,13 @@ export default Vue.extend({
     onFocus($event) {
       $event.target.select()
     },
-    onInput($event) {
-      const value = $event.target.value
-      this.$emit('input', value)
-    },
   },
 })
 </script>
 
 <style lang="scss" scoped>
 .input-number {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   border: 1px solid $color-grey-weak;
   background-color: transparent;
@@ -44,6 +41,7 @@ export default Vue.extend({
     display: block;
     flex-grow: 1;
     padding: 5px 10px;
+    width: 100%;
     border: none;
     resize: none;
   }

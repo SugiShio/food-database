@@ -72,6 +72,7 @@ export default Vue.extend({
 .input-text-array {
   display: flex;
   height: 33px;
+  width: 100%;
   padding: 0 3px;
   border-radius: 3px;
   border: 1px solid $color-grey-weak;

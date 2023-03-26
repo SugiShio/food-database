@@ -57,6 +57,14 @@ export class Nutrients {
     return getNutrientSum(this, nutrientId)
   }
 
+  static getNutrientValues(values, func = (value) => value) {
+    const result = {}
+    Object.keys(NUTRIENTS).forEach((key) => {
+      result[key] = values[key] === null ? null : func(values[key])
+    })
+    return result
+  }
+
   get nutrientSums() {
     return getNutrientSums(this)
   }

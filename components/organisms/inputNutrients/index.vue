@@ -1,13 +1,31 @@
 <template lang="pug">
 .o-input-nutrients
+  .o-input-nutrients__function
+    span.o-input-nutrients__gram-input
+      input-number(v-model='gram', unit='g', @change='onGramChange')
+    span
+      | あたり
+    fd-checkbox(label='入力値を等倍', @input='onShouldRecalculateValueInput')
+  .o-input-nutrients__function
+    span 小数点以下
+    span.o-input-nutrients__digit-input
+      input-number(v-model='numberOfDigits')
+    span 桁で
+    span
+      fd-button(
+        label='四捨五入',
+        :disabled='numberOfDigits < 0',
+        @button-clicked='round'
+      )
+
   ul.o-input-nutrients__block
-    li.o-input-nutrients__item(v-for='(v, key) in value')
+    li.o-input-nutrients__item(v-for='(v, key) in localValue')
       label.o-input-nutrients__label
-        | {{ value.getLabel(key) }}
+        | {{ localValue.getLabel(key) }}
       organisms-input-nutrients-item(
-        :unit='value.getUnit(key)',
-        v-model='value[key]',
-        @input='onInput($event, key)'
+        :unit='localValue.getUnit(key)',
+        v-model='localValue[key]',
+        @input='onNutrientsInput($event, key)'
       )
 </template>
 
@@ -26,11 +44,42 @@ export default Vue.extend({
       },
     },
   },
+  data() {
+    return {
+      gram: 100,
+      localValue: new Nutrients({ ...this.value }),
+      numberOfDigits: 2,
+      shouldRecalculateValue: false,
+    }
+  },
   methods: {
+    emitValue() {
+      const value = Nutrients.getNutrientValues(
+        this.localValue,
+        (v) => (v * 100) / this.gram
+      )
+      this.$emit('input', new Nutrients(value))
+    },
     onFocus($event) {
       $event.target.select()
     },
-    onInput(value, key) {
+    onGramChange(value) {
+      const gramNew = Number(value)
+      if (isNaN(gramNew)) return
+
+      if (this.shouldRecalculateValue) {
+        const rate = gramNew / this.gramOld
+
+        Object.keys(this.localValue).forEach((key) => {
+          if (this.localValue[key] !== null)
+            this.localValue[key] = this.localValue[key] * rate
+        })
+
+        this.emitValue()
+      }
+      this.gramOld = gramNew
+    },
+    onNutrientsInput(value, key) {
       const SEPARATORS = /\n|\t|,/
       const values = value.split(SEPARATORS).map((v) => {
         const number = Number(v)
@@ -42,7 +91,18 @@ export default Vue.extend({
 
       values.forEach((v, index) => {
         if (!nutrientIds[startIndex + index]) return
-        this.value[nutrientIds[startIndex + index]] = v
+        this.localValue[nutrientIds[startIndex + index]] = v
+      })
+      this.emitValue()
+    },
+    onShouldRecalculateValueInput({ checked }) {
+      this.shouldRecalculateValue = checked
+    },
+    round() {
+      const rate = 10 ** this.numberOfDigits
+      Object.keys(this.localValue).forEach((key) => {
+        if (this.localValue[key] !== null)
+          this.localValue[key] = Math.round(this.localValue[key] * rate) / rate
       })
     },
   },
@@ -51,9 +111,17 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .o-input-nutrients {
-  &__title {
+  &__function {
     margin: 10px 0;
-    font-weight: bold;
+  }
+
+  span + span {
+    margin-left: 5px;
+  }
+
+  &__digit-input {
+    display: inline-block;
+    width: 50px;
   }
 
   &__block {

@@ -4,7 +4,7 @@ input.input-text(
   :class='size',
   :value='value',
   @input='onInput',
-  @change='$emit("change")'
+  @change='onChange'
 )
 </template>
 
@@ -17,6 +17,10 @@ export default Vue.extend({
     value: { type: String, default: '' },
   },
   methods: {
+    onChange($event) {
+      const value = $event.target.value
+      this.$emit('change', value)
+    },
     onInput($event) {
       const value = $event.target.value
       this.$emit('input', value)

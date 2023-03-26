@@ -5,9 +5,8 @@
       span.input-units__label 単位
       input-text(:value='v.unit', @change='onUnitChange($event, index)')
     label.input-units__rate
-      span.input-units__label 1 {{ v.unit || "単位" }} あたり
+      span.input-units__label 1 {{ v.unit || '単位' }} あたり
       input-number(
-        type='number',
         unit='g',
         :value='v.rate',
         @input='onRateInput($event, index)'
