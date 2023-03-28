@@ -5,7 +5,8 @@ input.input-text(
   :disabled='disabled',
   :value='value',
   @input='onInput',
-  @change='onChange'
+  @change='onChange',
+  @keydown.enter='$emit("keydown-enter", $event)'
 )
 </template>
 

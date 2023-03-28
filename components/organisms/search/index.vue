@@ -2,7 +2,7 @@
 .o-search
   .o-search-index__item
     .o-search-index__label キーワード
-    input-text(v-model='keyword')
+    input-text(v-model='keyword', @keydown-enter='onKeyDownEnter')
 
   .o-search-index__item
     .o-search-index__label タイプ
@@ -61,6 +61,10 @@ export default Vue.extend({
     this.search()
   },
   methods: {
+    onKeyDownEnter($event) {
+      if ($event.isComposing) return
+      this.search()
+    },
     async search() {
       this.$store.commit('search/resetFoodItems')
       this.$store.dispatch('search/search')
