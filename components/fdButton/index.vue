@@ -37,8 +37,8 @@ export default Vue.extend({
 
   &[disabled],
   &[disabled]:hover {
-    background-color: rgba($color-main, 0.5);
-    border-color: rgba($color-main, 0.5);
+    background-color: $color-grey;
+    border-color: $color-grey;
     cursor: default;
   }
 

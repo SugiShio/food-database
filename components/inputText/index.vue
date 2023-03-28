@@ -2,6 +2,7 @@
 input.input-text(
   type='text',
   :class='size',
+  :disabled='disabled',
   :value='value',
   @input='onInput',
   @change='onChange'
@@ -13,6 +14,7 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'InputText',
   props: {
+    disabled: { type: Boolean, default: false },
     size: { type: String, default: '' },
     value: { type: String, default: '' },
   },
@@ -40,6 +42,10 @@ export default Vue.extend({
 
   &.large {
     font-size: $font-size-large;
+  }
+
+  &[disabled] {
+    color: $color-text-weak;
   }
 }
 </style>

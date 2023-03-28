@@ -56,7 +56,14 @@ main.foodItems-id(v-if='foodItem')
       .foodItems-id__item-label(:class='{ isEditing }')
         label(for='url') URL
       .foodItems-id__item-body
-        input-text(v-if='isEditing', v-model='foodItem.url')
+        template(v-if='isEditing')
+          input-text(v-model='foodItem.url', :disabled='isFetching')
+          .foodItems-id__item-body-button
+            fd-button(
+              label='データを取得',
+              @button-clicked='getData',
+              :disabled='!isUrlDataGetable'
+            )
         template(v-else)
           a(:href='foodItem.url') {{ foodItem.url }}
 
@@ -91,7 +98,11 @@ main.foodItems-id(v-if='foodItem')
       | gあたり
 
     template(v-if='isEditing')
-      organisms-input-nutrients(v-model='foodItem.nutrients')
+      organisms-input-nutrients(
+        v-model='foodItem.nutrients',
+        :overwrite='overwrite',
+        @overwrite-completed='overwrite = false'
+      )
 
     organisms-nutrient-graph(
       v-else,
@@ -112,6 +123,8 @@ import { FoodItem, TYPES } from '@/models/foodItem'
 import { NUTRIENTS } from '@/constants/nutrients'
 import { NUTRIENT_BASIS } from '@/models/nutrientBasis/constants'
 import { FirebaseHelper } from '@/plugins/firebase'
+import { REGEX_URL_SLISM } from '@/constants/slism'
+import { Nutrients } from '@/models/nutrients'
 
 export default Vue.extend({
   name: 'PagesFoodItemsId',
@@ -119,7 +132,9 @@ export default Vue.extend({
     return {
       foodItem: null,
       isEditing: false,
+      isFetching: false,
       gram: 100,
+      overwrite: false,
     }
   },
   computed: {
@@ -134,6 +149,9 @@ export default Vue.extend({
     },
     isNew() {
       return this.id === 'new'
+    },
+    isUrlDataGetable() {
+      return !this.isFetching && REGEX_URL_SLISM.test(this.foodItem.url)
     },
     nutrients() {
       const result = {}
@@ -166,6 +184,26 @@ export default Vue.extend({
           const data = doc.data()
           this.foodItem = new FoodItem(this.id, data)
         } catch (_) {}
+      }
+    },
+    async getData() {
+      if (this.isFetching) return
+      if (REGEX_URL_SLISM.test(this.foodItem.url)) {
+        this.isFetching = true
+        try {
+          const result = await this.$axios.get('/api/getDataFromSlism', {
+            params: { url: this.foodItem.url },
+          })
+          if (confirm('データを取得しました。上書きしますか？')) {
+            this.overwrite = true
+            this.foodItem.name = result.data.title
+            this.foodItem.nutrients = new Nutrients(result.data.nutrients)
+          }
+        } catch (e) {
+          console.error(e)
+        } finally {
+          this.isFetching = false
+        }
       }
     },
     submit() {
@@ -279,6 +317,11 @@ export default Vue.extend({
 
   &__item-body {
     @extend .list__item-body;
+  }
+
+  &__item-body-button {
+    margin-left: 10px;
+    flex-shrink: 0;
   }
 
   &__amount {

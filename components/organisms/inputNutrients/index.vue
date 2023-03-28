@@ -37,6 +37,7 @@ import { Nutrients } from '~/models/nutrients'
 export default Vue.extend({
   name: 'OrganismsInputNutrientsIndex',
   props: {
+    overwrite: { type: Boolean, default: false },
     value: {
       type: Nutrients,
       default: () => {
@@ -51,6 +52,13 @@ export default Vue.extend({
       numberOfDigits: 2,
       shouldRecalculateValue: false,
     }
+  },
+  watch: {
+    value() {
+      if (!this.overwrite) return
+      this.localValue = new Nutrients({ ...this.value })
+      this.$emit('overwrite-completed')
+    },
   },
   methods: {
     emitValue() {

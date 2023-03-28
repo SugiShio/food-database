@@ -83,4 +83,11 @@ export default {
   },
 
   env: { firebaseConfig: FIREBASE_CONFIG },
+
+  serverMiddleware: [
+    {
+      path: '/api/getDataFromSlism',
+      handler: '~/api/getDataFromSlism.js',
+    },
+  ],
 }
