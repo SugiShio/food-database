@@ -90,4 +90,11 @@ export default {
       handler: '~/api/getDataFromSlism.js',
     },
   ],
+
+  // PWA module configuration: https://go.nuxtjs.dev/pwa
+  pwa: {
+    manifest: {
+      lang: 'ja',
+    },
+  },
 }
