@@ -7,7 +7,7 @@
     @focus='onFocus',
     @change='$emit("change", $event.target.value)',
     @input='$emit("input", $event.target.value)',
-    @keydown.enter.prevent
+    @keydown.enter.prevent='$emit("enter")'
   )
   span.input-number__unit {{ unit }}
 </template>

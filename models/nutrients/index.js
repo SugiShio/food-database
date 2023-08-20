@@ -41,7 +41,7 @@ export const getNutrientSums = (nutrients) => {
 export class Nutrients {
   constructor(nutrients) {
     Object.keys(NUTRIENTS).forEach((key) => {
-      this[key] = nutrients ? nutrients[key] : null
+      this[key] = nutrients && !isNaN(nutrients[key]) ? nutrients[key] : null
     })
   }
 

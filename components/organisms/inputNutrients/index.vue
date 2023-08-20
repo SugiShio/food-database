@@ -2,7 +2,12 @@
 .o-input-nutrients
   .o-input-nutrients__function
     span.o-input-nutrients__gram-input
-      input-number(v-model='gram', unit='g', @change='onGramChange')
+      input-number(
+        v-model='gram',
+        unit='g',
+        @change='onGramChange',
+        @enter='onGramChange'
+      )
     span
       | あたり
     fd-checkbox(label='入力値を等倍', @input='onShouldRecalculateValueInput')
@@ -49,6 +54,7 @@ export default Vue.extend({
   data() {
     return {
       gram: 100,
+      gramOld: 100,
       localValue: new Nutrients({ ...this.value }),
       numberOfDigits: 2,
       shouldRecalculateValue: false,
