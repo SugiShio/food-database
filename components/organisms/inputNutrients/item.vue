@@ -12,6 +12,8 @@
   transition(name='fade')
     fd-calculator(
       v-show='showCalculator',
+      :title='title',
+      :unit='unit',
       :value='value',
       @value-entered='onValueEntered',
       @close-calculator='showCalculator = false'
@@ -24,6 +26,7 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'OrganismsInputNutrientsItem',
   props: {
+    title: { type: String, default: '' },
     unit: { type: String, default: '' },
     value: { type: [String, Number], default: 0 },
   },

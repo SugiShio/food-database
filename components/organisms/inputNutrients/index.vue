@@ -23,6 +23,7 @@
       label.o-input-nutrients__label
         | {{ localValue.getLabel(key) }}
       organisms-input-nutrients-item(
+        :title='localValue.getLabel(key)',
         :unit='localValue.getUnit(key)',
         v-model='localValue[key]',
         @input='onNutrientsInput($event, key)'

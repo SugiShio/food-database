@@ -1,11 +1,13 @@
 <template lang="pug">
 .fd-calculator(@click.stop='closeCalculator', @dblclick.prevent)
   .fd-calculator__container(@click.stop)
+    .fd-calulator__title(v-if='title') {{ title }}
     .fd-error(v-if='hasError') Invalid input
     .fd-calculator__formula(v-else)
       | {{ formula }}
     .fd-calculator__value
-      | {{ localValue }}
+      span {{ localValue }}
+      span.fd-calculator__unit {{ unit }}
     ul.fd-calculator__buttons
       li.fd-calculator__item
         button.fd-calculator__button(type='button', @click='inputValue("(")') (
@@ -48,6 +50,8 @@ import { evaluate } from 'mathjs'
 export default {
   name: 'FdCalculator',
   props: {
+    title: { type: String, default: '' },
+    unit: { type: String, default: '' },
     value: { type: Number, default: 0 },
   },
   data() {
@@ -134,7 +138,15 @@ export default {
   }
 
   &__value {
+    align-items: center;
+    display: flex;
     font-size: 24px;
+    justify-content: space-between;
+  }
+
+  &__unit {
+    font-size: 16px;
+    color: $color-grey-weak;
   }
 
   &__buttons {
