@@ -19,7 +19,8 @@ export class FoodItem {
     this.provider = foodItem ? foodItem.provider : ''
     this.type = foodItem ? foodItem.type : ''
     this.url = foodItem ? foodItem.url : ''
-    this.units = foodItem ? foodItem.units || [{ unit: 'g', rate: 1 }] : []
+    this.units =
+      foodItem && foodItem.units ? foodItem.units : [{ unit: 'g', rate: 1 }]
   }
 
   addUnit() {
