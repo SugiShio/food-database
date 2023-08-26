@@ -1,31 +1,30 @@
 <template lang="pug">
-.foodItems-index
-  section.foodItems-index__block
-    h2.foodItems-index__title
+.p-foodItems-index
+  section.p-foodItems-index__block
+    h2.p-foodItems-index__title
       | 食材検索
     organisms-search
-  nuxt-link.foodItems-index_link(
-    :to='{ name: "foodItems-id", params: { id: "new" } }'
-  )
-    i.icon-plus-circle.o-daily__add-icon
-    | 食材を追加
 
-  section.foodItems-index__block
-    h2.foodItems-index__title
+  section.p-foodItems-index__block
+    h2.p-foodItems-index__title
       | 検索結果
 
-    .foodItems-index__searching(v-if='isSearching') 検索中
-    .foodItems-index__error(v-else-if='hasError') エラーがありました
-    .foodItems-index__error(v-else-if='!foodItems.length') 条件に合う食材がありませんでした
+    .p-foodItems-index__searching(v-if='isSearching') 検索中
+    .p-foodItems-index__error(v-else-if='hasError') エラーがありました
+    .p-foodItems-index__error(v-else-if='!foodItems.length') 条件に合う食材がありませんでした
     template(v-else)
-      ul.foodItems-index__list
+      ul.p-foodItems-index__list
         li(v-for='foodItem in foodItems')
           nuxt-link(
             :to='{ name: "foodItems-id", params: { id: foodItem.id } }'
           )
             | {{ foodItem.nameWithProvider }}
-      .foodItems-index__more(@click='showMore')
+      .p-foodItems-index__more(@click='showMore')
         | 次の{{ limit }}件を表示
+
+  nuxt-link.p-foodItems-index__link-add(
+    :to='{ name: "foodItems-id", params: { id: "new" } }'
+  ) +
 </template>
 
 <script>
@@ -56,7 +55,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.foodItems-index {
+.p-foodItems-index {
   padding: 30px 20px 50px;
 
   &__block {
@@ -75,6 +74,25 @@ export default Vue.extend({
   &__label {
     font-size: 12px;
     margin-bottom: 3px;
+  }
+
+  &__link-add {
+    position: fixed;
+  }
+
+  &__link-add {
+    background-color: $color-main;
+    border-radius: 20px;
+    bottom: 10px;
+    box-shadow: 0 0 5px rgba(darken($color-main, 40%), 0.5);
+    color: #fff;
+    font-size: 25px;
+    left: 10px;
+    line-height: 40px;
+    position: fixed;
+    text-align: center;
+    text-decoration: none;
+    width: 40px;
   }
 }
 </style>

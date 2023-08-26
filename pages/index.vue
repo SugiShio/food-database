@@ -1,5 +1,5 @@
 <template lang="pug">
-main.index
+main.p-index
   organisms-search
   section.foodItems-index__block
     h2.foodItems-index__title
@@ -24,6 +24,10 @@ main.index
         nuxt-link.foodItems-id__link(:to='{ name: "recipes" }') レシピ
       li
         nuxt-link.foodItems-id__link(:to='{ name: "daily" }') デイリー
+
+  nuxt-link.p-index__link-add(
+    :to='{ name: "foodItems-id", params: { id: "new" } }'
+  ) +
 </template>
 
 <script>
@@ -69,7 +73,24 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.index {
+@import '~/assets/stylesheets/variables';
+
+.p-index {
   padding: 30px 20px 50px;
+
+  &__link-add {
+    background-color: $color-main;
+    border-radius: 20px;
+    bottom: 10px;
+    box-shadow: 0 0 5px rgba(darken($color-main, 40%), 0.5);
+    color: #fff;
+    font-size: 25px;
+    left: 10px;
+    line-height: 40px;
+    position: fixed;
+    text-align: center;
+    text-decoration: none;
+    width: 40px;
+  }
 }
 </style>
