@@ -73,24 +73,22 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-@import '~/assets/stylesheets/variables';
-
 .p-index {
   padding: 30px 20px 50px;
 
   &__link-add {
     background-color: $color-main;
-    border-radius: 20px;
-    bottom: 10px;
+    border-radius: 25px;
+    bottom: calc(env(safe-area-inset-bottom) + 15px);
     box-shadow: 0 0 5px rgba(darken($color-main, 40%), 0.5);
     color: #fff;
     font-size: 25px;
-    left: 10px;
-    line-height: 40px;
+    left: 15px;
+    line-height: 50px;
     position: fixed;
     text-align: center;
     text-decoration: none;
-    width: 40px;
+    width: 50px;
   }
 }
 </style>

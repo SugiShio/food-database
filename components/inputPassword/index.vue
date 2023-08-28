@@ -31,12 +31,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/stylesheets/input';
 .input-password {
-  display: block;
-  padding: 5px 10px;
-  width: 100%;
-  border: 1px solid $color-grey-weak;
-  background-color: transparent;
-  border-radius: 3px;
+  @extend %input;
 }
 </style>

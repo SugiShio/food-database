@@ -26,7 +26,7 @@ export default Vue.extend({
   border-radius: 3px;
   border: 1px solid $color-main;
   background-color: $color-main;
-  padding: 5px 10px;
+  padding: 10px 15px;
   color: #fff;
   transition: background-color 0.3s;
 

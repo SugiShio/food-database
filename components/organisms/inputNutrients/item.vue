@@ -60,13 +60,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/stylesheets/input';
+
 .o-input-nutrients-item {
+  @extend %input;
   display: flex;
   align-items: center;
-  width: 100%;
-  border: 1px solid $color-grey-weak;
-  background-color: transparent;
-  border-radius: 3px;
+  padding: 0;
 
   &__input {
     display: block;

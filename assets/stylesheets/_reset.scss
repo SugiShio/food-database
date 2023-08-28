@@ -114,6 +114,11 @@ button {
   color: inherit;
   appearance: none;
   outline: none;
+
+  &[type='checkbox'],
+  &[type='radio'] {
+    display: none;
+  }
 }
 
 a {

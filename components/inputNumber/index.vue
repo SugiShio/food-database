@@ -30,6 +30,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/stylesheets/input';
 .input-number {
   display: inline-flex;
   align-items: center;
@@ -38,9 +39,9 @@ export default Vue.extend({
   border-radius: 3px;
 
   &__input {
+    @extend %input;
     display: block;
     flex-grow: 1;
-    padding: 5px 10px;
     width: 100%;
     border: none;
     resize: none;

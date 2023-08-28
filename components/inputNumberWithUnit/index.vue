@@ -48,6 +48,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/stylesheets/input';
 .input-number-with-unit {
   position: relative;
   width: 100%;
@@ -71,14 +72,16 @@ export default Vue.extend({
   }
 
   &__amount {
-    padding: 5px 10px;
+    @extend %input;
     border: none;
     flex-grow: 1;
     width: 100%;
   }
 
   &__unit {
-    padding: 5px 20px 5px 0;
+    @extend %input;
+    padding-right: 20px;
+    padding-left: 0;
     width: 60px;
     border: none;
     color: $color-grey-weak;

@@ -69,14 +69,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/stylesheets/input';
+
 .input-text-array {
+  @extend %input;
   display: flex;
-  height: 33px;
-  width: 100%;
-  padding: 0 3px;
-  border-radius: 3px;
-  border: 1px solid $color-grey-weak;
-  background-color: transparent;
+  height: 43px;
+  padding: 0 5px;
   overflow: scroll;
 
   &__input {

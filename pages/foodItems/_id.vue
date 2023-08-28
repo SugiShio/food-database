@@ -10,7 +10,7 @@ main.foodItems-id(v-if='foodItem')
       @input='onInput($event, "name")'
     )
     fd-title(v-else) {{ foodItem.name }}
-    fd-button(
+    fd-button.foodItems-id__button-header(
       v-if='isEditable',
       label='Edit',
       type='button',
@@ -266,6 +266,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/stylesheets/input';
+
 .foodItems-id {
   padding: 30px 20px 50px;
 
@@ -297,6 +299,9 @@ export default Vue.extend({
   &__title-container {
     @extend .title-container;
     margin: 30px 0;
+  }
+  &__button-header {
+    margin-left: 10px;
   }
 
   &__section {
@@ -333,12 +338,9 @@ export default Vue.extend({
   }
 
   &__amount-input {
+    @extend %input;
     margin-right: 5px;
-    padding: 5px 10px;
     width: 100px;
-    border: 1px solid $color-grey-weak;
-    background-color: transparent;
-    border-radius: 3px;
   }
 
   &__buttons {
@@ -349,7 +351,7 @@ export default Vue.extend({
     display: flex;
     justify-content: center;
     margin: auto;
-    padding: 10px 0;
+    padding: 10px 0 calc(env(safe-area-inset-bottom) + 10px);
     background-color: #fff;
     border-top: 1px solid $color-grey;
   }
