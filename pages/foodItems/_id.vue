@@ -198,6 +198,8 @@ export default Vue.extend({
             this.overwrite = true
             this.foodItem.name = result.data.title
             this.foodItem.nutrients = new Nutrients(result.data.nutrients)
+            this.foodItem.description = result.data.description
+            this.foodItem.keywords = result.data.keywords
           }
         } catch (e) {
           console.error(e)
