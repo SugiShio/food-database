@@ -1,5 +1,4 @@
 import algoliasearch from 'algoliasearch'
-import { FirebaseHelper } from '@/plugins/firebase'
 import { TYPES, FoodItem } from '~/models/foodItem'
 const client = algoliasearch('0VUG31LZTM', '6db46705cc09237dd2c59bba77c63254')
 const index = client.initIndex('index_fooditems')
