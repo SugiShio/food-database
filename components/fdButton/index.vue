@@ -1,6 +1,6 @@
 <template lang="pug">
 button.fd-button(
-  :class='type',
+  :class='[size, type]',
   :disabled='disabled',
   :type='typeAttribute',
   @click='$emit("button-clicked")'
@@ -14,10 +14,10 @@ export default Vue.extend({
   props: {
     disabled: { type: Boolean, default: false },
     label: { type: String, default: '' },
+    size: { type: String, default: 'medium' },
     typeAttribute: { type: String, default: 'button' },
     type: { type: String, default: '' },
   },
-  methods: {},
 })
 </script>
 
@@ -26,7 +26,7 @@ export default Vue.extend({
   border-radius: 3px;
   border: 1px solid $color-main;
   background-color: $color-main;
-  padding: 10px 15px;
+  padding: 5px 10px;
   color: #fff;
   transition: background-color 0.3s;
 
@@ -50,6 +50,10 @@ export default Vue.extend({
       background-color: rgba($color-main, 0.1);
       border-color: rgba($color-main, 0.1);
     }
+  }
+
+  &.large {
+    padding: 10px 15px;
   }
 }
 </style>

@@ -62,7 +62,8 @@ main.foodItems-id(v-if='foodItem')
             fd-button(
               label='データを取得',
               @button-clicked='getData',
-              :disabled='!isUrlDataGetable'
+              :disabled='!isUrlDataGetable',
+              size='large'
             )
         template(v-else)
           a(:href='foodItem.url') {{ foodItem.url }}

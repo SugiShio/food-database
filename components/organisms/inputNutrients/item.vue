@@ -74,6 +74,7 @@ export default Vue.extend({
     padding: 5px 10px;
     border: none;
     resize: none;
+    white-space: nowrap;
   }
 
   &__unit {
