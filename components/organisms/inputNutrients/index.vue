@@ -119,6 +119,7 @@ export default Vue.extend({
         if (this.localValue[key] !== null)
           this.localValue[key] = Math.round(this.localValue[key] * rate) / rate
       })
+      this.emitValue()
     },
   },
 })
