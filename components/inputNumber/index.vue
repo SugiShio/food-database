@@ -32,7 +32,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 @import '~/assets/stylesheets/input';
 .input-number {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   border: 1px solid $color-grey-weak;
   background-color: transparent;

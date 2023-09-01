@@ -81,6 +81,17 @@ main.foodItems-id(v-if='foodItem')
         template(v-else)
           | {{ unitText }}
 
+    .foodItems-id__item
+      .foodItems-id__item-label(:class='{ isEditing }')
+        label(for='units') デフォルトの単位
+      .foodItems-id__item-body
+        fd-selector(
+          v-if='isEditing',
+          :options='unitOptions',
+          v-model='foodItem.unitDefault'
+        )
+        template(v-else)
+          | {{ foodItem.unitDefault }}
     .foodItems-id__item(v-if='isEditing')
       .foodItems-id__item-label(:class='{ isEditing }')
         | キーワード
@@ -165,6 +176,11 @@ export default Vue.extend({
     },
     nutrientBasis() {
       return NUTRIENT_BASIS
+    },
+    unitOptions() {
+      return this.foodItem.units.map((unit) => {
+        return { value: unit.unit, disabled: false }
+      })
     },
     unitText() {
       return this.foodItem.units.map((unit) => unit.unit).join(', ')
