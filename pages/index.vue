@@ -1,33 +1,11 @@
 <template lang="pug">
 main.p-index
-  organisms-search
-  section.foodItems-index__block
-    h2.foodItems-index__title
-      | 検索結果
-
-    .foodItems-index__searching(v-if='isSearching') 検索中
-    .foodItems-index__error(v-else-if='hasError') エラーがありました
-    .foodItems-index__error(v-else-if='!foodItems.length') 条件に合う食材がありませんでした
-    template(v-else)
-      ul.foodItems-index__list
-        li(v-for='foodItem in foodItems')
-          nuxt-link(
-            :to='{ name: "foodItems-id", params: { id: foodItem.id } }'
-          )
-            | {{ foodItem.nameWithProvider }}
-
   nav
     ul
       li
         nuxt-link.foodItems-id__link(:to='{ name: "foodItems" }') 食品データベース
       li
         nuxt-link.foodItems-id__link(:to='{ name: "recipes" }') レシピ
-      li
-        nuxt-link.foodItems-id__link(:to='{ name: "daily" }') デイリー
-
-  nuxt-link.p-index__link-add(
-    :to='{ name: "foodItems-id", params: { id: "new" } }'
-  ) +
 </template>
 
 <script>
@@ -75,20 +53,5 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .p-index {
   padding: 30px 20px 50px;
-
-  &__link-add {
-    background-color: $color-main;
-    border-radius: 25px;
-    bottom: calc(env(safe-area-inset-bottom) + 15px);
-    box-shadow: 0 0 5px rgba(darken($color-main, 40%), 0.5);
-    color: #fff;
-    font-size: 25px;
-    left: 15px;
-    line-height: 50px;
-    position: fixed;
-    text-align: center;
-    text-decoration: none;
-    width: 50px;
-  }
 }
 </style>

@@ -23,6 +23,7 @@
         | 次の{{ limit }}件を表示
 
   nuxt-link.p-foodItems-index__link-add(
+    v-if='isSignin',
     :to='{ name: "foodItems-id", params: { id: "new" } }'
   ) +
 </template>
@@ -42,6 +43,9 @@ export default Vue.extend({
     isSearching() {
       return this.$store.state.search.isSearching
     },
+    isSignin() {
+      return this.$store.state.isSignin
+    },
     limit() {
       return this.$store.state.search.limit
     },
@@ -56,7 +60,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .p-foodItems-index {
-  padding: 30px 20px 50px;
+  padding: 10px 20px 50px;
 
   &__block {
     margin: 30px 0;

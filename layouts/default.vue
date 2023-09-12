@@ -1,6 +1,7 @@
 <template lang="pug">
 .layouts-default
   .layouts-default__header
+    button(@click='isMenuOpen = true') Menu
     button.layouts-default__button(v-if='isSignin', @click='signout') Signout
     button.layouts-default__button(v-else, @click='isSigninModalOpen = true') Signin
   .layouts-default__main
@@ -9,6 +10,17 @@
     :is-signin-modal-open='isSigninModalOpen',
     @close-modal='isSigninModalOpen = false'
   )
+
+  .layouts-default__menu-bg(v-show='isMenuOpen', @click='isMenuOpen = false')
+  nav.layouts-default__menu(:class='{ isMenuOpen }')
+    ul
+      li.layouts-default__menu-item(v-for='menu in navMenu')
+        nuxt-link.layouts-default__menu-link(
+          :to='{ name: menu.name }',
+          :class='{ current: $route.name === menu.name }'
+        ) {{ menu.label }}
+      li.layouts-default__menu-item-close
+        button(@click='isMenuOpen = false') close
 </template>
 
 <script>
@@ -18,11 +30,25 @@ export default Vue.extend({
   data() {
     return {
       isSigninModalOpen: false,
+      isMenuOpen: false,
+      navMenu: [
+        { name: 'index', label: 'Top' },
+        { name: 'foodItems', label: '食品データベース' },
+        { name: 'recipes', label: 'レシピ' },
+      ],
     }
   },
   computed: {
     isSignin() {
       return this.$store.state.isSignin
+    },
+  },
+  watch: {
+    $route: {
+      deep: true,
+      handler() {
+        this.isMenuOpen = false
+      },
     },
   },
   async created() {
@@ -56,7 +82,7 @@ export default Vue.extend({
 
   &__header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 10px 20px;
   }
 
@@ -72,6 +98,56 @@ export default Vue.extend({
     width: 800px;
     max-width: 100%;
     margin: 0 auto;
+  }
+
+  &__menu-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    background: rgba(#fff, 0.8);
+  }
+
+  &__menu {
+    background-color: #fff;
+    bottom: 0;
+    box-shadow: 0 0 10px rgba(darken($color-main, 40%), 0.1);
+    position: fixed;
+    padding: 20px 0;
+    top: 0;
+    transform: translateX(-100%);
+    width: 60vw;
+
+    &.isMenuOpen {
+      transition: transform 0.3s;
+      transform: translateX(0);
+    }
+  }
+
+  &__menu-link {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    transition: 0.3s;
+
+    &:hover {
+      background-color: $color-main;
+      color: #fff;
+    }
+
+    &.current {
+      color: #fff;
+      background-color: $color-main;
+      text-decoration: none;
+    }
+  }
+
+  &__menu-item-close {
+    display: block;
+    padding: 10px;
+    margin-top: 20px;
   }
 }
 </style>
