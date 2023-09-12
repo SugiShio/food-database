@@ -2,6 +2,7 @@
 .input-number
   textarea.input-number__input(
     type='number',
+    :class='size',
     :value='value',
     :rows=1,
     @focus='onFocus',
@@ -19,6 +20,7 @@ export default Vue.extend({
   name: 'InputNumber',
   props: {
     unit: { type: String, default: '' },
+    size: { type: String, default: '' },
     value: { type: [String, Number], default: 0 },
   },
   methods: {
@@ -46,6 +48,10 @@ export default Vue.extend({
     border: none;
     resize: none;
     white-space: pre;
+
+    &.small {
+      padding: 5px 10px;
+    }
   }
 
   &__unit {

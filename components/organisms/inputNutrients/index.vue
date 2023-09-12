@@ -14,7 +14,7 @@
   .o-input-nutrients__function
     span 小数点以下
     span.o-input-nutrients__digit-input
-      input-number(v-model='numberOfDigits')
+      input-number(v-model='numberOfDigits', size='small')
     span 桁で
     span
       fd-button(
