@@ -11,8 +11,6 @@ main.recipes-id(v-if='recipe')
       type='button',
       @button-clicked='isEditing = true'
     )
-  section.recipes-id__section
-    organisms-nutrients-summary(:nutrients='nutrients')
 
   section.recipes-id__section
     h2.recipes-id__title 基本情報
@@ -23,42 +21,35 @@ main.recipes-id(v-if='recipe')
         input-textarea(v-if='isEditing', :value='recipe.description')
         template(v-else)
           | {{ recipe.description }}
+
   section.recipes-id__section
     h2.recipes-id__title 材料
     ul
-      li.recipes-id__item(v-for='(item, index) in recipe.items')
-        label.recipes-id__item-label(:class='{ isEditing }')
-          | {{ item.foodItem.name }}
-        .recipes-id__item-body
-          input-number(
-            v-if='isEditing',
-            v-model='item.amount',
-            unit='g',
-            @input='onItemAmountInput(index)'
-          )
-          template(v-else)
-            | {{ item.amount }} g
-
-  section.recipes-id__section(v-if='isEditing')
-    h2.recipes-id__title 食材
-    ul
-      li(v-for='foodItem in foodItems')
-        div
-          | {{ foodItem.name }}
-          button(type='button', @click='addItem(foodItem)') +
-
-  section.recipes-id__section(v-if='!isEditing')
-    h2.recipes-id__title 栄養素
-    organisms-nutrient-graph(
-      :nutrients='recipe.nutrients',
-      :nutrient-basis='nutrientBasis'
-    )
+      li.recipes-id__item(v-for='(item, index) in recipeItems')
+        | {{ item.name }}
+        template(v-if='isEditing')
+          input(v-model='item.amount')
+          select(v-model='item.unit')
+            option(v-for='unitOption in item.units', :value='unitOption.unit')
+              | {{ unitOption.unit }}
+        template(v-else)
+          | ({{ item.amount }}{{ item.unit }})
+    button(v-if='isEditing', type='button', @click='openSearchForm') + Add item
 
   ul.recipes-id__buttons(v-if='isEditing')
     li.recipes-id__button
       fd-button(label='Cancel', type='secondary', @button-clicked='onCancel')
     li.recipes-id__button
       fd-button(label='Submit', @button-clicked='submit')
+
+  fd-window(
+    :is-show='isSearchFormOpen',
+    @close-clicked='isSearchFormOpen = false'
+  )
+    organisms-search
+    ul
+      li(v-for='foodItem in foodItems', @click='addRecipeItem(foodItem)')
+        | {{ foodItem.name }}
 </template>
 
 <script>
@@ -66,18 +57,21 @@ import Vue from 'vue'
 import { Recipe } from '@/models/recipe'
 import { FirebaseHelper } from '@/plugins/firebase'
 import { FoodItem } from '@/models/foodItem'
-import { NUTRIENT_BASIS } from '~/models/nutrientBasis/constants'
 
 export default Vue.extend({
-  name: 'PagesrecipesId',
+  name: 'PagesRecipesId',
   data() {
     return {
-      foodItems: [],
       isEditing: false,
-      recipe: null,
+      recipe: new Recipe(),
+      isSearchFormOpen: false,
+      recipeItems: [],
     }
   },
   computed: {
+    foodItems() {
+      return this.$store.state.search.foodItems
+    },
     id() {
       return this.$route.params.id
     },
@@ -87,86 +81,92 @@ export default Vue.extend({
     isNew() {
       return this.id === 'new'
     },
-    nutrients() {
-      this.recipe.items.forEach((item) => {})
-    },
-    nutrientBasis() {
-      return NUTRIENT_BASIS
-    },
-    nutrientItems() {
-      if (!this.recipe) return []
-      const recipe = this.recipe
-      return Object.keys(recipe.nutrients).map((key) => {
-        return { nutrientId: key, values: recipe.nutrients[key] }
-      })
-    },
   },
   async created() {
-    await this.fetchRecipe()
-    await this.fetchFoodItems()
+    if (this.isNew) this.isEditing = true
+    else {
+      await this.fetchRecipe()
+      this.recipe.items.map(async (item) => {
+        const doc = await FirebaseHelper.fetchItem('foodItems', item.id)
+        const foodItem = new FoodItem(doc.id, doc.data())
+        this.recipeItems.push({
+          amount: item.amount,
+          id: item.id,
+          name: foodItem.name,
+          unit: item.unit,
+          units: foodItem.units,
+        })
+      })
+    }
   },
   methods: {
-    async addItem(item, amount = 100) {
-      if (!this.recipe) return
-      this.recipe.addItem(item, amount)
+    addRecipeItem(foodItem) {
+      const unit = foodItem.unitDefault || foodItem.units[0]
+      const amount = unit === 'g' ? 100 : 1
+      this.recipeItems.push({
+        amount,
+        id: foodItem.id,
+        name: foodItem.name,
+        unit,
+        units: foodItem.units,
+      })
     },
-    async fetchFoodItems() {
+
+    openSearchForm() {
+      this.isSearchFormOpen = true
+    },
+
+    async fetchRecipe() {
       try {
-        const querySnapshot = await FirebaseHelper.fetchIndex('foodItems')
-        querySnapshot.forEach((doc) => {
-          this.foodItems.push(new FoodItem(doc.id, doc.data()))
-        })
+        const doc = await FirebaseHelper.fetchItem('recipes', this.id)
+        const data = doc.data()
+        this.recipe = new Recipe(data)
       } catch (_) {}
     },
-    async fetchRecipe() {
-      if (this.isNew) {
-        this.isEditing = true
-        this.recipe = new Recipe()
-      } else {
-        try {
-          const doc = await FirebaseHelper.fetchItem('recipes', this.id)
-          const data = doc.data()
-          this.recipe = new Recipe(this.id, data)
-        } catch (_) {}
-      }
-    },
+
     async submit() {
       if (!this.recipe) return
+      const items = this.recipeItems.map((item) => {
+        return {
+          id: item.id,
+          amount: item.amount,
+          unit: item.unit,
+        }
+      })
+      const recipe = {
+        ...this.recipe,
+        items,
+      }
       if (this.isNew) {
-        this.create()
+        this.create(recipe)
       } else {
-        this.update()
+        this.update(recipe)
       }
     },
-    async create() {
-      if (!this.recipe) return
+
+    async create(recipe) {
       try {
-        await this.recipe.setData()
-        const doc = await FirebaseHelper.create('recipes', this.recipe)
+        const doc = await FirebaseHelper.create('recipes', recipe)
         this.$router.push({
           name: 'recipes-id',
           params: { id: doc.id },
         })
       } catch (_) {}
     },
-    async update() {
-      if (!this.recipe) return
+
+    async update(recipe) {
       try {
-        await this.recipe.setData()
-        FirebaseHelper.update('recipes', this.recipe.id, this.recipe)
-        console.log('Item successfully updated! 🍅')
+        FirebaseHelper.update('recipes', this.id, recipe)
         this.fetchRecipe()
         this.isEditing = false
-      } catch (_) {}
+      } catch (e) {
+        console.log(e)
+      }
     },
+
     onCancel() {
       this.fetchRecipe()
       this.isEditing = false
-    },
-    onItemAmountInput(index) {
-      if (!this.recipe) return
-      const items = this.recipe.items
-      items.splice(index, 1, this.recipe.items[index])
     },
   },
 })

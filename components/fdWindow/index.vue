@@ -1,6 +1,7 @@
 <template lang="pug">
 transition(name='slidein')
   .fd-window(v-if='isShow')
+    button.fd-window__close-bar(@click='$emit("close-clicked")')
     slot
 </template>
 
@@ -16,13 +17,24 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .fd-window {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 30px 20px 50px;
   background-color: #fff;
+  border-radius: 5px;
+  bottom: 0;
+  box-shadow: 0 0 10px rgba(darken($color-main, 40%), 0.1);
+  left: 10px;
+  padding: 10px 20px 50px;
+  position: fixed;
+  right: 10px;
+  top: 30vh;
+
+  &__close-bar {
+    display: block;
+    margin: 10px auto 30px;
+    width: 100px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: $color-text-weak;
+  }
 }
 .slidein-enter-active,
 .slidein-leave-active {
@@ -31,6 +43,6 @@ export default Vue.extend({
 .slidein-enter,
 .slidein-leave-to {
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateY(100%);
 }
 </style>
