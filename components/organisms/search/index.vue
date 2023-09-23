@@ -4,12 +4,12 @@
     .o-search-index__label キーワード
     input-text(v-model='keyword', @keydown-enter='onKeyDownEnter')
 
-  .o-search-index__item
+  //- .o-search-index__item
     .o-search-index__label タイプ
     checkbox-array(v-model='types', :options='typeOptions', inline)
-  input(type='number', v-model='limit')
+  //- input(type='number', v-model='limit')
 
-  .o-search-index__item
+  .o-search-index__bottom
     fd-button(
       label='Search',
       @button-clicked='search',
@@ -75,13 +75,18 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .o-search-index {
-  &__item {
+  &__item,
+  &__bottom {
     margin: 10px 0;
   }
 
   &__label {
     font-size: 12px;
     margin-bottom: 3px;
+  }
+
+  &__bottom {
+    text-align: center;
   }
 }
 </style>
