@@ -1,7 +1,3 @@
-import { FoodItem } from './foodItem'
-import { NUTRIENTS } from '~/constants/nutrients'
-import { FirebaseHelper } from '@/plugins/firebase'
-
 export class RecipeItem {
   id = ''
   amount = 0
