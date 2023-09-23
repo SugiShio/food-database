@@ -48,7 +48,12 @@ main.recipes-id(v-if='recipe')
   )
     organisms-search
     ul
-      li(v-for='foodItem in foodItems', @click='addRecipeItem(foodItem)')
+      li.recipes-id__result-item(
+        v-for='(foodItem, index) in foodItems',
+        :class='{ isAdded: isAdded(index) }',
+        @click='addRecipeItem(foodItem, index)'
+      )
+        i.icon-plus-circle.recipes-id__result-icon
         | {{ foodItem.name }}
 </template>
 
@@ -62,6 +67,7 @@ export default Vue.extend({
   name: 'PagesRecipesId',
   data() {
     return {
+      addedIndexes: [],
       isEditing: false,
       recipe: new Recipe(),
       isSearchFormOpen: false,
@@ -82,6 +88,11 @@ export default Vue.extend({
       return this.id === 'new'
     },
   },
+  watch: {
+    foodItems() {
+      this.addedIndexes = []
+    },
+  },
   async created() {
     if (this.isNew) this.isEditing = true
     else {
@@ -100,7 +111,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    addRecipeItem(foodItem) {
+    addRecipeItem(foodItem, index) {
       const unit = foodItem.unitDefault || foodItem.units[0]
       const amount = unit === 'g' ? 100 : 1
       this.recipeItems.push({
@@ -110,6 +121,11 @@ export default Vue.extend({
         unit,
         units: foodItem.units,
       })
+      this.addedIndexes.push(index)
+    },
+
+    isAdded(index) {
+      return this.addedIndexes.includes(index)
     },
 
     openSearchForm() {
@@ -252,6 +268,19 @@ export default Vue.extend({
 
   &__button + &__button {
     margin-left: 30px;
+  }
+
+  &__result-item {
+    margin: 5px 0;
+
+    &.isAdded {
+      color: $color-main;
+    }
+  }
+
+  &__result-icon {
+    margin-right: 2px;
+    font-size: 1.2em;
   }
 }
 </style>
