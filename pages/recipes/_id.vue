@@ -149,9 +149,11 @@ export default Vue.extend({
           unit: item.unit,
         }
       })
+      const itemNames = this.recipeItems.map((item) => item.name)
       const recipe = {
         ...this.recipe,
         items,
+        itemNames,
       }
       if (this.isNew) {
         this.create(recipe)
