@@ -1,4 +1,4 @@
-import { initializeApp, FirebaseOptions } from 'firebase/app'
+import { initializeApp } from 'firebase/app'
 import {
   addDoc,
   collection,
@@ -13,7 +13,6 @@ import {
   query,
   limit,
   orderBy,
-  FieldPath,
 } from 'firebase/firestore'
 
 const app = initializeApp(process.env.firebaseConfig)
@@ -44,6 +43,12 @@ const normalizeObject = (object) => {
   return object
 }
 
+const addFieldsForAlgolia = (object) => {
+  return {
+    ...object,
+    _tags: [...object.tags, ...object.keywords],
+  }
+}
 export class FirebaseHelper {
   static async fetchIndex(collectionName) {
     try {
@@ -92,7 +97,7 @@ export class FirebaseHelper {
   }
 
   static async create(collectionName, postData) {
-    const data = getFirestoreFormat(postData)
+    const data = addFieldsForAlgolia(getFirestoreFormat(postData))
 
     try {
       const docRef = await addDoc(collection(db, collectionName), data)
@@ -104,7 +109,7 @@ export class FirebaseHelper {
   }
 
   static async update(collectionName, docId, postData) {
-    const data = getFirestoreFormat(postData)
+    const data = addFieldsForAlgolia(getFirestoreFormat(postData))
 
     try {
       const docRef = doc(db, collectionName, docId)

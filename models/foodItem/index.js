@@ -10,6 +10,7 @@ export class FoodItem {
   constructor(id = '', foodItem) {
     this.id = id || ''
     this.name = foodItem ? foodItem.name : ''
+    this.alias = foodItem ? foodItem.alias || [] : []
     this.description = foodItem ? foodItem.description : ''
     this.keywords = foodItem ? foodItem.keywords || [] : []
     this.images = foodItem ? foodItem.images : []
@@ -17,6 +18,7 @@ export class FoodItem {
       ? new Nutrients(foodItem.nutrients)
       : new Nutrients()
     this.provider = foodItem ? foodItem.provider : ''
+    this.tags = foodItem ? foodItem.tags || [] : []
     this.type = foodItem ? foodItem.type : ''
     this.url = foodItem ? foodItem.url : ''
     this.units =

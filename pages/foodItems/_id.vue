@@ -33,6 +33,19 @@ main.foodItems-id(v-if='foodItem')
 
     .foodItems-id__item
       .foodItems-id__item-label(:class='{ isEditing }')
+        | よみがな、別名
+      .foodItems-id__item-body
+        input-text-array(
+          v-if='isEditing',
+          v-model='foodItem.alias',
+          @text-array-input='onTextArrayInput($event, "alias")'
+        )
+        ul(v-else)
+          li(v-for='al in foodItem.alias')
+            | {{ al }}
+
+    .foodItems-id__item
+      .foodItems-id__item-label(:class='{ isEditing }')
         label(for='type') タイプ
       .foodItems-id__item-body
         input-radio(
@@ -92,15 +105,19 @@ main.foodItems-id(v-if='foodItem')
         )
         template(v-else)
           | {{ foodItem.unitDefault }}
-    .foodItems-id__item(v-if='isEditing')
+
+    .foodItems-id__item
       .foodItems-id__item-label(:class='{ isEditing }')
-        | キーワード
+        | タグ
       .foodItems-id__item-body
         input-text-array(
           v-if='isEditing',
-          v-model='foodItem.keywords',
-          @text-array-input='onTextArrayInput($event, "keywords")'
+          v-model='foodItem.tags',
+          @text-array-input='onTextArrayInput($event, "tags")'
         )
+        ul(v-else)
+          li(v-for='tag in foodItem.tags')
+            | {{ tag }}
 
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
@@ -216,7 +233,7 @@ export default Vue.extend({
             this.foodItem.name = result.data.title
             this.foodItem.nutrients = new Nutrients(result.data.nutrients)
             this.foodItem.description = result.data.description
-            this.foodItem.keywords = result.data.keywords
+            this.foodItem.alias = result.data.alias
           }
         } catch (e) {
           console.error(e)

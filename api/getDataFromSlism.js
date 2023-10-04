@@ -24,7 +24,7 @@ export default async (req, res) => {
       elementTitle && elementTitle.innerHTML.replace(/<.*?>/g, '').trim()
     const title = rawTitle.replace(/ *\(.*\)$/, '')
     const match = rawTitle.match(/\((.*)\)$/)
-    const keywords = match ? match[1].split('/') : []
+    const alias = match ? match[1].split('/') : []
 
     const elementDescription = dom.window.document.querySelector('.note')
     const description = elementDescription && elementDescription.innerHTML
@@ -69,7 +69,7 @@ export default async (req, res) => {
     })
 
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
-    res.end(JSON.stringify({ title, nutrients, description, keywords }), 'utf8')
+    res.end(JSON.stringify({ title, nutrients, description, alias }), 'utf8')
   } catch (error) {
     const status = (error.response && error.response.status) || 500
     res.writeHead(status).end()
