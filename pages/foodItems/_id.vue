@@ -40,9 +40,8 @@ main.foodItems-id(v-if='foodItem')
           v-model='foodItem.alias',
           @text-array-input='onTextArrayInput($event, "alias")'
         )
-        ul(v-else)
-          li(v-for='al in foodItem.alias')
-            | {{ al }}
+        template(v-else)
+          | {{ foodItem.alias.join(', ') }}
 
     .foodItems-id__item
       .foodItems-id__item-label(:class='{ isEditing }')
@@ -83,6 +82,19 @@ main.foodItems-id(v-if='foodItem')
 
     .foodItems-id__item
       .foodItems-id__item-label(:class='{ isEditing }')
+        | タグ
+      .foodItems-id__item-body
+        input-text-array(
+          v-if='isEditing',
+          v-model='foodItem.tags',
+          @text-array-input='onTextArrayInput($event, "tags")'
+        )
+        ul(v-else)
+          li(v-for='tag in foodItem.tags')
+            | {{ tag }}
+
+    .foodItems-id__item
+      .foodItems-id__item-label(:class='{ isEditing }')
         label(for='units') 単位
       .foodItems-id__item-body
         input-units(
@@ -105,19 +117,6 @@ main.foodItems-id(v-if='foodItem')
         )
         template(v-else)
           | {{ foodItem.unitDefault }}
-
-    .foodItems-id__item
-      .foodItems-id__item-label(:class='{ isEditing }')
-        | タグ
-      .foodItems-id__item-body
-        input-text-array(
-          v-if='isEditing',
-          v-model='foodItem.tags',
-          @text-array-input='onTextArrayInput($event, "tags")'
-        )
-        ul(v-else)
-          li(v-for='tag in foodItem.tags')
-            | {{ tag }}
 
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
