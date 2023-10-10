@@ -9,18 +9,44 @@ main.foodItems-id(v-if='foodItem')
       size='large',
       @input='onInput($event, "name")'
     )
-    fd-title(v-else) {{ foodItem.name }}
+    template(v-else)
+      fd-title {{ foodItem.name }}
     fd-button.foodItems-id__button-header(
       v-if='isEditable',
       label='Edit',
       type='button',
       @button-clicked='isEditing = true'
     )
+  template(v-if='!isEditing')
+    div {{ foodItem.alias.join(', ') }}
+    div {{ foodItem.tags.map((tag) => `#${tag}`).join(' ') }}
 
   section.foodItems-id__section
     h2.foodItems-id__title 基本情報
+    .foodItems-id__item(v-if='isEditing')
+      .foodItems-id__item-label.isEditing
+        label よみがな、別名
+      .foodItems-id__item-body
+        input-text-array(
+          v-model='foodItem.alias',
+          @text-array-input='onTextArrayInput($event, "alias")'
+        )
+
+    .foodItems-id__item(v-if='isEditing')
+      .foodItems-id__item-label.isEditing
+        | タグ
+      .foodItems-id__item-body
+        input-text-array(
+          v-if='isEditing',
+          v-model='foodItem.tags',
+          @text-array-input='onTextArrayInput($event, "tags")'
+        )
+        ul(v-else)
+          li(v-for='tag in foodItem.tags')
+            | {{ tag }}
+
     .foodItems-id__item
-      .foodItems-id__item-label(:class='{ isEditing }')
+      .foodItems-id__item-label.isEditing(v-if='isEditing')
         label(for='description') 説明
       .foodItems-id__item-body
         input-textarea(
@@ -28,20 +54,7 @@ main.foodItems-id(v-if='foodItem')
           :value='foodItem.description',
           @input='onInput($event, "description")'
         )
-        template(v-else)
-          | {{ foodItem.description }}
-
-    .foodItems-id__item
-      .foodItems-id__item-label(:class='{ isEditing }')
-        | よみがな、別名
-      .foodItems-id__item-body
-        input-text-array(
-          v-if='isEditing',
-          v-model='foodItem.alias',
-          @text-array-input='onTextArrayInput($event, "alias")'
-        )
-        template(v-else)
-          | {{ foodItem.alias.join(', ') }}
+        div(v-else, v-html='descriptionSanitized')
 
     .foodItems-id__item
       .foodItems-id__item-label(:class='{ isEditing }')
@@ -56,7 +69,7 @@ main.foodItems-id(v-if='foodItem')
         template(v-else)
           | {{ foodItem.typeLabel }}
 
-    .foodItems-id__item
+    .foodItems-id__item(v-if='foodItem.provider.length || isEditing')
       .foodItems-id__item-label(:class='{ isEditing }')
         label(for='provider') メーカー、店名等
       .foodItems-id__item-body
@@ -82,19 +95,6 @@ main.foodItems-id(v-if='foodItem')
 
     .foodItems-id__item
       .foodItems-id__item-label(:class='{ isEditing }')
-        | タグ
-      .foodItems-id__item-body
-        input-text-array(
-          v-if='isEditing',
-          v-model='foodItem.tags',
-          @text-array-input='onTextArrayInput($event, "tags")'
-        )
-        ul(v-else)
-          li(v-for='tag in foodItem.tags')
-            | {{ tag }}
-
-    .foodItems-id__item
-      .foodItems-id__item-label(:class='{ isEditing }')
         label(for='units') 単位
       .foodItems-id__item-body
         input-units(
@@ -103,20 +103,12 @@ main.foodItems-id(v-if='foodItem')
           @add-unit-clicked='onAddUnitClicked',
           @units-input='onUnitsInput'
         )
-        template(v-else)
-          | {{ unitText }}
-
-    .foodItems-id__item
-      .foodItems-id__item-label(:class='{ isEditing }')
-        label(for='units') デフォルトの単位
-      .foodItems-id__item-body
-        fd-selector(
-          v-if='isEditing',
-          :options='unitOptions',
-          v-model='foodItem.unitDefault'
-        )
-        template(v-else)
-          | {{ foodItem.unitDefault }}
+        ul.foodItems-id__unit-texts(v-else)
+          li.foodItems-id__unit-text(
+            v-for='unitText in unitTexts',
+            :class='{ isDefault: unitText.isDefault }'
+          )
+            | {{ unitText.text }}
 
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
@@ -147,6 +139,7 @@ main.foodItems-id(v-if='foodItem')
 
 <script>
 import Vue from 'vue'
+import DOMPurify from 'dompurify'
 import { FoodItem, TYPES } from '@/models/foodItem'
 import { NUTRIENTS } from '@/constants/nutrients'
 import { NUTRIENT_BASIS } from '@/models/nutrientBasis/constants'
@@ -166,6 +159,10 @@ export default Vue.extend({
     }
   },
   computed: {
+    descriptionSanitized() {
+      return DOMPurify.sanitize(this.foodItem.description)
+    },
+
     foodItemTypes() {
       return TYPES
     },
@@ -198,8 +195,15 @@ export default Vue.extend({
         return { value: unit.unit, disabled: false }
       })
     },
-    unitText() {
-      return this.foodItem.units.map((unit) => unit.unit).join(', ')
+    unitTexts() {
+      return this.foodItem.units
+        .filter((unit) => unit.unit !== 'g')
+        .map((unit) => {
+          return {
+            text: `${unit.unit}(${unit.rate}g)`,
+            isDefault: this.foodItem.unitDefault === unit.unit,
+          }
+        })
     },
   },
   created() {
@@ -331,7 +335,7 @@ export default Vue.extend({
 
   &__title-container {
     @extend .title-container;
-    margin: 30px 0;
+    margin-top: 30px;
   }
   &__button-header {
     margin-left: 10px;
@@ -351,7 +355,7 @@ export default Vue.extend({
     margin: 15px 0;
   }
 
-  &__item-label {
+  &__item-label label {
     @extend .list__item-label;
   }
 
@@ -362,6 +366,17 @@ export default Vue.extend({
   &__item-body-button {
     margin-left: 10px;
     flex-shrink: 0;
+  }
+
+  &__unit-texts {
+    list-style: disc;
+    list-style-position: inside;
+  }
+
+  &__unit-text {
+    &.isDefault {
+      font-weight: bold;
+    }
   }
 
   &__amount {
