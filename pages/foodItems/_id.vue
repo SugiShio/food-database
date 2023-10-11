@@ -110,6 +110,17 @@ main.foodItems-id(v-if='foodItem')
           )
             | {{ unitText.text }}
 
+      .foodItems-id__item(v-if='isEditing')
+        .foodItems-id__item-label.isEditing
+          label(for='units') デフォルトの単位
+        .foodItems-id__item-body
+          fd-selector(
+            v-if='isEditing',
+            :options='unitOptions',
+            v-model='foodItem.unitDefault'
+          )
+          template(v-else)
+            | {{ foodItem.unitDefault }}
   section.foodItems-id__section
     h2.foodItems-id__title 栄養素
 
